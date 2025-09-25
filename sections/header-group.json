@@ -1,0 +1,117 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "text_slide_RVgGMe": {
+          "type": "text-slide",
+          "settings": {
+            "content": "<p><strong>ENVIO GRATIS POR COMPRAS SUPERIORES A $400.000</strong></p>",
+            "icon": ""
+          }
+        },
+        "link_qJzTi3": {
+          "type": "link",
+          "settings": {
+            "show_on": "desktop",
+            "link_label": "Rastrear pedido",
+            "link": "/",
+            "icon": ""
+          }
+        },
+        "link_EF3tRJ": {
+          "type": "link",
+          "settings": {
+            "show_on": "desktop",
+            "link_label": "Ayuda",
+            "link": "/",
+            "icon": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_slide_RVgGMe",
+        "link_qJzTi3",
+        "link_EF3tRJ"
+      ],
+      "settings": {
+        "text_block_behaviour": "slider",
+        "slider_autoplay_interval": 4,
+        "font_weight": "500",
+        "section_width": "max-w-fluid",
+        "color_scheme": "scheme-2bee5a80-7981-4d92-86f8-b798298e461f"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "image_link_text_pbGBqw": {
+          "type": "image-link-text",
+          "settings": {
+            "show_on": "desktop",
+            "menu_link_title": "camisas",
+            "color_scheme": "scheme-2",
+            "image": "shopify://shop_images/c1b580d5935c8ecb2868e3c240f7a43dc628ba0e.png",
+            "card_aspect_ratio": "same_as_section",
+            "content_position_horizontal": "align-start text-start",
+            "content_position_vertical": "justify-end",
+            "title": "",
+            "subtitle": "Men's New Arrivals",
+            "link": "shopify://collections/frontpage"
+          }
+        }
+      },
+      "block_order": [
+        "image_link_text_pbGBqw"
+      ],
+      "settings": {
+        "layout": "",
+        "sticky": true,
+        "nav_items_border": false,
+        "drawer_layer": false,
+        "logo": "shopify://shop_images/new_header_logo.svg",
+        "logo_transparent": "shopify://shop_images/new_header_logo2.svg",
+        "logo_svg_code": "",
+        "logo_width": 134,
+        "logo_width_mobile": 100,
+        "logo_font_size": 1,
+        "transparent_header_bottom_border": false,
+        "country_drawer_header": true,
+        "country_drawer_navigation_menu": true,
+        "utils_link_display": "icon",
+        "first_additional_link_title": "",
+        "first_additional_link_url": "shopify://collections",
+        "second_additional_link_title": "",
+        "second_additional_link_url": "",
+        "menu": "main-menu",
+        "menu_mobile": "",
+        "submenu": "main-menu",
+        "menu_mobile_card_column_count": "2",
+        "parent_link_size": "md",
+        "parent_without_submenu_size": "md",
+        "spacing_between_cards": "2",
+        "card_aspect_ratio": "3/4",
+        "card_aspect_ratio_mobile": "3/4",
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-1",
+        "color_scheme_for_dropdown": "",
+        "color_scheme_for_drawer": ""
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

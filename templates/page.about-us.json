@@ -1,0 +1,299 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "1658995208ad05f95f": {
+      "type": "hero-banner",
+      "blocks": {
+        "e3867974-072c-4cfe-968e-a10d22e8941a": {
+          "type": "slide",
+          "settings": {
+            "banner_layout": "hero-banner--full",
+            "color_scheme": "scheme-8",
+            "header_menu_text_color": "#ffffff",
+            "heading": "<p>Our Story</p>",
+            "subheading": "SINCE 1979",
+            "subheading_link": "",
+            "text": "",
+            "button_link_1": "/",
+            "button_link_1_type": "button",
+            "button_label_1": "",
+            "button_style_1": "button--filled",
+            "button_link_2": "/",
+            "button_label_2": "",
+            "button_style_2": "button--outlined",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/20231010_about_timeline_1979.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "enable_media_overlay_desktop": true,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "enable_media_overlay_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "e3867974-072c-4cfe-968e-a10d22e8941a"
+      ],
+      "settings": {
+        "enable_transparent_header": true,
+        "slider_height": 60,
+        "slideshow_autoplay_interval": 6,
+        "show_slideshow_navigation": true,
+        "slideshow_navigation_position": "hero__swiper-buttons--start",
+        "color_scheme_arrows": "scheme-8",
+        "show_slideshow_pagination": true,
+        "slideshow_pagination_style": "style-1",
+        "floating_bar": false
+      }
+    },
+    "9585dbdf-5519-43bd-a4c5-6aa99afe9a31": {
+      "type": "seo-content",
+      "disabled": true,
+      "settings": {
+        "section_layout": "boxed",
+        "heading": "",
+        "heading_size": "h3",
+        "text": "<h6>At Chevignon we are dedicated to creating timeless pieces that celebrate a rich, shared history. Our tradition blends French influence with American style to create the consummate wardrobe for the urban adventurer.</h6>",
+        "content_alignment": "start",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_inner": "2",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "carousel_NCbwVL": {
+      "type": "carousel",
+      "blocks": {
+        "card_abBmyy": {
+          "type": "card",
+          "settings": {
+            "heading": "1979",
+            "heading_size": "h3",
+            "text": "<p>Chevignon was founded in France by <strong>Guy Azoulay</strong>, inspired by vintage flight jackets and second-hand military garments. His first collection honored <strong>Charles Chevignon</strong>, a name that would define the brand. From day one, Chevignon stood for <strong>authentic style</strong>, <strong>heritage design</strong>, and a deep respect for adventure and craftsmanship.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "3/2",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING_Mesa_de_trabajo_1_copia_9.jpg",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        },
+        "card_H9eFY9": {
+          "type": "card",
+          "settings": {
+            "heading": "80's",
+            "heading_size": "h3",
+            "text": "<p>The launch of the <strong>TOG'S UNLIMITED</strong> label marked a new era. The green-collared duck became a bold icon of <strong>urban fashion</strong>. Embroidered on jackets and other staples, the migratory bird reflected a generation’s need for <strong>individuality</strong>. This signature look left a lasting imprint on street culture and youth style.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "3/2",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING-11_898eb78e-fe3e-4a87-a3a8-0451bf7b2394.jpg",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        },
+        "card_d8LPGj": {
+          "type": "card",
+          "settings": {
+            "heading": "90's",
+            "heading_size": "h3",
+            "text": "<p>Chevignon’s <strong>iconic leather jackets</strong> found fans around the world. They embodied freedom, style, and a sense of adventure. Soon, the brand’s <strong>denim collection</strong> gained ground—crafted with the same care and identity. Rugged, refined, and always relevant, Chevignon denim became a new symbol of quality and style for all.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "3/2",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING-12.jpg",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        },
+        "card_Y4RbLe": {
+          "type": "card",
+          "settings": {
+            "heading": "00's",
+            "heading_size": "h3",
+            "text": "<p>With stores opening in <strong>Europe, Asia, and Latin America</strong>, Chevignon became a global presence. In Paris, the flagship store on rue du Faubourg Saint-Antoine debuted. Artistic Director Milan Vukmirovic released two limited-edition heritage collections, reviving signature <strong>aviator silhouettes</strong> and the brand’s unmistakable <strong>leather craftsmanship</strong>.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "auto",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING-13.jpg",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        },
+        "card_AtMyii": {
+          "type": "card",
+          "settings": {
+            "heading": "10's",
+            "heading_size": "h3",
+            "text": "<p>Chevignon took its premium denim to the next level—fusing <strong>traditional craftsmanship</strong> with <strong>modern sustainability</strong>. Each piece is built to last, with advanced finishing techniques and an eco-conscious mindset. Durable, stylish, and responsibly made, Chevignon denim delivers timeless fashion that’s ready for everyday adventures<strong> </strong>with purpose and performance.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "3/2",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING-14.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        },
+        "card_cRkh3C": {
+          "type": "card",
+          "settings": {
+            "heading": "2023",
+            "heading_size": "h3",
+            "text": "<p>Chevignon’s long-awaited U.S. launch marks a key milestone. With over 40 years of cultural fusion between French sophistication and American casualness, the brand enters boldly. Focused on hero products—refined classics that define its DNA—Chevignon sets the tone for what’s next, blending heritage style with modern, fashion-forward sensibility.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "button--filled",
+            "aspect_ratio": "3/2",
+            "color_scheme": "scheme-5",
+            "media_position": "top",
+            "content_position": "center",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/DESCK_LANDING-15.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "2"
+          }
+        }
+      },
+      "block_order": [
+        "card_abBmyy",
+        "card_H9eFY9",
+        "card_d8LPGj",
+        "card_Y4RbLe",
+        "card_AtMyii",
+        "card_cRkh3C"
+      ],
+      "name": "t:sections.carousel.name",
+      "settings": {
+        "show_navigation_arrows": false,
+        "slideshow_autoplay_interval": 0,
+        "slides_per_view": 6,
+        "layout": "layout-1",
+        "heading": "OUR STORY",
+        "heading_size": "h3",
+        "subheading": "At Chevignon we are dedicated to creating timeless pieces that celebrate a rich, shared history. Our tradition blends French influence with American style to create the consummate wardrobe for the urban adventurer.",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "button--filled",
+        "section_width": "max-w-fluid",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "hero_banner_rkyqdz": {
+      "type": "hero-banner",
+      "blocks": {
+        "slide_eiNPPz": {
+          "type": "slide",
+          "settings": {
+            "banner_layout": "hero-banner--full",
+            "color_scheme": "scheme-1",
+            "header_menu_text_color": "#ffffff",
+            "heading": "",
+            "subheading": "",
+            "subheading_link": "",
+            "text": "",
+            "button_link_1": "/",
+            "button_link_1_type": "button",
+            "button_label_1": "",
+            "button_style_1": "button--filled",
+            "button_link_2": "/",
+            "button_label_2": "",
+            "button_style_2": "button--outlined",
+            "content_position": "end",
+            "content_alignment": "center",
+            "image": "shopify://shop_images/20231010_about_archive_banner.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "enable_media_overlay_desktop": true,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "enable_media_overlay_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "slide_eiNPPz"
+      ],
+      "settings": {
+        "enable_transparent_header": true,
+        "slider_height": 100,
+        "slideshow_autoplay_interval": 6,
+        "show_slideshow_navigation": true,
+        "slideshow_navigation_position": "hero__swiper-buttons--start",
+        "color_scheme_arrows": "",
+        "show_slideshow_pagination": true,
+        "slideshow_pagination_style": "style-1",
+        "floating_bar": false
+      }
+    }
+  },
+  "order": [
+    "1658995208ad05f95f",
+    "9585dbdf-5519-43bd-a4c5-6aa99afe9a31",
+    "carousel_NCbwVL",
+    "hero_banner_rkyqdz"
+  ]
+}

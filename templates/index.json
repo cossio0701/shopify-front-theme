@@ -1,0 +1,592 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "breadcrumbs": false,
+        "show_page_title": false,
+        "page_title_alignment": "text-center",
+        "info_title": "",
+        "info_content": "",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "hero_banner_hKjCWb": {
+      "type": "hero-banner",
+      "blocks": {
+        "slide_pmBHLU": {
+          "type": "slide",
+          "settings": {
+            "banner_layout": "hero-banner--full",
+            "color_scheme": "scheme-6",
+            "header_menu_text_color": "#ffffff",
+            "heading": "",
+            "subheading": "",
+            "subheading_link": "",
+            "text": "",
+            "button_link_1": "/",
+            "button_link_1_type": "button",
+            "button_label_1": "",
+            "button_style_1": "button--filled",
+            "button_link_2": "/",
+            "button_label_2": "",
+            "button_style_2": "button--outlined",
+            "content_position": "center",
+            "content_alignment": "start",
+            "image": "shopify://shop_images/da4e8f7ada8681fcc0bf3df92e6c24209ac4670a.png",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "enable_media_overlay_desktop": true,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "image_mobile": "shopify://shop_images/0da24530bf1932c2f732c73e42ccb0e5e11694c0.png",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "enable_media_overlay_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "slide_pmBHLU"
+      ],
+      "name": "t:sections.hero-banner.name",
+      "settings": {
+        "enable_transparent_header": true,
+        "slider_height": 100,
+        "slideshow_autoplay_interval": 6,
+        "show_slideshow_navigation": true,
+        "slideshow_navigation_position": "hero__swiper-buttons--start",
+        "color_scheme_arrows": "",
+        "show_slideshow_pagination": true,
+        "slideshow_pagination_style": "style-1",
+        "floating_bar": false
+      }
+    },
+    "seo_content_UPwQym": {
+      "type": "seo-content",
+      "name": "t:sections.seo-content.name",
+      "settings": {
+        "section_layout": "normal",
+        "heading": "Forever Essentials",
+        "heading_size": "h6",
+        "text": "<p>MODA Y ESTILO  <br/>PARA CADA MUJER</p>",
+        "text_size_mobile": 24,
+        "text_size_tablet": 15,
+        "text_size_desktop": 28,
+        "text_size_unit": "px",
+        "content_alignment": "start",
+        "custom_background_color": "#f3eddf",
+        "custom_text_color": "",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_inner": "2",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "featured_products_XiQxrn": {
+      "type": "featured-products",
+      "blocks": {
+        "collection_mmWxex": {
+          "type": "collection",
+          "settings": {
+            "title": "",
+            "collection": "frontpage",
+            "products": [
+              "camiseta-adjustable-front-slim-v-neck",
+              "camiseta-sin-mangas-base",
+              "camiseta-invierno",
+              "camiseta-sin-mangas-italian-army-ultra-slim",
+              "chaqueta-denim-relaxed",
+              "mono-army",
+              "sobrecamisa-worker-oversized",
+              "top-raw-dot"
+            ],
+            "vendor": "",
+            "collection_of_products": "",
+            "show_unavailable_products": false,
+            "card_text_heading": "",
+            "card_text_button_label": "",
+            "card_text_button_style": "button--filled",
+            "card_text_button_link": "",
+            "content_position": "center",
+            "content_alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "collection_mmWxex"
+      ],
+      "name": "t:sections.featured-products.name",
+      "settings": {
+        "layout": "layout-1",
+        "heading": "New arrivals",
+        "heading_size": "h5",
+        "subheading": "",
+        "button_label": "View all",
+        "button_link": "",
+        "button_style": "button--text",
+        "max_products": 8,
+        "enable_slideshow_overflow": false,
+        "show_navigation_arrows": true,
+        "slideshow_autoplay_interval": 0,
+        "tab_button_style": "button--text",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "carousel_zikBxU": {
+      "type": "carousel",
+      "blocks": {
+        "card_C4nHxh": {
+          "type": "card",
+          "settings": {
+            "heading": "camisas",
+            "heading_size": "h5",
+            "text": "",
+            "button_label": "descubrir ahora",
+            "button_link": "",
+            "button_style": "button--text",
+            "aspect_ratio": "3/4",
+            "color_scheme": "scheme-2",
+            "media_position": "background",
+            "content_position": "end",
+            "content_alignment": "start",
+            "image": "shopify://shop_images/a861b66d091dbad798645445816de3ddbd7c4af7.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "4"
+          }
+        },
+        "card_zwkGGN": {
+          "type": "card",
+          "settings": {
+            "heading": "Vestidos",
+            "heading_size": "h5",
+            "text": "",
+            "button_label": "descubrir ahora",
+            "button_link": "",
+            "button_style": "button--text",
+            "aspect_ratio": "auto",
+            "color_scheme": "scheme-2",
+            "media_position": "background",
+            "content_position": "end",
+            "content_alignment": "start",
+            "image": "shopify://shop_images/30208c7f7b27bb3344f9769dad8a8269afeef965.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "4"
+          }
+        },
+        "card_HadM3j": {
+          "type": "card",
+          "settings": {
+            "heading": "Pantalones",
+            "heading_size": "h5",
+            "text": "",
+            "button_label": "descubrir ahora",
+            "button_link": "",
+            "button_style": "button--text",
+            "aspect_ratio": "auto",
+            "color_scheme": "scheme-2",
+            "media_position": "background",
+            "content_position": "end",
+            "content_alignment": "start",
+            "image": "shopify://shop_images/27bf7fae5cfdc8d0091aaa872fc5e123ff3bd28e.jpg",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "4"
+          }
+        },
+        "card_baPqrX": {
+          "type": "card",
+          "settings": {
+            "heading": "chaquetas",
+            "heading_size": "h5",
+            "text": "",
+            "button_label": "descubrir ahora",
+            "button_link": "",
+            "button_style": "button--text",
+            "aspect_ratio": "auto",
+            "color_scheme": "scheme-2",
+            "media_position": "background",
+            "content_position": "end",
+            "content_alignment": "start",
+            "image": "shopify://shop_images/9fa57cd15786274da16b0dbd3ba579ccc9e42027.png",
+            "video_external": "",
+            "show_controls_on_video": false,
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "video_external_mobile": "",
+            "show_controls_on_video_mobile": false,
+            "spacing_inner": "4"
+          }
+        }
+      },
+      "block_order": [
+        "card_C4nHxh",
+        "card_zwkGGN",
+        "card_HadM3j",
+        "card_baPqrX"
+      ],
+      "name": "t:sections.carousel.name",
+      "settings": {
+        "show_navigation_arrows": false,
+        "slideshow_autoplay_interval": 0,
+        "slides_per_view": 4,
+        "layout": "layout-1",
+        "heading": "¡que estas buscando?",
+        "heading_size": "h6",
+        "subheading": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "button--filled",
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-1",
+        "spacing_top": "0",
+        "spacing_bottom": "0"
+      }
+    },
+    "collection_highlight_VPDn3n": {
+      "type": "collection-highlight",
+      "name": "Collection Highlight",
+      "settings": {
+        "section_size": "medium",
+        "content_position": "left",
+        "content_vertical_position": "bottom-left",
+        "text_alignment": "left",
+        "subheading": "Meet our New Collection",
+        "subheading_size": 14,
+        "heading": "Nomad",
+        "heading_size": 32,
+        "text": "La colección perfecta para cualquier ocasión, este drop incluye camisas de botones de ajuste fácil, pantalones ligeros y chaquetas de lino transpirable, todo diseñado para ofrecer comodidad y estilo.",
+        "text_size": 16,
+        "text_max_width": 400,
+        "button_text": "CONOCER MÁS",
+        "button_link": "shopify://collections",
+        "button_text_size": 15,
+        "button_padding_vertical": 16,
+        "button_padding_horizontal": 48,
+        "button_border_radius": 0,
+        "media_type": "video",
+        "video": "https://marketingdigital.gco.com.co/Esprit/videos/videonuevapage.mp4",
+        "content_background_color": "#f3eddf",
+        "subheading_color": "#000000",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "button_background_color": "#000000",
+        "button_text_color": "#ffffff",
+        "button_hover_color": "#333333"
+      }
+    },
+    "featured_collection_split_KignEr": {
+      "type": "featured-collection-split",
+      "name": "collection split",
+      "settings": {
+        "section_size": "large",
+        "image": "shopify://shop_images/9e06abd6d6d48e97c06f159a8c5671eb101b9aef.jpg",
+        "heading": "",
+        "heading_size_desktop": 48,
+        "heading_size_mobile": 28,
+        "description": "",
+        "button_text": "Comprar Best Sellers",
+        "button_link": "",
+        "collection": "frontpage",
+        "color_scheme": "",
+        "text_color": "#ffffff",
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#000000",
+        "products_bg_color": "#ffffff",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "video_hero_section_ab8n4r": {
+      "type": "video-hero-section",
+      "name": "Video Hero",
+      "settings": {
+        "video_source": "url",
+        "desktop_video_url": "https://marketingdigital.gco.com.co/Esprit/videos/BANNERPRINCIPALABRILDSK.mp4",
+        "mobile_video_url": "https://marketingdigital.gco.com.co/Esprit/videos/BANNERPRINCIPALABRILMOB.mp4",
+        "section_height": "full"
+      }
+    },
+    "featured_products_dbVTcC": {
+      "type": "featured-products",
+      "blocks": {
+        "collection_pxYmXx": {
+          "type": "collection",
+          "settings": {
+            "title": "",
+            "collection": "frontpage",
+            "products": [],
+            "vendor": "",
+            "collection_of_products": "",
+            "show_unavailable_products": false,
+            "card_text_heading": "",
+            "card_text_button_label": "",
+            "card_text_button_style": "button--filled",
+            "card_text_button_link": "",
+            "content_position": "center",
+            "content_alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "collection_pxYmXx"
+      ],
+      "name": "t:sections.featured-products.name",
+      "settings": {
+        "layout": "layout-1",
+        "heading": "últimos visto",
+        "heading_size": "h4",
+        "subheading": "",
+        "button_label": "View all",
+        "button_link": "",
+        "button_style": "button--text",
+        "max_products": 8,
+        "enable_slideshow_overflow": false,
+        "show_navigation_arrows": true,
+        "slideshow_autoplay_interval": 0,
+        "tab_button_style": "button--filled",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "social_media_highlights_GD8rTE": {
+      "type": "social-media-highlights",
+      "blocks": {
+        "image_qiKQQY": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/a42c16d17d17b086f6bbebd3824afe8df0a635aa.png",
+            "image_url": "",
+            "card_aspect_ratio": "3/4"
+          }
+        },
+        "image_BUAWKK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/9517082d361b679ded361a7c6073c6f8f4f4496c.png",
+            "image_url": "",
+            "card_aspect_ratio": "3/4"
+          }
+        },
+        "image_LdVVEe": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/c1b580d5935c8ecb2868e3c240f7a43dc628ba0e.png",
+            "image_url": "",
+            "card_aspect_ratio": "3/4"
+          }
+        },
+        "image_jzHcz8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/991c6d10e39402c01748435df145cb4f4c22a61d.png",
+            "image_url": "",
+            "card_aspect_ratio": "3/4"
+          }
+        }
+      },
+      "block_order": [
+        "image_qiKQQY",
+        "image_BUAWKK",
+        "image_LdVVEe",
+        "image_jzHcz8"
+      ],
+      "name": "t:sections.social_media_highlights.name",
+      "settings": {
+        "layout": "stacked",
+        "heading": "Síguenos en instagram",
+        "heading_size": "h5",
+        "subheading": "",
+        "button_label": "Follow us",
+        "button_link": "#",
+        "button_style": "button--text",
+        "button_icon": "brand-instagram",
+        "content_card_color_scheme": "",
+        "media_aspect_ratio": "auto",
+        "autoplay_speed": 10,
+        "section_width": "max-w-full",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "trending_searches_F3kVC4": {
+      "type": "trending-searches",
+      "blocks": {
+        "search_term_Hb4UL6": {
+          "type": "search_term",
+          "settings": {
+            "term": "camisas",
+            "display_text": ""
+          }
+        },
+        "search_term_366D7k": {
+          "type": "search_term",
+          "settings": {
+            "term": "pantalones",
+            "display_text": ""
+          }
+        },
+        "search_term_MBViED": {
+          "type": "search_term",
+          "settings": {
+            "term": "vestidos",
+            "display_text": ""
+          }
+        },
+        "search_term_LRiJ3Y": {
+          "type": "search_term",
+          "settings": {
+            "term": "zapatos",
+            "display_text": ""
+          }
+        },
+        "search_term_9YXYTQ": {
+          "type": "search_term",
+          "settings": {
+            "term": "accesorios",
+            "display_text": ""
+          }
+        },
+        "search_term_NVgRry": {
+          "type": "search_term",
+          "settings": {
+            "term": "jeans",
+            "display_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "search_term_Hb4UL6",
+        "search_term_366D7k",
+        "search_term_MBViED",
+        "search_term_LRiJ3Y",
+        "search_term_9YXYTQ",
+        "search_term_NVgRry"
+      ],
+      "name": "Búsquedas en Tendencia",
+      "settings": {
+        "title": "BÚSQUEDAS EN TENDENCIA",
+        "title_size_desktop": 20,
+        "title_size_tablet": 20,
+        "title_size_mobile": 20,
+        "title_weight": "700",
+        "title_transform": "uppercase",
+        "title_letter_spacing": 1,
+        "title_color": "#000000",
+        "title_margin_bottom": 30,
+        "title_margin_bottom_mobile": 20,
+        "alignment": "flex-start",
+        "button_font_size": 14,
+        "button_font_size_tablet": 13,
+        "button_font_size_mobile": 12,
+        "button_font_weight": "400",
+        "button_text_transform": "uppercase",
+        "button_letter_spacing": 0.5,
+        "button_padding_vertical": 12,
+        "button_padding_horizontal": 20,
+        "button_padding_vertical_tablet": 10,
+        "button_padding_horizontal_tablet": 18,
+        "button_padding_vertical_mobile": 8,
+        "button_padding_horizontal_mobile": 16,
+        "buttons_gap": 12,
+        "buttons_gap_tablet": 10,
+        "buttons_gap_mobile": 8,
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#000000",
+        "button_border_color": "#000000",
+        "button_border_width": 1,
+        "button_border_radius": 0,
+        "button_hover_bg_color": "#000000",
+        "button_hover_text_color": "#ffffff",
+        "button_hover_border_color": "#000000",
+        "button_hover_transform": -2,
+        "button_hover_shadow": "0 4px 12px rgba(0,0,0,0.15)",
+        "show_popular_tags": false,
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "collection_highlight_i7tDdz": {
+      "type": "collection-highlight",
+      "name": "Collection Highlight",
+      "settings": {
+        "section_size": "small",
+        "content_position": "right",
+        "content_vertical_position": "center-left",
+        "text_alignment": "left",
+        "subheading": "¡Aprovecha un 25% de descuento al registrarte en nuestra Newsletter!",
+        "subheading_size": 20,
+        "heading": "",
+        "heading_size": 32,
+        "text": "Obtén un 25% de descuento en tu primera compra y sé el primero en conocer nuestros eventos, contenido exclusivo y precios especiales.",
+        "text_size": 16,
+        "text_max_width": 600,
+        "button_text": "SUSCRIBIRME",
+        "button_link": "shopify://collections",
+        "button_text_size": 14,
+        "button_padding_vertical": 18,
+        "button_padding_horizontal": 48,
+        "button_border_radius": 0,
+        "media_type": "image",
+        "image": "shopify://shop_images/d26bd30843be7d01164dbec6e80a5b656a81812d.jpg",
+        "video": "",
+        "content_background_color": "#f3eddf",
+        "subheading_color": "#000000",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "button_background_color": "#000000",
+        "button_text_color": "#ffffff",
+        "button_hover_color": "#333333"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "hero_banner_hKjCWb",
+    "seo_content_UPwQym",
+    "featured_products_XiQxrn",
+    "carousel_zikBxU",
+    "collection_highlight_VPDn3n",
+    "featured_collection_split_KignEr",
+    "video_hero_section_ab8n4r",
+    "featured_products_dbVTcC",
+    "social_media_highlights_GD8rTE",
+    "trending_searches_F3kVC4",
+    "collection_highlight_i7tDdz"
+  ]
+}

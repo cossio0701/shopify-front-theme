@@ -1,0 +1,667 @@
+{{ 'section-video-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign video_source = section.settings.video_source
+  assign desktop_video = section.settings.desktop_video
+  assign mobile_video = section.settings.mobile_video
+  assign desktop_video_url = section.settings.desktop_video_url
+  assign mobile_video_url = section.settings.mobile_video_url
+  assign section_height = section.settings.section_height
+  assign section_id = 'VideoHero--' | append: section.id
+-%}
+
+<div class="video-hero video-hero--{{ section_height }}" id="{{ section_id }}">
+  <div class="video-hero__container">
+    {%- if video_source == 'url' -%}
+      {%- comment -%} Videos desde URL {%- endcomment -%}
+      {%- if desktop_video_url != blank or mobile_video_url != blank -%}
+        <div class="video-hero__video-wrapper">
+          {%- comment -%} Video Desktop desde URL {%- endcomment -%}
+          {%- if desktop_video_url != blank -%}
+            <div class="video-hero__video-container video-hero__video--desktop">
+              {%- if desktop_video_url contains 'youtube.com' or desktop_video_url contains 'youtu.be' -%}
+                {%- liquid
+                  assign youtube_id = desktop_video_url | split: 'v=' | last | split: '&' | first
+                  if desktop_video_url contains 'youtu.be'
+                    assign youtube_id = desktop_video_url | split: 'youtu.be/' | last | split: '?' | first
+                  endif
+                -%}
+                <iframe 
+                  class="video-hero__iframe"
+                  src="https://www.youtube.com/embed/{{ youtube_id }}?autoplay=1&mute=1&loop=1&playlist={{ youtube_id }}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&hd=1&vq=hd1080&origin={{ shop.url }}"
+                  frameborder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen>
+                </iframe>
+              {%- else -%}
+                <video 
+                  class="video-hero__video"
+                  autoplay 
+                  muted 
+                  loop 
+                  playsinline
+                  preload="metadata"
+                  data-autoplay="true">
+                  <source src="{{ desktop_video_url }}" type="video/mp4">
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          
+          {%- comment -%} Video Mobile desde URL {%- endcomment -%}
+          {%- if mobile_video_url != blank -%}
+            <div class="video-hero__video-container video-hero__video--mobile">
+              {%- if mobile_video_url contains 'youtube.com' or mobile_video_url contains 'youtu.be' -%}
+                {%- liquid
+                  assign mobile_youtube_id = mobile_video_url | split: 'v=' | last | split: '&' | first
+                  if mobile_video_url contains 'youtu.be'
+                    assign mobile_youtube_id = mobile_video_url | split: 'youtu.be/' | last | split: '?' | first
+                  endif
+                -%}
+                <iframe 
+                  class="video-hero__iframe"
+                  src="https://www.youtube.com/embed/{{ mobile_youtube_id }}?autoplay=1&mute=1&loop=1&playlist={{ mobile_youtube_id }}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&hd=1&vq=hd720&origin={{ shop.url }}"
+                  frameborder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen>
+                </iframe>
+              {%- else -%}
+                <video 
+                  class="video-hero__video"
+                  autoplay 
+                  muted 
+                  loop 
+                  playsinline
+                  preload="metadata"
+                  data-autoplay="true">
+                  <source src="{{ mobile_video_url }}" type="video/mp4">
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              {%- endif -%}
+            </div>
+          {%- elsif desktop_video_url != blank -%}
+            {%- comment -%} Fallback: usar video desktop en mobile si no hay mobile específico {%- endcomment -%}
+            <div class="video-hero__video-container video-hero__video--mobile">
+              {%- if desktop_video_url contains 'youtube.com' or desktop_video_url contains 'youtu.be' -%}
+                {%- liquid
+                  assign youtube_id = desktop_video_url | split: 'v=' | last | split: '&' | first
+                  if desktop_video_url contains 'youtu.be'
+                    assign youtube_id = desktop_video_url | split: 'youtu.be/' | last | split: '?' | first
+                  endif
+                -%}
+                <iframe 
+                  class="video-hero__iframe"
+                  src="https://www.youtube.com/embed/{{ youtube_id }}?autoplay=1&mute=1&loop=1&playlist={{ youtube_id }}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&hd=1&vq=hd720&origin={{ shop.url }}"
+                  frameborder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen>
+                </iframe>
+              {%- else -%}
+                <video 
+                  class="video-hero__video"
+                  autoplay 
+                  muted 
+                  loop 
+                  playsinline
+                  preload="metadata"
+                  data-autoplay="true">
+                  <source src="{{ desktop_video_url }}" type="video/mp4">
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class="video-hero__placeholder">
+          <p>Por favor, ingresa las URLs de video para desktop y/o mobile.</p>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      {%- comment -%} Videos subidos directamente {%- endcomment -%}
+      {%- if desktop_video != blank or mobile_video != blank -%}
+        <div class="video-hero__video-wrapper">
+          {%- if desktop_video != blank -%}
+            <video 
+              class="video-hero__video video-hero__video--desktop"
+              autoplay 
+              muted 
+              loop 
+              playsinline
+              preload="metadata"
+              data-autoplay="true">
+              <source src="{{ desktop_video | file_url }}" type="video/mp4">
+              Tu navegador no soporta el elemento de video.
+            </video>
+          {%- endif -%}
+          
+          {%- if mobile_video != blank -%}
+            <video 
+              class="video-hero__video video-hero__video--mobile"
+              autoplay 
+              muted 
+              loop 
+              playsinline
+              preload="metadata"
+              data-autoplay="true">
+              <source src="{{ mobile_video | file_url }}" type="video/mp4">
+              Tu navegador no soporta el elemento de video.
+            </video>
+          {%- elsif desktop_video != blank -%}
+            <video 
+              class="video-hero__video video-hero__video--mobile"
+              autoplay 
+              muted 
+              loop 
+              playsinline
+              preload="metadata"
+              data-autoplay="true">
+              <source src="{{ desktop_video | file_url }}" type="video/mp4">
+              Tu navegador no soporta el elemento de video.
+            </video>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class="video-hero__placeholder">
+          <p>Por favor, sube videos para desktop y/o mobile.</p>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+    
+    {%- comment -%} Overlay opcional {%- endcomment -%}
+    <div class="video-hero__overlay"></div>
+  </div>
+</div>
+
+<style>
+.video-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video-hero--small {
+  height: 50vh;
+  min-height: 300px;
+}
+
+.video-hero--medium {
+  height: 70vh;
+  min-height: 400px;
+}
+
+.video-hero--full {
+  height: 100vh;
+  min-height: 500px;
+}
+
+.video-hero__container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-hero__video-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-hero__video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* COMPORTAMIENTO UNIVERSAL - MISMO PARA DESKTOP Y MOBILE */
+.video-hero__video,
+.video-hero__iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  outline: none;
+  object-fit: cover;
+  object-position: center;
+  
+  /* AJUSTE AUTOMÁTICO UNIVERSAL */
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.video-hero__video--desktop {
+  display: block;
+}
+
+.video-hero__video--mobile {
+  display: none;
+}
+
+.video-hero__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.video-hero__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.video-hero__placeholder p {
+  font-size: 1.2rem;
+  margin: 0;
+  max-width: 400px;
+}
+
+/* RESPONSIVE - SOLO CAMBIAR TAMAÑOS, NO COMPORTAMIENTO */
+@media screen and (max-width: 1024px) {
+  .video-hero--small {
+    height: 45vh;
+    min-height: 280px;
+  }
+  
+  .video-hero--medium {
+    height: 65vh;
+    min-height: 380px;
+  }
+  
+  .video-hero--full {
+    height: 100vh;
+    min-height: 450px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .video-hero--small {
+    height: 40vh;
+    min-height: 250px;
+  }
+  
+  .video-hero--medium {
+    height: 60vh;
+    min-height: 350px;
+  }
+  
+  .video-hero--full {
+    height: 100vh;
+    min-height: 400px;
+  }
+  
+  /* SOLO CAMBIAR CUÁL VIDEO SE MUESTRA - NO EL COMPORTAMIENTO */
+  .video-hero__video--desktop,
+  .video-hero__video-container.video-hero__video--desktop {
+    display: none;
+  }
+  
+  .video-hero__video--mobile,
+  .video-hero__video-container.video-hero__video--mobile {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .video-hero--small {
+    height: 35vh;
+    min-height: 200px;
+  }
+  
+  .video-hero--medium {
+    height: 50vh;
+    min-height: 300px;
+  }
+  
+  .video-hero--full {
+    height: 100vh;
+    min-height: 350px;
+  }
+}
+
+/* OPTIMIZACIONES DE RENDIMIENTO */
+.video-hero__video {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.video-hero__iframe {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* MEJORAS DE ACCESIBILIDAD */
+@media (prefers-reduced-motion: reduce) {
+  .video-hero__video,
+  .video-hero__iframe {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ESTADOS DE CARGA */
+.video-hero__video {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-hero__video.loaded {
+  opacity: 1;
+}
+
+.video-hero__iframe {
+  opacity: 1;
+}
+
+/* MEJORA PARA PANTALLAS DE ALTA DENSIDAD */
+@media screen and (-webkit-min-device-pixel-ratio: 2), 
+       screen and (min-resolution: 192dpi) {
+  .video-hero__video {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sectionId = '{{ section_id }}';
+  const section = document.getElementById(sectionId);
+  
+  if (!section) return;
+  
+  const videos = section.querySelectorAll('.video-hero__video[data-autoplay="true"]');
+  const iframes = section.querySelectorAll('.video-hero__iframe');
+  
+  // FUNCIÓN UNIVERSAL PARA AJUSTAR VIDEOS - MISMO COMPORTAMIENTO EN DESKTOP Y MOBILE
+  function adjustVideoSize() {
+    videos.forEach(function(video) {
+      if (video.videoWidth && video.videoHeight) {
+        const container = video.closest('.video-hero__video-container');
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const containerRatio = containerWidth / containerHeight;
+        const videoRatio = video.videoWidth / video.videoHeight;
+        
+        // LÓGICA UNIVERSAL - MISMO COMPORTAMIENTO EN TODOS LOS DISPOSITIVOS
+        if (containerRatio > videoRatio) {
+          // Container más ancho que video - ajustar por ancho
+          video.style.width = '100%';
+          video.style.height = 'auto';
+          video.style.minHeight = '100%';
+        } else {
+          // Container más alto que video - ajustar por altura  
+          video.style.height = '100%';
+          video.style.width = 'auto';
+          video.style.minWidth = '100%';
+        }
+      }
+    });
+    
+    // AJUSTAR IFRAMES CON LA MISMA LÓGICA
+    iframes.forEach(function(iframe) {
+      const container = iframe.closest('.video-hero__video-container');
+      if (container) {
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const containerRatio = containerWidth / containerHeight;
+        const youtubeRatio = 16 / 9; // YouTube aspect ratio
+        
+        // APLICAR MISMA LÓGICA QUE VIDEOS NATIVOS
+        if (containerRatio > youtubeRatio) {
+          iframe.style.width = '100%';
+          iframe.style.height = 'auto';
+          iframe.style.minHeight = '100%';
+        } else {
+          iframe.style.height = '100%';
+          iframe.style.width = 'auto';
+          iframe.style.minWidth = '100%';
+        }
+      }
+    });
+  }
+  
+  // FUNCIÓN PARA FORZAR REPRODUCCIÓN
+  function forcePlay(video) {
+    video.muted = true;
+    video.play().then(() => {
+      console.log('Video reproduciendo correctamente');
+      video.classList.add('loaded');
+      // AJUSTAR TAMAÑO DESPUÉS DE QUE CARGUE
+      setTimeout(adjustVideoSize, 100);
+    }).catch((error) => {
+      console.log('Intentando reproducir video después de interacción del usuario:', error);
+      
+      const playOnInteraction = function() {
+        video.play().then(() => {
+          video.classList.add('loaded');
+          setTimeout(adjustVideoSize, 100);
+        }).catch(console.log);
+      };
+      
+      document.addEventListener('click', playOnInteraction, { once: true });
+      document.addEventListener('touchstart', playOnInteraction, { once: true });
+    });
+  }
+  
+  // PROCESAR CADA VIDEO
+  videos.forEach(function(video) {
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.preload = 'metadata';
+    
+    video.addEventListener('loadedmetadata', function() {
+      adjustVideoSize();
+    });
+    
+    video.addEventListener('loadeddata', function() {
+      forcePlay(this);
+    });
+    
+    video.addEventListener('canplay', function() {
+      forcePlay(this);
+    });
+    
+    video.addEventListener('pause', function() {
+      setTimeout(() => {
+        if (this.paused && this.readyState >= 2) {
+          forcePlay(this);
+        }
+      }, 100);
+    });
+    
+    video.addEventListener('error', function(e) {
+      console.log('Error en video:', e);
+      const wrapper = this.closest('.video-hero__video-wrapper');
+      if (wrapper) {
+        wrapper.style.background = '#333';
+      }
+    });
+    
+    if (video.readyState >= 3) {
+      forcePlay(video);
+    }
+  });
+  
+  // OBSERVER PARA VIDEOS EN VIEWPORT
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const video = entry.target.querySelector('.video-hero__video[data-autoplay="true"]');
+          if (video && video.paused) {
+            forcePlay(video);
+          }
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    observer.observe(section);
+  }
+  
+  // AJUSTAR TAMAÑO EN RESIZE - UNIVERSAL
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(adjustVideoSize, 100);
+  });
+  
+  // AJUSTE INICIAL Y CON DELAYS
+  setTimeout(adjustVideoSize, 500);
+  setTimeout(adjustVideoSize, 1500);
+  
+  // FORZAR REPRODUCCIÓN CON DELAYS
+  setTimeout(() => {
+    videos.forEach(video => {
+      if (video.paused && video.readyState >= 2) {
+        forcePlay(video);
+      }
+    });
+  }, 1000);
+});
+
+// ASEGURAR REPRODUCCIÓN AL HACER FOCUS
+window.addEventListener('focus', function() {
+  const videos = document.querySelectorAll('#{{ section_id }} .video-hero__video[data-autoplay="true"]');
+  videos.forEach(video => {
+    if (video.paused && video.readyState >= 2) {
+      video.play().catch(console.log);
+    }
+  });
+});
+
+// OPTIMIZACIÓN PARA MOBILE
+if ('ontouchstart' in window) {
+  document.addEventListener('touchstart', function() {
+    const videos = document.querySelectorAll('#{{ section_id }} .video-hero__video[data-autoplay="true"]');
+    videos.forEach(video => {
+      if (video.paused) {
+        video.play().catch(console.log);
+      }
+    });
+  }, { once: true });
+}
+</script>
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tipo de Video"
+    },
+    {
+      "type": "select",
+      "id": "video_source",
+      "label": "Fuente del Video",
+      "options": [
+        {
+          "value": "upload",
+          "label": "Videos Subidos"
+        },
+        {
+          "value": "url",
+          "label": "URLs de Video"
+        }
+      ],
+      "default": "upload",
+      "info": "Selecciona si quieres subir videos directamente o usar URLs externas"
+    },
+    {
+      "type": "header",
+      "content": "Videos Subidos"
+    },
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Video para Desktop",
+      "info": "Sube un video para mostrar en pantallas grandes. Se adapta automáticamente al contenedor."
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Video para Mobile",
+      "info": "Sube un video específico para dispositivos móviles. Se adapta automáticamente al contenedor. Si no se proporciona, se usará el video de desktop."
+    },
+    {
+      "type": "header",
+      "content": "URLs de Video"
+    },
+    {
+      "type": "url",
+      "id": "desktop_video_url",
+      "label": "URL Video Desktop",
+      "info": "URL de YouTube (HD recomendado) o enlace directo a MP4 para desktop."
+    },
+    {
+      "type": "url",
+      "id": "mobile_video_url",
+      "label": "URL Video Mobile",
+      "info": "URL de YouTube o enlace directo a MP4 para mobile. Si no se proporciona, se usará el video de desktop."
+    },
+    {
+      "type": "header",
+      "content": "Configuración de Tamaño"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Altura de la Sección",
+      "options": [
+        {
+          "value": "small",
+          "label": "Pequeño (50% de pantalla)"
+        },
+        {
+          "value": "medium",
+          "label": "Mediano (70% de pantalla)"
+        },
+        {
+          "value": "full",
+          "label": "Pantalla Completa (100%)"
+        }
+      ],
+      "default": "medium",
+      "info": "El video se adaptará automáticamente a la altura seleccionada"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero",
+      "settings": {
+        "video_source": "upload",
+        "section_height": "medium"
+      }
+    }
+  ]
+}
+{% endschema %}

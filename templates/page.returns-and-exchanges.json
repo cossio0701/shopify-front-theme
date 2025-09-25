@@ -1,0 +1,168 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "breadcrumbs": true,
+        "show_page_title": true,
+        "page_title_alignment": "text-center",
+        "info_title": "",
+        "info_content": "",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "e4a22221-96e8-47eb-8e41-ff9780104ed3": {
+      "type": "page-banner",
+      "settings": {
+        "enable_transparent_header": true,
+        "heading": "Returns and exchanges",
+        "heading_size": "h3",
+        "text": "",
+        "show_default_description": true,
+        "show_on_description": "desktop",
+        "content_position": "center",
+        "content_alignment": "center",
+        "media_position": "background",
+        "page_menu": "",
+        "enable_breadcrumbs": true,
+        "section_height": "auto",
+        "content_width": "100%",
+        "video_external": "",
+        "show_controls_on_video": false,
+        "section_height_mobile": "auto",
+        "video_external_mobile": "",
+        "show_controls_on_video_mobile": false,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-5",
+        "color_scheme_for_media": "",
+        "spacing_top": "2",
+        "spacing_bottom": "1"
+      }
+    },
+    "15d37dcd-dfe5-404c-80f1-8f76c2017e23": {
+      "type": "accordions",
+      "blocks": {
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-0": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "WHAT IS CHEVIGNON’S RETURN POLICY? ",
+            "text": "<p>Any purchase made from Chevignon stores can be returned or exchanged within 30 days (some exceptions may apply) with proof of purchase. Items must be unworn, unaltered and in new condition with all tags attached. Jeans that have been hemmed or altered are <strong>not </strong>eligible for return or exchange. Items marked “Final Sale” are not eligible for returns. The refund value of the merchandise returned is based on the original form and amount of payment. Please follow the instructions on the portal to proceed with a return.</p>",
+            "page": ""
+          }
+        },
+        "topic_dc84qH": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "START A RETURN ",
+            "text": "<p>To initiate a return or exchange, please click our return portal below. You will answer a few short questions to receive a printable return label. We will issue you a refund once we’ve received your package and inspect the returned items.</p><p><a href=\"https://returns.chevignon.us/\" target=\"_blank\" title=\"https://returns.chevignon.us/\">START RETURN</a></p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-0",
+        "topic_dc84qH"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "scheme-1",
+        "spacing_top": "2",
+        "spacing_bottom": "1"
+      }
+    },
+    "accordions_AUAWib": {
+      "type": "accordions",
+      "blocks": {
+        "topic_FdANDz": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "START A EXCHANGE ",
+            "text": "<p>To initiate an exchange for a <strong>different</strong> <strong>size</strong>, please click our return portal below. Please follow the steps to receive a printable label and select the item you would like to exchange. Once we receive the package, we will ship out your new order.</p><p><a href=\"https://returns.chevignon.us/\" title=\"https://returns.chevignon.us/\">START EXCHANGE</a></p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "topic_FdANDz"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "1",
+        "spacing_bottom": "1"
+      }
+    },
+    "accordions_DKVQMe": {
+      "type": "accordions",
+      "blocks": {
+        "topic_kFzkWj": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "REFUNDS",
+            "text": "<p>Refunds will be issued to the original method of payment, or store credit. We cannot process a return if no purchasing information is available. <strong>Please note</strong>: <strong>Shipping costs are not refundable on returns.  </strong></p><p>Once we receive your return, your refund will be issued within 5 to 10 business days. Your bank or credit card institution may take up to 2 weeks to acknowledge the credit after we process the refund. </p><p>We cannot refund a purchase made with store credit to another method of payment. Gift cards are non-transferable, non-refundable and are not redeemable for cash. We cannot replace lost or stolen gift cards. </p><p>We do not offer free returns for international orders. Customers are responsible for covering the cost of any returned items. </p>",
+            "page": ""
+          }
+        },
+        "topic_riwCPR": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "GIFT REFUNDS ",
+            "text": "<p>Gift returns will be refunded either as store credit, or as a refund to the original purchaser’s payment method. We cannot process a return if no purchasing information is available.</p>",
+            "page": ""
+          }
+        },
+        "topic_NefVjA": {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "RETURN SHIPMENTS",
+            "text": "<p>Chevignon provides prepaid return labels exclusively for the contiguous United States. We cannot be held responsible for items that are delivered to the wrong address, lost or stolen in transit or otherwise delayed by third-party shipping companies, postal depots, freight forwarders, etc. </p><p>All return shipments should be directed to our distribution center:  </p><p><strong>Chevignon US Warehouse</strong> 5220 Northwest 72nd Avenue, Warehouse #3, Miami Florida 33166, United States</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "topic_kFzkWj",
+        "topic_riwCPR",
+        "topic_NefVjA"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "e4a22221-96e8-47eb-8e41-ff9780104ed3",
+    "15d37dcd-dfe5-404c-80f1-8f76c2017e23",
+    "accordions_AUAWib",
+    "accordions_DKVQMe"
+  ]
+}
