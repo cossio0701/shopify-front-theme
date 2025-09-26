@@ -176,11 +176,16 @@ suggest_next_steps() {
         start)
             echo "1. Realiza tus cambios en el código"
             echo "2. Confirma cambios: sf commit"
-            echo "3. Publica cuando esté listo: sf publish --dry-run"
+            echo "3. Fusiona cuando esté listo: sf merge --dry-run"
             ;;
         commit)
             echo "1. Verifica cambios: sf diff --with-master"
-            echo "2. Publica: sf publish --dry-run (primero)"
+            echo "2. Fusiona: sf merge --dry-run (primero)"
+            echo "3. Fusiona: sf merge"
+            ;;
+        merge)
+            echo "1. Prueba los cambios localmente: sf dev"
+            echo "2. Publica cuando esté listo: sf publish --dry-run"
             echo "3. Publica: sf publish"
             ;;
         publish)
@@ -697,8 +702,8 @@ commit_changes() {
     suggest_next_steps "commit"
 }
 
-# Comando: sf publish
-publish_changes() {
+# Comando: sf merge
+merge_changes() {
     validate_env
     get_current_branch
 
@@ -713,7 +718,7 @@ publish_changes() {
         return 1
     fi
 
-    echo "🚀 Preparando publicación de: $CURRENT_BRANCH"
+    echo "🔀 Preparando merge de: $CURRENT_BRANCH"
 
     # Mostrar resumen de cambios
     echo "📊 Resumen de cambios:"
@@ -725,14 +730,13 @@ publish_changes() {
         
 
     if [[ "$dry_run" == true ]]; then
-        echo "🔍 Modo dry-run: Simulando publicación..."
+        echo "🔍 Modo dry-run: Simulando merge..."
         echo "  ✅ Verificar que no hay conflictos"
         echo "  ✅ Cambiar a master"
         echo "  ✅ Fusionar $CURRENT_BRANCH"
-        echo "  ✅ Publicar en Shopify"
-        echo "  ✅ Subir cambios a remoto"
+        echo "  ✅ Sincronizar con Shopify Admin"
             
-        echo "💡 Ejecuta sin --dry-run cuando estés listo para publicar."
+        echo "💡 Ejecuta sin --dry-run cuando estés listo para mergear."
         return 0
     fi
 
@@ -750,19 +754,18 @@ publish_changes() {
         fi
     fi
 
-    # Ejecutar sync antes de publicar para actualizar y resolver conflictos
-    echo "🔄 Ejecutando sincronización completa antes de publicar..."
+    # Ejecutar sync después del merge para descargar cambios de Shopify Admin
+    echo "🔄 Ejecutando sincronización después del merge..."
     if ! sync_changes --force; then
-        echo "❌ Error: Falló la sincronización. No se puede continuar con la publicación."
-        return 1
+        echo "❌ Error: Falló la sincronización. El merge se completó, pero verifica los cambios."
     fi
 
     # Después de sync, deberíamos estar en master
-    echo "🚀 Publicando cambios..."
+    echo "🚀 Fusionando cambios..."
 
     local feature_branch="$CURRENT_BRANCH"
 
-    # Backup automático antes de publicar
+    # Backup automático antes de mergear
     echo "💾 Creando backup automático..."
     git stash push -m "backup-auto-$(date '+%Y%m%d-%H%M%S')" >/dev/null 2>&1 || true
 
@@ -774,27 +777,87 @@ publish_changes() {
         echo "1. Edita los archivos en conflicto"
         echo "2. Ejecuta: git add <archivo>"
         echo "3. Ejecuta: git commit -m 'Resolve conflicts'"
-        echo "4. Luego: shopify theme push -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
-        echo "5. Finalmente: git push origin master"
+        echo "4. Luego: sf publish"
             
         echo "O usa 'sf backup restore' para restaurar el estado anterior."
         exit 1
     fi
 
+    log_history "Merged changes from $feature_branch to master"
+    echo "✅ ¡Merge completado exitosamente!"
+    echo "🌐 Rama fusionada: $feature_branch → master"
+
+    # Sugerir probar cambios si no hay conflictos
+    if git diff --quiet && git diff --staged --quiet; then
+        echo "💡 No hay conflictos. Puedes probar los cambios localmente."
+        echo "   Ejecuta: sf dev"
+        echo "   O publica directamente: sf publish"
+    else
+        echo "⚠️  Hay cambios pendientes. Revisa y confirma antes de publicar."
+    fi
+
+    suggest_next_steps "merge"
+}
+
+# Comando: sf publish
+publish_changes() {
+    validate_env
+    get_current_branch
+
+    # Parsear flags
+    local flags_output=$(parse_flags "$@")
+    local dry_run=$(echo "$flags_output" | cut -d' ' -f1)
+    local force=$(echo "$flags_output" | cut -d' ' -f2)
+    local verbose=$(echo "$flags_output" | cut -d' ' -f3)
+
+    if [[ "$CURRENT_BRANCH" != "master" ]]; then
+        echo "❌ Error: Debes estar en master para publicar. Usa 'sf merge' primero."
+        return 1
+    fi
+
+    echo "🚀 Preparando publicación desde master"
+
+    # Mostrar resumen de cambios pendientes
+    echo "📊 Resumen de cambios por publicar:"
+    echo "Rama: $CURRENT_BRANCH"
+    echo "Cambios sin commit:"
+    git status --porcelain
+        
+    if [[ "$dry_run" == true ]]; then
+        echo "🔍 Modo dry-run: Simulando publicación..."
+        echo "  ✅ Sincronizar con Shopify Admin"
+        echo "  ✅ Publicar en Shopify"
+        echo "  ✅ Subir cambios a remoto"
+            
+        echo "💡 Ejecuta sin --dry-run cuando estés listo para publicar."
+        return 0
+    fi
+
+    # Validaciones críticas
+    if [[ "$force" != true ]]; then
+        check_uncommitted_changes
+    fi
+
+    # Ejecutar sync para sincronizar antes de publicar
+    echo "🔄 Ejecutando sincronización antes de publicar..."
+    if ! sync_changes --force; then
+        echo "❌ Error: Falló la sincronización. No se puede continuar con la publicación."
+        return 1
+    fi
+
+    # Después de sync, estamos listos para publicar
     echo "📤 Publicando en Shopify..."
     shopify theme push -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
         echo "❌ Error: Falló shopify theme push."
-        echo "💡 El merge se completó, pero falló la publicación en Shopify."
-        echo "   Puedes intentar nuevamente o publicar manualmente."
+        echo "💡 Puedes intentar nuevamente o publicar manualmente."
         return 1
     }
 
     git push origin master || { echo "❌ Error: Falló git push."; return 1; }
 
-    log_history "Published changes from $feature_branch to master"
+    log_history "Published changes to Shopify"
     echo "✅ ¡Publicación completada exitosamente!"
     echo "🌐 Cambios publicados en: https://$SHOPIFY_STORE"
-    echo "� Rama fusionada: $feature_branch → master"
 
     suggest_next_steps "publish"
 }
@@ -1110,7 +1173,7 @@ resolve_conflicts() {
         echo "   shopify theme push -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
         echo ""
         echo "💡 O si tienes cambios en una rama de trabajo, considera:"
-        echo "   sf publish  # Para publicar cambios desde una rama de trabajo"
+        echo "   sf merge  # Para fusionar cambios desde una rama de trabajo"
         return 0
     fi
 
@@ -1204,7 +1267,7 @@ finish_branch() {
         echo "✅ Rama fusionada en master"
     else
         echo "⚠️  Rama NO fusionada en master"
-        echo "💡 Asegúrate de haber ejecutado 'sf publish' primero."
+        echo "💡 Asegúrate de haber ejecutado 'sf merge' primero."
         if ! confirm_action "¿Eliminar rama de todas formas?" "n"; then
             return 1
         fi
@@ -1935,7 +1998,8 @@ show_help() {
     echo "  sf init      - Inicializa el proyecto y configura sf"
     echo "  sf start     - Inicia un nuevo flujo de trabajo creando una rama"
     echo "  sf commit    - Confirma cambios en la rama actual"
-    echo "  sf publish   - Fusiona rama a master y publica en Shopify"
+    echo "  sf merge     - Fusiona rama a master y sincroniza cambios"
+    echo "  sf publish   - Publica cambios fusionados en Shopify"
     echo "  sf sync      - Sincroniza cambios desde Shopify Admin"
     echo "  sf resolve   - Resuelve conflictos y confirma cambios"
     echo "  sf status    - Muestra estado de Git y Shopify"
@@ -2053,6 +2117,7 @@ main() {
             case "$1" in
                 start) start_branch ;;
                 commit) commit_changes ;;
+                merge) shift; merge_changes "$@" ;;
                 publish) shift; publish_changes "$@" ;;
                 sync) shift; sync_changes "$@" ;;
                 resolve) resolve_conflicts ;;
