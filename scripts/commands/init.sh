@@ -1,6 +1,6 @@
 #!/bin/bash
-source utils/env.sh
-source utils/common.sh
+source scripts/utils/env.sh
+source scripts/utils/common.sh
 
 init() {
     echo "🚀 Inicializando proyecto sf..."

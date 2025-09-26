@@ -1,7 +1,7 @@
 #!/bin/bash
-source utils/env.sh
-source utils/git.sh
-source utils/common.sh
+source scripts/utils/env.sh
+source scripts/utils/git.sh
+source scripts/utils/common.sh
 
 resolve() {
     validate_env

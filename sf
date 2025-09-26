@@ -13,14 +13,14 @@ HISTORY_FILE=".sf_history"
 # Función principal
 main() {
     case "${1:-help}" in
-        init) source commands/init.sh; init "$@" ;;
+        init) source scripts/commands/init.sh; init "$@" ;;
         *) 
-            source utils/env.sh
+            source scripts/utils/env.sh
             load_env
             validate_dependencies
 
             # Validaciones preventivas inteligentes
-            source utils/git.sh
+            source scripts/utils/git.sh
             if ! preventive_checks "$1"; then
                 return 1
             fi
@@ -29,31 +29,31 @@ main() {
             smart_suggestions "$1"
 
             case "$1" in
-                start) source commands/start.sh; start ;;
-                commit) source commands/commit.sh; commit ;;
-                merge) shift; source commands/merge.sh; merge "$@" ;;
-                publish) shift; source commands/publish.sh; publish "$@" ;;
-                sync) shift; source commands/sync.sh; sync "$@" ;;
-                resolve) source commands/resolve.sh; resolve ;;
-                status) source commands/status.sh; status ;;
-                finish) source commands/finish.sh; finish ;;
-                stash) source commands/stash.sh; stash ;;
-                log) shift; source commands/log.sh; log "$@" ;;
-                diff) shift; source commands/diff.sh; diff "$@" ;;
-                clean) shift; source commands/clean.sh; clean "$@" ;;
-                backup) shift; source commands/backup.sh; backup "$@" ;;
-                pr) shift; source commands/pr.sh; pr "$@" ;;
-                dev) shift; source commands/dev.sh; dev "$@" ;;
-                help|--help|-h) source commands/help.sh; help ;;
-                *) echo "❌ Comando desconocido: $1"; source commands/help.sh; help; exit 1 ;;
+                start) source scripts/commands/start.sh; start ;;
+                commit) source scripts/commands/commit.sh; commit ;;
+                merge) shift; source scripts/commands/merge.sh; merge "$@" ;;
+                publish) shift; source scripts/commands/publish.sh; publish "$@" ;;
+                sync) shift; source scripts/commands/sync.sh; sync "$@" ;;
+                resolve) source scripts/commands/resolve.sh; resolve ;;
+                status) source scripts/commands/status.sh; status ;;
+                finish) source scripts/commands/finish.sh; finish ;;
+                stash) source scripts/commands/stash.sh; stash ;;
+                log) shift; source scripts/commands/log.sh; log "$@" ;;
+                diff) shift; source scripts/commands/diff.sh; diff "$@" ;;
+                clean) shift; source scripts/commands/clean.sh; clean "$@" ;;
+                backup) shift; source scripts/commands/backup.sh; backup "$@" ;;
+                pr) shift; source scripts/commands/pr.sh; pr "$@" ;;
+                dev) shift; source scripts/commands/dev.sh; dev "$@" ;;
+                help|--help|-h) source scripts/commands/help.sh; help ;;
+                *) echo "❌ Comando desconocido: $1"; source scripts/commands/help.sh; help; exit 1 ;;
             esac
             ;;
     esac
 }
 
 # Para agregar un nuevo comando 'nuevo':
-# 1. Crear commands/nuevo.sh con la función 'nuevo()'
-# 2. En main(), agregar: source commands/nuevo.sh; nuevo "$@"
+# 1. Crear scripts/commands/nuevo.sh con la función 'nuevo()'
+# 2. En main(), agregar: source scripts/commands/nuevo.sh; nuevo "$@"
 # 3. Asegurar que source los utils necesarios en nuevo.sh
 # 4. Si llama a otros comandos, sourcearlos en nuevo.sh
 

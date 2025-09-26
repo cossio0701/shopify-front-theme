@@ -1,8 +1,8 @@
 #!/bin/bash
-source utils/env.sh
-source utils/ui.sh
-source utils/git.sh
-source utils/common.sh
+source scripts/utils/env.sh
+source scripts/utils/ui.sh
+source scripts/utils/git.sh
+source scripts/utils/common.sh
 
 start() {
     validate_env
@@ -58,7 +58,7 @@ start() {
 
     # Sincronizar con Shopify y remoto antes de crear rama
     echo "🔄 Sincronizando con Shopify y remoto..."
-    source commands/sync.sh
+    source scripts/commands/sync.sh
     sync --force || { echo "❌ Error: Falló sincronización."; return 1; }
 
     # Menú interactivo para seleccionar tipo de flujo
