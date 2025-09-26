@@ -18,6 +18,13 @@ load_env() {
     fi
 }
 
+# Función para registrar acciones en el historial
+log_history() {
+    local message="$1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$timestamp] $message" >> "$HISTORY_FILE"
+}
+
 # Función para validar dependencias
 validate_dependencies() {
     local missing_deps=()
