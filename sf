@@ -1560,8 +1560,7 @@ start_dev_server() {
     validate_env
 
     echo "🚀 Iniciando servidor de desarrollo..."
-    echo "🔗 Shopify Store: $SHOPIFY_STORE"
-    echo "🆔 Theme ID: $SHOPIFY_THEME_ID"
+    echo "🎯 Usando configuración por defecto de Shopify CLI (tema live/producción)"
     echo ""
 
     # Parsear argumentos PRIMERO
@@ -1612,7 +1611,7 @@ start_dev_server() {
     fi
 
     # Construir comando
-    local cmd="shopify theme dev --store=\"$SHOPIFY_STORE\" --theme=\"$SHOPIFY_THEME_ID\" --port=\"$port\" --host=\"$host\""
+    local cmd="shopify theme dev --port=\"$port\" --host=\"$host\""
 
     if [[ "$test_mode" == true ]]; then
         echo "🧪 Modo de pruebas activado (desarrollo sin recarga automática)"
