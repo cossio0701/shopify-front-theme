@@ -705,6 +705,14 @@ publish_changes() {
         fi
     fi
 
+    # Ejecutar sync antes de publicar para actualizar y resolver conflictos
+    echo "🔄 Ejecutando sincronización completa antes de publicar..."
+    if ! sync_changes --force; then
+        echo "❌ Error: Falló la sincronización. No se puede continuar con la publicación."
+        return 1
+    fi
+
+    # Después de sync, deberíamos estar en master
     echo "🚀 Publicando cambios..."
 
     local feature_branch="$CURRENT_BRANCH"
@@ -713,41 +721,7 @@ publish_changes() {
     echo "💾 Creando backup automático..."
     git stash push -m "backup-auto-$(date '+%Y%m%d-%H%M%S')" >/dev/null 2>&1 || true
 
-    git checkout master || { echo "❌ Error: No se pudo cambiar a master."; return 1; }
-    git pull origin master || { echo "❌ Error: Falló git pull."; return 1; }
-
-    # Sincronizar con Shopify Admin antes de fusionar
-    echo "🔄 Sincronizando con Shopify Admin antes de publicar..."
-    local shopify_changes_before=$(git status --porcelain | wc -l)
-    if shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" 2>/dev/null; then
-        local shopify_changes_after=$(git status --porcelain | wc -l)
-        if [[ $shopify_changes_after -gt $shopify_changes_before ]]; then
-            echo "✅ Se incorporaron cambios recientes desde Shopify Admin."
-            # Verificar conflictos con committed
-            local conflicted_files=()
-            for file in $(git diff --name-only); do
-                if git diff HEAD "$file" >/dev/null 2>&1; then
-                    conflicted_files+=("$file")
-                fi
-            done
-            resolve_shopify_conflicts "${conflicted_files[@]}"
-            if [[ $? -eq 1 ]]; then
-                echo "  Después, vuelve a ejecutar sf publish"
-                return 1
-            fi
-            # Hacer commit automático de los cambios de Shopify
-                git add . && git commit -m "sync: cambios desde admin Shopify antes de publicar" || {
-                    echo "⚠️  No se pudieron confirmar los cambios de Shopify automáticamente."
-                    echo "💡 Continuando con la publicación..."
-                }
-        else
-            echo "✅ Master está sincronizado con Shopify Admin."
-        fi
-    else
-        echo "⚠️  No se pudo sincronizar con Shopify Admin."
-        echo "💡 Continuando con la publicación usando el estado local..."
-    fi
-
+    # Después de sync, estamos en master y listos para el merge
     if ! git merge "$feature_branch"; then
         echo "❌ Error: Conflicto en merge."
         echo ""
@@ -775,7 +749,7 @@ publish_changes() {
     log_history "Published changes from $feature_branch to master"
     echo "✅ ¡Publicación completada exitosamente!"
     echo "🌐 Cambios publicados en: https://$SHOPIFY_STORE"
-    echo "📊 Rama fusionada: $feature_branch → master"
+    echo "� Rama fusionada: $feature_branch → master"
 
     suggest_next_steps "publish"
 }
