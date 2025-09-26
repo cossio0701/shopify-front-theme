@@ -824,7 +824,7 @@ sync_changes() {
                     local base_file=$(mktemp)
                     local ours_file=$(mktemp)
                     local theirs_file=$(mktemp)
-                    git show HEAD:"$file" > "$base_file" 2>/dev/null || echo "" > "$base_file"
+                    echo "" > "$base_file"
                     git show HEAD:"$file" > "$ours_file" 2>/dev/null || echo "" > "$ours_file"
                     cat "$file" > "$theirs_file"
                     git merge-file "$ours_file" "$base_file" "$theirs_file" >/dev/null 2>&1
