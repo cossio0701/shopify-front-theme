@@ -1,42 +1,65 @@
-# sf - Shopify Flow CLI
+# sf - Shopify Flow CLI v1.0
 
 Un CLI en Bash para gestionar flujos de trabajo entre Git y Shopify Admin, evitando conflictos y facilitando la sincronización.
 
-## 🚀 Instalación Rápida
+## 🚀 Flujo Principal de Desarrollo
+
+Para realizar un cambio y publicarlo rápidamente (después de la configuración inicial):
+
+1. **Sincroniza antes de trabajar**: `sf sync`
+2. **Inicia desarrollo**: `sf start` (crea rama)
+3. **Desarrolla tus cambios** en el código
+4. **Prueba localmente**: `sf dev`
+5. **Confirma cambios**: `sf commit`
+6. **Fusiona rama a master**: `sf merge --dry-run` (simula merge)
+7. **Fusiona rama**: `sf merge` (fusiona y sincroniza con Shopify)
+8. **Prueba la fusión**: `sf dev --test` (verifica que todo funcione)
+9. **Publica en Shopify**: `sf publish`
+10. **Limpia**: `sf finish`
+
+**Diagrama del flujo:**
+
+```text
+Sync → Start → Develop → Test → Commit → Merge → Test Merge → Publish → Finish
+   ↑                                                                        ↓
+   └─────────────────────── Repite para siguiente cambio ───────────────────┘
+```
+
+## 🧠 Características Inteligentes
+
+El script sf incluye validaciones preventivas y sugerencias inteligentes para evitar errores comunes:
+
+- **🔍 Validaciones preventivas:** Detecta problemas antes de que ocurran (repositorio no inicializado, conexiones faltantes)
+- **💡 Sugerencias contextuales:** Recomienda próximos pasos basados en el estado actual del proyecto
+- **⚠️ Detección de conflictos:** Identifica posibles conflictos antes de operaciones críticas
+- **💾 Backups automáticos:** Crea respaldos antes de operaciones riesgosas
+- **📊 Análisis de estado:** Proporciona información completa del estado del proyecto y rama actual
+
+Cada comando incluye mensajes específicos con soluciones cuando algo sale mal.
+
+### Configuración Inicial (una sola vez por proyecto)
+
+Antes de comenzar a desarrollar, configura el proyecto una vez:
+
+- **Instala dependencias**: Asegúrate de tener Git y Shopify CLI instalados.
+
+## 📦 Instalación Rápida
 
 ```bash
-# 1. Clona o descarga el script sf
+# 1. Da permisos de ejecución al script sf
 chmod +x sf
 
-# 2. Crea archivo de configuración
-echo 'SHOPIFY_STORE="tu-tienda.myshopify.com"' > .env
-echo 'SHOPIFY_THEME_ID="123456789"' >> .env
-
-# 3. Configura alias global (opcional)
+# 2. Configura alias global para ejecutar sf desde cualquier directorio
 echo 'alias sf="/ruta/absoluta/al/proyecto/sf"' >> ~/.bashrc
 source ~/.bashrc
 
-# 4. Inicializa el proyecto
+# 3. Inicializa el proyecto (esto genera el archivo .env)
 sf init
-```
 
-## 🎯 Flujo de Desarrollo Principal
-
-### 📋 Resumen del Flujo
-
-El flujo de desarrollo sigue un ciclo claro: **preparar** → **desarrollar** → **publicar** → **limpiar**. Cada paso está diseñado para evitar conflictos entre Git y Shopify Admin.
-
-```text
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Config    │ -> │  Sincroniza │ -> │   Crea Rama │ -> │   Desarrolla │ -> │   Publica   │
-│   (init)    │    │    (sync)   │    │   (start)   │    │   (commit)   │    │  (publish)  │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-                                                                                 │
-                                                                                 v
-                                                                    ┌─────────────┐
-                                                                    │   Limpia    │
-                                                                    │  (finish)   │
-                                                                    └─────────────┘
+# 4. Configura las variables de entorno en el archivo .env generado
+# Edita .env y establece:
+# SHOPIFY_STORE="tu-tienda.myshopify.com"
+# SHOPIFY_THEME_ID="123456789"
 ```
 
 ### 1. `sf init` - Configuración Inicial
@@ -129,11 +152,38 @@ sf commit
 - **Ejemplos interactivos:** Muestra ejemplos de formatos válidos cuando es necesario
 - **Flexibilidad:** Permite continuar con mensajes no convencionales si se confirma
 
-### 5. `sf publish` - Publicar Cambios
+### 5. `sf merge` - Fusionar Cambios a Master
 
-**¿Qué hace?** Fusiona tu rama a master y publica los cambios en Shopify Admin.
+**¿Qué hace?** Fusiona la rama de trabajo actual a la rama master y sincroniza con Shopify Admin.
 
-**Cuándo usarlo:** Cuando tus cambios están listos para producción.
+**Cuándo usarlo:** Cuando tus cambios están listos para ser integrados a la rama principal.
+
+```bash
+sf merge                      # Fusionar normalmente
+sf merge --dry-run           # Simula fusión para ver qué cambiaría
+sf merge --force             # Omite algunas validaciones de seguridad
+```
+
+**¿Qué hace exactamente?**
+
+- ✅ Fusiona la rama actual a master
+- ✅ Sincroniza cambios desde Shopify Admin
+- ✅ Crea backup automático antes de la operación
+- ✅ Detecta conflictos potenciales
+- ✅ Sugiere próximos pasos después del merge
+
+**Validaciones inteligentes:**
+
+- **Prevención de conflictos:** Verifica conflictos antes de fusionar
+- **Backup automático:** Guarda estado actual en caso de problemas
+- **Sincronización:** Trae cambios de Shopify Admin después del merge
+- **Sugerencias:** Recomienda probar cambios o publicar directamente
+
+### 6. `sf publish` - Publicar Cambios
+
+**¿Qué hace?** Publica los cambios desde la rama master a Shopify Admin (debes estar en master).
+
+**Cuándo usarlo:** Después de fusionar cambios a master y verificar que todo funciona.
 
 ```bash
 sf publish                    # Publica normalmente
@@ -141,7 +191,37 @@ sf publish --dry-run         # Simula publicación (recomendado primero)
 sf publish --force           # Omite validaciones de seguridad
 ```
 
-### 6. `sf finish` - Finalizar Trabajo
+**¿Qué hace exactamente?**
+
+- ✅ Sincroniza con Shopify Admin antes de publicar
+- ✅ Publica tema en Shopify usando shopify theme push
+- ✅ Sube cambios a repositorio remoto (git push)
+- ✅ Valida que estés en la rama master
+
+**Importante:** Debes estar en la rama master para publicar. Usa `sf merge` primero si estás en una rama de trabajo.
+
+### 7. `sf resolve` - Resolver Conflictos
+
+**¿Qué hace?** Confirma cambios resueltos después de un conflicto y los publica automáticamente.
+
+**Cuándo usarlo:** Después de resolver conflictos manualmente en los archivos.
+
+```bash
+sf resolve
+# ✅ Agrega todos los archivos resueltos
+# ✅ Confirma con mensaje "resolve: conflictos sync Shopify"
+# ✅ Sube cambios a repositorio remoto
+# ✅ Publica en Shopify Admin
+```
+
+**Flujo típico de resolución:**
+
+1. Un comando como `sf sync` o `sf merge` detecta conflictos
+2. Resuelve conflictos manualmente editando los archivos
+3. Ejecuta `git add <archivos>` para marcar como resueltos
+4. Usa `sf resolve` para confirmar y publicar automáticamente
+
+### 8. `sf finish` - Finalizar Trabajo
 
 **¿Qué hace?** Elimina la rama de trabajo después de confirmar que todo está bien.
 
@@ -174,7 +254,7 @@ sf publish # Cuando esté listo
 
 ### Resolver Conflictos de Merge
 
-Si `sf publish` falla por conflictos:
+Si `sf merge` o `sf sync` falla por conflictos:
 
 ```bash
 # 1. Revisa qué archivos tienen conflictos
@@ -186,8 +266,12 @@ git status
 # 3. Agrega los archivos resueltos
 git add archivo-conflicto.js
 
-# 4. Continúa con el publish
-sf publish --force  # O usa --dry-run primero
+# 4. Confirma y publica automáticamente
+sf resolve
+
+# O continúa manualmente si prefieres
+git commit -m "Resolve conflicts"
+sf publish
 ```
 
 ### Cambios Urgentes (Hotfix)
@@ -201,7 +285,10 @@ sf start
 
 # Haz tus cambios urgentes
 sf commit
-sf publish  # Esto irá directo a master sin validaciones extra
+
+# Para hotfix, puedes omitir algunas validaciones si es necesario
+sf merge --force     # Fusiona a master (omite algunas validaciones)
+sf publish           # Publica inmediatamente
 ```
 
 ### Sincronizar Cambios del Admin
@@ -265,7 +352,6 @@ sf status
 **¿Cuándo usarlo?** Para desarrollar y probar cambios localmente antes de publicar.
 
 ```bash
-```bash
 sf dev
 # ✅ Inicia servidor de desarrollo con shopify theme dev
 # ✅ Usa configuración por defecto (tema de desarrollo)
@@ -280,28 +366,7 @@ sf dev
 - **🌐 Acceso local:** Servidor disponible en puerto configurable
 - **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
 - **⚙️ Configurable:** Puerto, host y opciones personalizables
-
-```bash
-- **⚙️ Configurable:** Puerto, host y opciones personalizables
-
-```bash
-# Modo de pruebas (informativo)
-sf dev --test
-
-```
-
-**Características:**
-
-- **🔄 Recarga automática:** Los cambios se reflejan inmediatamente
-- **🌐 Acceso local:** Servidor disponible en puerto configurable
-- **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
-**Características:**
-
 - **🎯 Tema de Desarrollo:** Ambiente seguro para probar cambios antes de publicar
-- **🔄 Recarga automática:** Los cambios se reflejan inmediatamente
-- **🌐 Acceso local:** Servidor disponible en puerto configurable
-- **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
-- **⚙️ Configurable:** Puerto, host y opciones personalizables
 
 ```bash
 # Modo de pruebas (informativo)
@@ -426,6 +491,10 @@ sf sync            # Traer cambios si los hay
 sf start           # Crear rama de feature
 # ... hacer cambios en el código ...
 sf commit          # Confirmar cambios locales
+
+# 🔀 Fusión a master
+sf merge --dry-run # Simular fusión (siempre recomendado)
+sf merge           # Fusionar rama a master
 
 # ✅ Publicación
 sf publish --dry-run  # Simular publicación (siempre recomendado)
