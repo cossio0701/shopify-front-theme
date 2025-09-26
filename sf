@@ -703,8 +703,7 @@ publish_changes() {
         echo "5. Finalmente: git push origin master"
         echo ""
         echo "O usa 'sf backup restore' para restaurar el estado anterior."
-        git merge --abort
-        return 1
+        exit 1
     fi
 
     echo "📤 Publicando en Shopify..."
