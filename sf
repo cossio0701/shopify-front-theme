@@ -113,11 +113,18 @@ supports_colors() {
 color_text() {
     local color_code="$1"
     local text="$2"
-    
+
     if supports_colors; then
         echo -e "\033[${color_code}m${text}\033[0m"
     else
-        echo "$text"
+        # Si no hay colores, usar mayúsculas y símbolos para resaltar
+        case "$color_code" in
+            "1;31") echo "❌ $text" ;;  # Rojo -> Error symbol
+            "1;32") echo "✅ $text" ;;  # Verde -> Success symbol
+            "1;33") echo "⚠️  $text" ;;  # Amarillo -> Warning symbol
+            "1;34") echo "ℹ️  $text" ;;  # Azul -> Info symbol
+            *) echo "$text" ;;
+        esac
     fi
 }
 
