@@ -6,12 +6,22 @@
   border-block-end: 0.1rem solid rgba(var(--color-foreground), var(--header-inner-after-opacity, 1));
   background-color: rgba(var(--color-background), var(--header-background-alpha, 1));
   margin-block-start: -0.1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .header.is-megamenu-open {
   color: rgb(var(--color-foreground));
   background-color: rgb(var(--color-background));
   transition: background-color var(--duration-default);
+}
+
+.header:hover {
+  background-color: white;
+  color: black;
+}
+
+.header:hover .header__logo img {
+  filter: brightness(0);
 }
 
 .header--nav-drawer .header__nav {
@@ -1317,4 +1327,8 @@ nav.slide-out-menu ul li + li.menu-card-group {
 
 nav.slide-out-menu ul li + li.menu-card-group {
   margin-block-start: 3.6rem;
+}
+
+.header:hover {
+  background-color: white;
 }

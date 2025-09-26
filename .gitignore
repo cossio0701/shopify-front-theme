@@ -19,6 +19,9 @@ Thumbs.db
 *.swo
 *~
 
+# GitHub directory
+.github/
+
 # Temporary files
 *.tmp
 *.temp
