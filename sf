@@ -791,7 +791,7 @@ sync_changes() {
         has_local_changes=true
         echo "⚠️  Tienes cambios locales sin commit."
         echo ""
-        echo "� Archivos modificados:"
+        echo "📝 Archivos modificados:"
         git status --porcelain | head -10
         echo ""
 
