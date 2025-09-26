@@ -1,0 +1,1551 @@
+#!/bin/bash
+
+# sf - Shopify Flow CLI para gestionar cambios entre Git y Shopify Admin
+# Versión: 1.0
+# Autor: Asistente de desarrollo
+
+# Variables globales
+SHOPIFY_STORE="${SHOPIFY_STORE:-}"
+SHOPIFY_THEME_ID="${SHOPIFY_THEME_ID:-}"
+CURRENT_BRANCH=""
+HISTORY_FILE=".sf_history"
+
+# Función para cargar variables de entorno desde .env
+load_env() {
+    local env_file=".env"
+    if [[ -f "$env_file" ]]; then
+        source "$env_file"
+    fi
+}
+
+# Función para validar dependencias
+validate_dependencies() {
+    local missing_deps=()
+
+    # Verificar Git
+    if ! command -v git &> /dev/null; then
+        missing_deps+=("Git")
+    fi
+
+    # Verificar Shopify CLI
+    if ! command -v shopify &> /dev/null; then
+        missing_deps+=("Shopify CLI")
+    fi
+
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        echo "❌ Error: Las siguientes dependencias no están instaladas:"
+        printf "  - %s\n" "${missing_deps[@]}"
+        echo ""
+        echo "Instala las dependencias faltantes:"
+        echo "  - Git: https://git-scm.com/downloads"
+        echo "  - Shopify CLI: https://shopify.dev/themes/tools/cli"
+        exit 1
+    fi
+}
+
+# Función para parsear flags globales
+parse_flags() {
+    local dry_run=false
+    local force=false
+    local verbose=false
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --dry-run)
+                dry_run=true
+                shift
+                ;;
+            --force)
+                force=true
+                shift
+                ;;
+            --verbose)
+                verbose=true
+                shift
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    # Devolver los valores parseados
+    echo "$dry_run $force $verbose"
+}
+
+# Función para validar variables de entorno
+validate_env() {
+    if [[ -z "$SHOPIFY_STORE" || -z "$SHOPIFY_THEME_ID" ]]; then
+        echo "❌ Error: Variables de entorno no configuradas"
+        echo ""
+        echo "Solución:"
+        echo "1. Crea o edita el archivo .env en la raíz del proyecto:"
+        echo "   SHOPIFY_STORE=\"tu-tienda.myshopify.com\""
+        echo "   SHOPIFY_THEME_ID=\"123456789\""
+        echo ""
+        echo "2. O configura las variables en tu entorno:"
+        echo "   export SHOPIFY_STORE=\"tu-tienda.myshopify.com\""
+        echo "   export SHOPIFY_THEME_ID=\"123456789\""
+        echo ""
+        echo "Después de configurar, ejecuta el comando nuevamente."
+        exit 1
+    fi
+
+    # Validar formato básico
+    if [[ ! "$SHOPIFY_STORE" =~ \.myshopify\.com$ ]]; then
+        echo "⚠️  Advertencia: SHOPIFY_STORE no parece una URL de Shopify válida"
+        echo "   Esperado: algo.myshopify.com"
+        echo "   Actual: $SHOPIFY_STORE"
+    fi
+
+    if [[ ! "$SHOPIFY_THEME_ID" =~ ^[0-9]+$ ]]; then
+        echo "⚠️  Advertencia: SHOPIFY_THEME_ID debe ser un número"
+        echo "   Actual: $SHOPIFY_THEME_ID"
+    fi
+}
+
+# Función para registrar en historial
+log_history() {
+    local message="$1"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $message" >> "$HISTORY_FILE"
+}
+
+# Función para confirmar acción
+confirm_action() {
+    local prompt="$1"
+    local default="${2:-n}"  # Default a 'n' si no se especifica
+    local help_text="$3"
+
+    echo ""
+    echo "⚠️  $prompt"
+    if [[ -n "$help_text" ]]; then
+        echo "$help_text"
+    fi
+
+    local response
+    read -p "¿Continuar? (y/N): " -n 1 -r response
+    echo
+
+    if [[ "$default" == "y" ]]; then
+        [[ ! "$response" =~ ^[Nn]$ ]]
+    else
+        [[ "$response" =~ ^[Yy]$ ]]
+    fi
+}
+
+# Función para sugerir próximos pasos
+suggest_next_steps() {
+    local command="$1"
+    local context="$2"
+
+    echo ""
+    echo "💡 Próximos pasos sugeridos:"
+
+    case "$command" in
+        init)
+            echo "1. Edita .env con tus credenciales de Shopify"
+            echo "2. Reinicia terminal o ejecuta: source ~/.bashrc"
+            echo "3. Prueba: sf status"
+            ;;
+        start)
+            echo "1. Realiza tus cambios en el código"
+            echo "2. Confirma cambios: sf commit"
+            echo "3. Publica cuando esté listo: sf publish --dry-run"
+            ;;
+        commit)
+            echo "1. Verifica cambios: sf diff --with-master"
+            echo "2. Publica: sf publish --dry-run (primero)"
+            echo "3. Publica: sf publish"
+            ;;
+        publish)
+            echo "1. Verifica que todo funciona en Shopify"
+            echo "2. Limpia rama: sf finish"
+            echo "3. Inicia nuevo trabajo: sf start"
+            ;;
+        sync)
+            echo "1. Verifica cambios: sf status"
+            echo "2. Si hay conflictos, resuélvelos manualmente"
+            echo "3. Inicia nuevo trabajo: sf start"
+            ;;
+        finish)
+            echo "1. Verifica que todo está bien: sf status"
+            echo "2. Inicia nuevo trabajo: sf start"
+            echo "3. O sincroniza si es necesario: sf sync"
+            ;;
+        *)
+            echo "Ejecuta 'sf help' para ver todos los comandos disponibles"
+            ;;
+    esac
+}
+
+# Función para verificar cambios sin commit
+check_uncommitted_changes() {
+    if ! git diff --quiet || ! git diff --staged --quiet; then
+        echo "❌ Error: Hay cambios sin confirmar (commit)"
+        echo ""
+        echo "Archivos modificados:"
+        git status --porcelain | head -10
+        echo ""
+        echo "Opciones:"
+        echo "1. Confirma los cambios: sf commit"
+        echo "2. Guarda temporalmente: sf stash"
+        echo "3. Descarta cambios: git checkout -- .  (⚠️  PELIGROSO)"
+        echo "4. Continua de todas formas: usa --force"
+        exit 1
+    fi
+}
+
+# Función para validaciones preventivas inteligentes
+preventive_checks() {
+    local command="$1"
+
+    # Solo ejecutar para comandos que modifican estado
+    case "$command" in
+        start|commit|publish|finish)
+            # Verificar si estamos en un repo Git
+            if [[ ! -d ".git" ]]; then
+                echo "❌ Error: No estás en un repositorio Git."
+                echo "💡 Ejecuta 'sf init' para inicializar el proyecto."
+                return 1
+            fi
+
+            # Verificar conexión con remoto
+            if ! git ls-remote --exit-code origin >/dev/null 2>&1; then
+                echo "⚠️  No se puede conectar con el repositorio remoto."
+                echo "   Verifica tu conexión a internet y configuración de Git."
+            fi
+            ;;
+    esac
+
+    return 0
+}
+
+# Función para detectar y sugerir correcciones comunes
+smart_suggestions() {
+    local command="$1"
+
+    case "$command" in
+        start)
+            # Si hay stash, sugerir restaurarlo
+            if [[ $(git stash list | wc -l) -gt 0 ]]; then
+                echo "💡 Tienes $(git stash list | wc -l) cambios en stash. Considera restaurarlos: git stash pop"
+            fi
+            ;;
+        commit)
+            # Si no hay cambios, sugerir qué hacer
+            if git diff --quiet && git diff --staged --quiet; then
+                echo "💡 No hay cambios para confirmar. Modifica archivos primero."
+                return
+            fi
+            ;;
+        publish)
+            # Verificar si hay muchos commits sin publicar
+            local commits_ahead=$(git rev-list master..HEAD --count 2>/dev/null || echo "0")
+            if [[ $commits_ahead -gt 5 ]]; then
+                echo "⚠️  Tienes $commits_ahead commits por publicar. Considera hacer commits más pequeños."
+            fi
+            ;;
+    esac
+}
+
+# Función para obtener rama actual
+get_current_branch() {
+    CURRENT_BRANCH=$(git branch --show-current)
+}
+
+# Función para menú interactivo con flechas
+interactive_menu() {
+    local options=("fix:Corrección de errores" "feat:Nueva funcionalidad" "hotfix:Corrección urgente en producción" "refactor:Refactorización de código" "docs:Cambios en documentación" "style:Cambios de estilo/formato" "test:Cambios en tests" "chore:Tareas de mantenimiento")
+    local selected=0
+    local key=""
+
+    # Función para dibujar el menú
+    draw_menu() {
+        echo -e "\nSelecciona el tipo de flujo (usa ↑↓ flechas, Enter para seleccionar):"
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -e "  \e[7m${options[$i]}\e[0m"  # Resaltado inverso
+            else
+                echo "  ${options[$i]}"
+            fi
+        done
+        echo
+    }
+
+    # Ocultar cursor
+    echo -e "\e[?25l"
+
+    # Bucle principal
+    while true; do
+        draw_menu
+        read -sn1 key
+
+        case "$key" in
+            $'\e')  # Escape sequence
+                read -sn2 -t 0.1 key2
+                case "$key2" in
+                    '[A')  # Flecha arriba
+                        ((selected--))
+                        if [[ $selected -lt 0 ]]; then
+                            selected=$((${#options[@]} - 1))
+                        fi
+                        ;;
+                    '[B')  # Flecha abajo
+                        ((selected++))
+                        if [[ $selected -ge ${#options[@]} ]]; then
+                            selected=0
+                        fi
+                        ;;
+                esac
+                ;;
+            '')  # Enter
+                break
+                ;;
+            'q'|'Q')  # Salir con q
+                echo -e "\e[?25h"  # Mostrar cursor
+                echo "🚫 Operación cancelada."
+                return 1
+                ;;
+        esac
+
+        # Limpiar pantalla hacia arriba
+        echo -e "\e[${#options[@]}A\e[J"
+    done
+
+    # Mostrar cursor
+    echo -e "\e[?25h"
+
+    # Extraer el tipo del option seleccionado
+    local selected_option="${options[$selected]}"
+    flow_type="${selected_option%%:*}"
+    
+    echo "✅ Seleccionado: $flow_type"
+}
+
+# Comando: sf start
+start_branch() {
+    validate_env
+    echo "🚀 Iniciando nuevo flujo de trabajo..."
+
+    # Detectar estado actual
+    echo "📊 Estado actual del proyecto:"
+    detect_project_state
+
+    get_current_branch
+
+    # Validaciones preventivas
+    if [[ "$CURRENT_BRANCH" != "master" ]]; then
+        echo ""
+        echo "⚠️  Ya estás en una rama de trabajo: $CURRENT_BRANCH"
+        echo "¿Quieres continuar en esta rama o crear una nueva?"
+        echo "1. Continuar en $CURRENT_BRANCH"
+        echo "2. Crear nueva rama (cambiará a master primero)"
+        echo "3. Cancelar"
+
+        local choice
+        read -p "Elige opción (1-3): " -n 1 -r choice
+        echo
+
+        case $choice in
+            1)
+                echo "✅ Continuando en rama actual: $CURRENT_BRANCH"
+                suggest_next_steps "start" "existing-branch"
+                return 0
+                ;;
+            2)
+                echo "🔄 Cambiando a master para crear nueva rama..."
+                git checkout master || { echo "❌ Error: No se pudo cambiar a master."; return 1; }
+                ;;
+            *)
+                echo "🚫 Operación cancelada."
+                return 1
+                ;;
+        esac
+    fi
+
+    # Verificar cambios sin commit antes de crear rama
+    if ! git diff --quiet || ! git diff --staged --quiet; then
+        echo ""
+        echo "⚠️  Hay cambios sin commit en master."
+        if ! confirm_action "¿Crear rama desde este estado?" "n" "Los cambios sin commit estarán en la nueva rama."; then
+            echo "💡 Sugerencias:"
+            echo "  - Confirma cambios: sf commit"
+            echo "  - Guarda temporalmente: sf stash"
+            return 1
+        fi
+    fi
+
+    # Sincronizar con remoto antes de crear rama
+    echo "🔄 Sincronizando con remoto..."
+    git pull origin master || { echo "❌ Error: Falló git pull. Verifica conexión."; return 1; }
+
+    # Menú interactivo para seleccionar tipo de flujo
+    if ! interactive_menu; then
+        return 1
+    fi
+
+    # Preguntar nombre descriptivo en kebab-case
+    read -p "Nombre descriptivo (kebab-case): " name
+    if [[ -z "$name" ]]; then
+        echo "❌ Error: El nombre es obligatorio."
+        return 1
+    fi
+
+    if [[ ! "$name" =~ ^[a-z0-9-]+(-[a-z0-9-]+)*$ ]]; then
+        echo "❌ Error: Nombre debe estar en kebab-case (solo letras minúsculas, números y guiones)."
+        echo "Ejemplos válidos: add-product-slider, fix-header-bug, update-styles"
+        return 1
+    fi
+
+    # Generar nombre de rama
+    local date_suffix=$(date '+%Y%m%d')
+    local branch_name="${flow_type}/${name}-${date_suffix}"
+
+    echo "📝 Creando rama: $branch_name"
+
+    # Ejecutar comandos
+    git checkout -b "$branch_name" || { echo "❌ Error: No se pudo crear la rama."; return 1; }
+    shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || { echo "❌ Error: Falló shopify theme pull."; return 1; }
+    git push -u origin "$branch_name" || { echo "❌ Error: Falló git push."; return 1; }
+
+    log_history "Started branch: $branch_name"
+    echo "✅ Rama '$branch_name' creada exitosamente."
+    echo ""
+    echo "🎯 Trabajo listo para comenzar en: $branch_name"
+
+    suggest_next_steps "start"
+}
+
+# Función para validar formato de conventional commits
+validate_commit_message() {
+    local message="$1"
+
+    # Tipos de commit válidos (conventional commits)
+    local valid_types="feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert"
+
+    # Patrón regex para conventional commits
+    # Formato: type(scope): description
+    # O: type: description
+    local pattern="^($valid_types)(\([a-zA-Z0-9_-]+\))?: .+"
+
+    if [[ $message =~ $pattern ]]; then
+        return 0  # Válido
+    else
+        return 1  # Inválido
+    fi
+}
+
+# Función para sugerir tipos de commit basados en cambios
+suggest_commit_type() {
+    local changes_summary="$1"
+
+    # Analizar cambios para sugerir tipo
+    if echo "$changes_summary" | grep -q "\.md\|\.txt\|README\|docs/"; then
+        echo "docs"
+    elif echo "$changes_summary" | grep -q "\.test\.|\.spec\.|test/|spec/"; then
+        echo "test"
+    elif echo "$changes_summary" | grep -q "\.css\|\.scss\|\.sass\|styles/"; then
+        echo "style"
+    elif echo "$changes_summary" | grep -q "package\.json\|yarn\.lock\|package-lock\.json\|\.gitignore"; then
+        echo "chore"
+    elif echo "$changes_summary" | grep -q "refactor\|rename\|move"; then
+        echo "refactor"
+    elif echo "$changes_summary" | grep -q "fix\|bug\|error\|issue"; then
+        echo "fix"
+    else
+        echo "feat"  # Default
+    fi
+}
+
+# Función para mostrar ejemplos de conventional commits
+show_commit_examples() {
+    echo "💡 Formato recomendado (Conventional Commits):"
+    echo ""
+    echo "  feat: agregar nueva funcionalidad de login"
+    echo "  fix: corregir error en validación de email"
+    echo "  docs: actualizar documentación de instalación"
+    echo "  style: formatear código con prettier"
+    echo "  refactor: renombrar variables para mayor claridad"
+    echo "  test: agregar pruebas para componente header"
+    echo "  chore: actualizar dependencias"
+    echo "  perf: optimizar carga de imágenes"
+    echo ""
+    echo "📝 Tipos disponibles: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+}
+
+# Comando: sf commit
+commit_changes() {
+    validate_env
+    get_current_branch
+
+    if [[ "$CURRENT_BRANCH" == "master" ]]; then
+        echo "❌ Error: No puedes hacer commit en la rama master."
+        echo "💡 Usa 'sf start' para crear una rama de trabajo."
+        return 1
+    fi
+
+    echo "📝 Preparando commit en rama: $CURRENT_BRANCH"
+
+    # Mostrar estado actual
+    echo "📊 Archivos modificados:"
+    git status --porcelain
+    echo ""
+
+    # Verificar si hay cambios
+    if git diff --quiet && git diff --staged --quiet; then
+        echo "⚠️  No hay cambios para confirmar."
+        echo "💡 Modifica algunos archivos primero, luego ejecuta 'sf commit'."
+        return 1
+    fi
+
+    # Agregar archivos
+    git add . || { echo "❌ Error: Falló git add."; return 1; }
+
+    # Mostrar diff resumido
+    echo "📋 Cambios a confirmar:"
+    git diff --staged --stat
+    echo ""
+
+    # Preguntar mensaje de commit
+    echo "📝 Mensaje de commit (formato recomendado: tipo: descripción)"
+    echo "💡 Presiona Enter sin escribir para ver ejemplos de tipos"
+
+    read -p "Mensaje de commit: " commit_message
+
+    # Si no escribe nada, mostrar ejemplos
+    if [[ -z "$commit_message" ]]; then
+        show_commit_examples
+        echo ""
+        read -p "Mensaje de commit: " commit_message
+        if [[ -z "$commit_message" ]]; then
+            echo "❌ Error: El mensaje de commit es obligatorio."
+            return 1
+        fi
+    fi
+
+    # Validar formato conventional commits
+    if ! validate_commit_message "$commit_message"; then
+        echo "⚠️  El mensaje no sigue el formato recomendado de Conventional Commits."
+        echo ""
+        show_commit_examples
+        echo ""
+
+        # Sugerir tipo basado en cambios
+        local changes_summary=$(git diff --staged --name-only)
+        local suggested_type=$(suggest_commit_type "$changes_summary")
+        echo "💡 Sugerencia basada en tus cambios: $suggested_type: $commit_message"
+        echo ""
+
+        if ! confirm_action "¿Usar este mensaje de todas formas?" "n" "Se recomienda usar el formato tipo: descripción"; then
+            echo "💡 Intenta con: $suggested_type: $commit_message"
+            return 1
+        fi
+    fi
+
+    # Validar longitud del mensaje (solo si no es conventional commit válido)
+    if [[ ${#commit_message} -lt 10 ]]; then
+        echo "⚠️  El mensaje es muy corto (${#commit_message} caracteres)."
+        if ! confirm_action "¿Usar este mensaje de todas formas?" "n"; then
+            return 1
+        fi
+    fi
+
+    git commit -m "$commit_message" || { echo "❌ Error: Falló git commit."; return 1; }
+
+    log_history "Committed changes on $CURRENT_BRANCH: $commit_message"
+    echo "✅ Commit realizado exitosamente."
+    echo "💾 Mensaje: $commit_message"
+
+    suggest_next_steps "commit"
+}
+
+# Comando: sf publish
+publish_changes() {
+    validate_env
+    get_current_branch
+
+    # Parsear flags
+    local flags_output=$(parse_flags "$@")
+    local dry_run=$(echo "$flags_output" | cut -d' ' -f1)
+    local force=$(echo "$flags_output" | cut -d' ' -f2)
+    local verbose=$(echo "$flags_output" | cut -d' ' -f3)
+
+    if [[ "$CURRENT_BRANCH" == "master" ]]; then
+        echo "❌ Error: Ya estás en master. Usa 'sf sync' para sincronizar."
+        return 1
+    fi
+
+    echo "🚀 Preparando publicación de: $CURRENT_BRANCH"
+
+    # Mostrar resumen de cambios
+    echo "📊 Resumen de cambios:"
+    echo "Rama: $CURRENT_BRANCH"
+    echo "Commits por fusionar: $(git rev-list master.."$CURRENT_BRANCH" --count)"
+    echo ""
+    echo "Archivos modificados:"
+    git diff --stat master.."$CURRENT_BRANCH"
+    echo ""
+
+    if [[ "$dry_run" == true ]]; then
+        echo "🔍 Modo dry-run: Simulando publicación..."
+        echo "  ✅ Verificar que no hay conflictos"
+        echo "  ✅ Cambiar a master"
+        echo "  ✅ Fusionar $CURRENT_BRANCH"
+        echo "  ✅ Publicar en Shopify"
+        echo "  ✅ Subir cambios a remoto"
+        echo ""
+        echo "💡 Ejecuta sin --dry-run cuando estés listo para publicar."
+        return 0
+    fi
+
+    # Validaciones críticas
+    if [[ "$force" != true ]]; then
+        check_uncommitted_changes
+
+        # Verificar conflictos potenciales
+        echo "🔍 Verificando conflictos potenciales..."
+        if ! git merge-tree $(git merge-base master "$CURRENT_BRANCH") master "$CURRENT_BRANCH" >/dev/null 2>&1; then
+            echo "⚠️  Posibles conflictos detectados."
+            if ! confirm_action "¿Continuar de todas formas?" "n" "Revisa los archivos que podrían tener conflictos."; then
+                return 1
+            fi
+        fi
+    fi
+
+    echo "🚀 Publicando cambios..."
+
+    local feature_branch="$CURRENT_BRANCH"
+
+    # Backup automático antes de publicar
+    echo "💾 Creando backup automático..."
+    git stash push -m "backup-auto-$(date '+%Y%m%d-%H%M%S')" >/dev/null 2>&1 || true
+
+    git checkout master || { echo "❌ Error: No se pudo cambiar a master."; return 1; }
+    git pull origin master || { echo "❌ Error: Falló git pull."; return 1; }
+
+    if ! git merge "$feature_branch"; then
+        echo "❌ Error: Conflicto en merge."
+        echo ""
+        echo "🔧 Para resolver:"
+        echo "1. Edita los archivos en conflicto"
+        echo "2. Ejecuta: git add <archivo>"
+        echo "3. Ejecuta: git commit -m 'Resolve conflicts'"
+        echo "4. Luego: shopify theme push -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
+        echo "5. Finalmente: git push origin master"
+        echo ""
+        echo "O usa 'sf backup restore' para restaurar el estado anterior."
+        git merge --abort
+        return 1
+    fi
+
+    echo "📤 Publicando en Shopify..."
+    shopify theme push -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
+        echo "❌ Error: Falló shopify theme push."
+        echo "💡 El merge se completó, pero falló la publicación en Shopify."
+        echo "   Puedes intentar nuevamente o publicar manualmente."
+        return 1
+    }
+
+    git push origin master || { echo "❌ Error: Falló git push."; return 1; }
+
+    log_history "Published changes from $feature_branch to master"
+    echo "✅ ¡Publicación completada exitosamente!"
+    echo "🌐 Cambios publicados en: https://$SHOPIFY_STORE"
+    echo "📊 Rama fusionada: $feature_branch → master"
+
+    suggest_next_steps "publish"
+}
+
+# Comando: sf sync
+sync_changes() {
+    validate_env
+
+    # Parsear flags
+    local flags_output=$(parse_flags "$@")
+    local dry_run=$(echo "$flags_output" | cut -d' ' -f1)
+    local force=$(echo "$flags_output" | cut -d' ' -f2)
+    local verbose=$(echo "$flags_output" | cut -d' ' -f3)
+
+    get_current_branch
+
+    echo "🔄 Sincronizando con Shopify Admin..."
+    echo "📍 Rama actual: $CURRENT_BRANCH"
+
+    if [[ "$dry_run" == true ]]; then
+        echo "🔍 Modo dry-run: Simulando sincronización..."
+        echo "  ✅ Verificar cambios en Shopify Admin"
+        echo "  ✅ Cambiar a master si es necesario"
+        echo "  ✅ Sincronizar repositorio local"
+        echo "  ✅ Verificar conflictos con cambios locales"
+        return 0
+    fi
+
+    # Validar que no haya cambios sin commit si no estamos en master
+    if [[ "$CURRENT_BRANCH" != "master" ]] && ! git diff --quiet || ! git diff --staged --quiet; then
+        echo "⚠️  Tienes cambios sin commit en la rama '$CURRENT_BRANCH'."
+        echo "💡 Recomendación: Confirma tus cambios primero con 'sf commit',"
+        echo "   o cambia a master antes de sincronizar."
+        if ! confirm_action "¿Cambiar a master y descartar cambios locales?" "n"; then
+            return 1
+        fi
+    fi
+
+    # Cambiar a master si no estamos ahí
+    if [[ "$CURRENT_BRANCH" != "master" ]]; then
+        echo "🔄 Cambiando a rama master..."
+        git checkout master || { echo "❌ Error: No se pudo cambiar a master."; return 1; }
+    fi
+
+    # Verificar cambios en Shopify antes de descargar
+    echo "🔍 Verificando cambios en Shopify Admin..."
+    local shopify_has_changes=false
+    if shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" --dry-run 2>/dev/null; then
+        echo "📥 Descargando cambios desde Shopify..."
+        shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
+            echo "❌ Error: Falló shopify theme pull."
+            return 1
+        }
+        shopify_has_changes=true
+    else
+        echo "✅ No hay cambios nuevos en Shopify Admin."
+    fi
+
+    # Sincronizar con remoto
+    echo "🔄 Sincronizando con repositorio remoto..."
+    git pull origin master || {
+        echo "❌ Error: Falló git pull. Posible conflicto con cambios remotos."
+        echo "💡 Resuelve manualmente: git pull origin master"
+        return 1
+    }
+
+    # Verificar si hay cambios locales después de sync
+    if ! git diff --quiet || ! git diff --staged --quiet; then
+        echo ""
+        echo "📝 Se encontraron cambios después de sincronizar:"
+        git status --porcelain | head -5
+
+        if [[ "$force" == true ]] || confirm_action "¿Confirmar estos cambios automáticamente?" "y" "Se creará un commit con mensaje 'sync: cambios desde admin Shopify'"; then
+            git add . || { echo "❌ Error: Falló git add."; return 1; }
+            git commit -m "sync: cambios desde admin Shopify" || { echo "❌ Error: Falló git commit."; return 1; }
+            git push origin master || { echo "❌ Error: Falló git push."; return 1; }
+            log_history "Synced and committed changes from Shopify Admin"
+            echo "✅ Sincronización completada con commit automático."
+        else
+            echo "🚫 Sincronización cancelada."
+            echo "💡 Los cambios locales permanecen sin commit."
+            echo "   Puedes confirmarlos manualmente cuando estés listo."
+            return 1
+        fi
+    else
+        if [[ "$shopify_has_changes" == true ]]; then
+            log_history "Synced from Shopify Admin (no local changes)"
+            echo "✅ Sincronización completada. Cambios de Shopify incorporados."
+        else
+            log_history "Sync checked (no changes)"
+            echo "✅ Todo está sincronizado. No hay cambios nuevos."
+        fi
+    fi
+
+    suggest_next_steps "sync"
+}
+
+# Comando: sf status
+show_status() {
+    validate_env
+    echo "📊 Estado del proyecto:"
+
+    # Usar función de detección de estado
+    detect_project_state
+
+    echo ""
+    echo "🔗 Shopify Store: $SHOPIFY_STORE"
+    echo "🆔 Theme ID: $SHOPIFY_THEME_ID"
+    echo ""
+    echo "💡 Para verificar cambios en Shopify Admin:"
+    echo "   shopify theme pull -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
+}
+
+# Comando: sf finish
+finish_branch() {
+    validate_env
+    get_current_branch
+
+    if [[ "$CURRENT_BRANCH" == "master" ]]; then
+        echo "❌ Error: No puedes finalizar la rama master."
+        return 1
+    fi
+
+    echo "🧹 Preparando limpieza de rama: $CURRENT_BRANCH"
+
+    # Verificar estado
+    echo "📊 Verificando estado antes de eliminar..."
+
+    # Verificar si la rama está fusionada
+    if git merge-base --is-ancestor "$CURRENT_BRANCH" master 2>/dev/null; then
+        echo "✅ Rama fusionada en master"
+    else
+        echo "⚠️  Rama NO fusionada en master"
+        echo "💡 Asegúrate de haber ejecutado 'sf publish' primero."
+        if ! confirm_action "¿Eliminar rama de todas formas?" "n"; then
+            return 1
+        fi
+    fi
+
+    # Verificar cambios sin commit
+    if ! git diff --quiet || ! git diff --staged --quiet; then
+        echo "⚠️  Hay cambios sin commit en esta rama."
+        echo "Opciones:"
+        echo "1. Guardar cambios: sf stash"
+        echo "2. Forzar eliminación (perderás cambios)"
+        echo "3. Cancelar y hacer commit primero"
+
+        local choice
+        read -p "Elige opción (1-3): " -n 1 -r choice
+        echo
+
+        case $choice in
+            1)
+                echo "📦 Guardando cambios en stash..."
+                git stash push -m "auto-stash-finish-$(date '+%Y%m%d-%H%M%S')" || {
+                    echo "❌ Error: No se pudieron guardar los cambios."
+                    return 1
+                }
+                ;;
+            2)
+                echo "⚠️  Los cambios sin commit se perderán permanentemente."
+                if ! confirm_action "¿Confirmas eliminación forzada?" "n"; then
+                    return 1
+                fi
+                ;;
+            *)
+                echo "🚫 Operación cancelada. Confirma o guarda tus cambios primero."
+                return 1
+                ;;
+        esac
+    fi
+
+    local branch_to_delete="$CURRENT_BRANCH"
+
+    if ! confirm_action "¿Confirmas eliminar la rama '$branch_to_delete'?" "n" "Esta acción no se puede deshacer."; then
+        echo "🚫 Operación cancelada."
+        return 1
+    fi
+
+    echo "🧹 Eliminando rama..."
+
+    git checkout master || { echo "❌ Error: No se pudo cambiar a master."; return 1; }
+    git branch -d "$branch_to_delete" || { echo "❌ Error: No se pudo eliminar la rama local."; return 1; }
+
+    # Intentar eliminar rama remota
+    if git push origin --delete "$branch_to_delete" 2>/dev/null; then
+        echo "✅ Rama remota eliminada"
+    else
+        echo "⚠️  No se pudo eliminar rama remota (puede que no exista)"
+    fi
+
+    log_history "Finished and deleted branch: $branch_to_delete"
+    echo "✅ Rama '$branch_to_delete' eliminada exitosamente."
+    echo "📍 Ahora estás en: master"
+
+    suggest_next_steps "finish"
+}
+
+# Comando: sf stash (extra)
+stash_changes() {
+    read -p "Mensaje para el stash: " stash_message
+    if [[ -z "$stash_message" ]]; then
+        stash_message="Stashed changes"
+    fi
+
+    git stash push -m "$stash_message" || { echo "❌ Error: Falló git stash."; return 1; }
+
+    log_history "Stashed changes: $stash_message"
+    echo "✅ Cambios guardados en stash."
+}
+
+# Comando: sf log
+show_log() {
+    if [[ ! -f "$HISTORY_FILE" ]]; then
+        echo "📜 No hay historial de acciones registrado."
+        return 0
+    fi
+
+    echo "📜 Historial de acciones de sf:"
+    echo "================================="
+
+    local filter=""
+    local limit=""
+
+    # Parsear argumentos
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --last)
+                limit="$2"
+                shift 2
+                ;;
+            --today)
+                filter="today"
+                shift
+                ;;
+            --yesterday)
+                filter="yesterday"
+                shift
+                ;;
+            --this-week)
+                filter="this-week"
+                shift
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Opciones: --last N, --today, --yesterday, --this-week"
+                return 1
+                ;;
+        esac
+    done
+
+    # Leer y filtrar historial
+    local entries=()
+    while IFS= read -r line; do
+        local should_include=true
+
+        if [[ -n "$filter" ]]; then
+            local entry_date=$(echo "$line" | cut -d' ' -f1)
+            local today=$(date '+%Y-%m-%d')
+            local yesterday=$(date -d 'yesterday' '+%Y-%m-%d')
+
+            case $filter in
+                today)
+                    [[ "$entry_date" != "$today" ]] && should_include=false
+                    ;;
+                yesterday)
+                    [[ "$entry_date" != "$yesterday" ]] && should_include=false
+                    ;;
+                this-week)
+                    local week_start=$(date -d 'last monday' '+%Y-%m-%d')
+                    [[ "$entry_date" < "$week_start" ]] && should_include=false
+                    ;;
+            esac
+        fi
+
+        if [[ "$should_include" == true ]]; then
+            entries+=("$line")
+        fi
+    done < "$HISTORY_FILE"
+
+    # Aplicar límite
+    if [[ -n "$limit" ]]; then
+        entries=("${entries[@]: -limit}")
+    fi
+
+    # Mostrar entradas
+    if [[ ${#entries[@]} -eq 0 ]]; then
+        echo "No se encontraron entradas con los filtros aplicados."
+    else
+        for entry in "${entries[@]}"; do
+            echo "$entry"
+        done
+    fi
+}
+
+# Comando: sf diff
+show_diff() {
+    validate_env
+    get_current_branch
+
+    local diff_type="master"
+    local target=""
+
+    # Parsear argumentos
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --with-shopify)
+                diff_type="shopify"
+                shift
+                ;;
+            --with-master)
+                diff_type="master"
+                shift
+                ;;
+            --branches)
+                if [[ -n "$2" && -n "$3" ]]; then
+                    diff_type="branches"
+                    local branch1="$2"
+                    local branch2="$3"
+                    shift 3
+                else
+                    echo "❌ Uso: sf diff --branches <rama1> <rama2>"
+                    return 1
+                fi
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Opciones:"
+                echo "  --with-shopify    Comparar con cambios en Shopify Admin"
+                echo "  --with-master     Comparar con rama master (por defecto)"
+                echo "  --branches R1 R2  Comparar entre dos ramas específicas"
+                return 1
+                ;;
+        esac
+    done
+
+    echo "🔍 Comparando diferencias..."
+
+    case $diff_type in
+        master)
+            if [[ "$CURRENT_BRANCH" == "master" ]]; then
+                echo "⚠️  Ya estás en master. No hay diferencias que mostrar."
+                return 0
+            fi
+            echo "Comparando $CURRENT_BRANCH con master:"
+            git diff master.."$CURRENT_BRANCH"
+            ;;
+        shopify)
+            echo "Comparando cambios locales con Shopify Admin..."
+            echo "Nota: Esta es una comparación simulada. Para ver cambios reales:"
+            echo "  shopify theme pull -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
+            echo ""
+            # Simular comparación mostrando archivos modificados
+            echo "Archivos que podrían tener cambios en Shopify:"
+            git status --porcelain | head -10
+            ;;
+        branches)
+            echo "Comparando $branch1 con $branch2:"
+            if git rev-parse --verify "$branch1" &>/dev/null && git rev-parse --verify "$branch2" &>/dev/null; then
+                git diff "$branch1..$branch2"
+            else
+                echo "❌ Una o ambas ramas no existen: $branch1, $branch2"
+                return 1
+            fi
+            ;;
+    esac
+}
+
+# Comando: sf clean
+clean_branches() {
+    local clean_type="merged"
+    local days=""
+    local dry_run=false
+
+    # Parsear argumentos
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --merged)
+                clean_type="merged"
+                shift
+                ;;
+            --older-than)
+                if [[ -n "$2" ]]; then
+                    clean_type="older"
+                    days="$2"
+                    shift 2
+                else
+                    echo "❌ Uso: sf clean --older-than <dias>"
+                    return 1
+                fi
+                ;;
+            --dry-run)
+                dry_run=true
+                shift
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Opciones:"
+                echo "  --merged          Eliminar ramas ya merged en master"
+                echo "  --older-than N    Eliminar ramas con commits más antiguos que N días"
+                echo "  --dry-run         Mostrar qué se eliminaría sin hacerlo"
+                return 1
+                ;;
+        esac
+    done
+
+    echo "🧹 Limpiando ramas..."
+
+    local branches_to_clean=()
+
+    case $clean_type in
+        merged)
+            echo "Buscando ramas ya merged en master..."
+            # Obtener ramas locales merged
+            while IFS= read -r branch; do
+                if [[ "$branch" != "master" && "$branch" != "*" ]]; then
+                    branch=${branch#* }
+                    if git merge-base --is-ancestor "$branch" master 2>/dev/null; then
+                        branches_to_clean+=("$branch")
+                    fi
+                fi
+            done < <(git branch --merged master)
+            ;;
+        older)
+            echo "Buscando ramas con commits más antiguos que $days días..."
+            local cutoff_date=$(date -d "$days days ago" '+%Y-%m-%d')
+            while IFS= read -r branch; do
+                if [[ "$branch" != "master" && "$branch" != "*" ]]; then
+                    branch=${branch#* }
+                    local last_commit_date=$(git log -1 --format=%ci "$branch" 2>/dev/null | cut -d' ' -f1)
+                    if [[ -n "$last_commit_date" && "$last_commit_date" < "$cutoff_date" ]]; then
+                        branches_to_clean+=("$branch")
+                    fi
+                fi
+            done < <(git branch)
+            ;;
+    esac
+
+    if [[ ${#branches_to_clean[@]} -eq 0 ]]; then
+        echo "✅ No se encontraron ramas para limpiar."
+        return 0
+    fi
+
+    echo "Ramas encontradas para limpiar:"
+    for branch in "${branches_to_clean[@]}"; do
+        echo "  - $branch"
+    done
+    echo ""
+
+    if [[ "$dry_run" == true ]]; then
+        echo "🔍 Modo dry-run: No se eliminaron ramas."
+        return 0
+    fi
+
+    if ! confirm_action "¿Confirmas eliminar estas ${#branches_to_clean[@]} ramas?"; then
+        echo "🚫 Operación cancelada."
+        return 1
+    fi
+
+    local deleted_local=0
+    local deleted_remote=0
+
+    for branch in "${branches_to_clean[@]}"; do
+        # Eliminar rama local
+        if git branch -d "$branch" &>/dev/null; then
+            ((deleted_local++))
+            echo "  ✅ Eliminada rama local: $branch"
+        fi
+
+        # Intentar eliminar rama remota
+        if git push origin --delete "$branch" &>/dev/null; then
+            ((deleted_remote++))
+            echo "  ✅ Eliminada rama remota: $branch"
+        fi
+    done
+
+    log_history "Cleaned branches: ${#branches_to_clean[@]} local, $deleted_remote remote"
+    echo ""
+    echo "✅ Limpieza completada: $deleted_local ramas locales, $deleted_remote ramas remotas eliminadas."
+}
+
+# Comando: sf backup
+create_backup() {
+    local backup_type="stash"
+    local backup_name=""
+
+    # Parsear argumentos
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            create)
+                backup_type="stash"
+                shift
+                ;;
+            branch)
+                backup_type="branch"
+                shift
+                ;;
+            list)
+                backup_type="list"
+                shift
+                ;;
+            restore)
+                if [[ -n "$2" ]]; then
+                    backup_type="restore"
+                    backup_name="$2"
+                    shift 2
+                else
+                    echo "❌ Uso: sf backup restore <nombre>"
+                    return 1
+                fi
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Opciones:"
+                echo "  create              Crear backup en stash (por defecto)"
+                echo "  branch              Crear backup en rama temporal"
+                echo "  list                Listar backups disponibles"
+                echo "  restore <nombre>    Restaurar backup específico"
+                return 1
+                ;;
+        esac
+    done
+
+    case $backup_type in
+        stash)
+            echo "💾 Creando backup en stash..."
+            local stash_message="backup-$(date '+%Y%m%d-%H%M%S')"
+            git stash push -m "$stash_message" || { echo "❌ Error: Falló git stash."; return 1; }
+            log_history "Created backup stash: $stash_message"
+            echo "✅ Backup creado: $stash_message"
+            ;;
+        branch)
+            get_current_branch
+            echo "💾 Creando backup en rama temporal..."
+            local backup_branch="backup/$CURRENT_BRANCH-$(date '+%Y%m%d-%H%M%S')"
+            git checkout -b "$backup_branch" || { echo "❌ Error: No se pudo crear rama backup."; return 1; }
+            git checkout "$CURRENT_BRANCH" || { echo "❌ Error: No se pudo volver a la rama original."; return 1; }
+            log_history "Created backup branch: $backup_branch"
+            echo "✅ Backup creado en rama: $backup_branch"
+            ;;
+        list)
+            echo "📋 Backups disponibles:"
+            echo ""
+            echo "Stashes:"
+            git stash list | nl -v0 || echo "  No hay stashes"
+            echo ""
+            echo "Ramas de backup:"
+            git branch | grep "^  backup/" | nl -v1 || echo "  No hay ramas de backup"
+            ;;
+        restore)
+            if [[ -z "$backup_name" ]]; then
+                echo "❌ Debes especificar el nombre del backup a restaurar."
+                echo "Usa 'sf backup list' para ver backups disponibles."
+                return 1
+            fi
+
+            echo "🔄 Restaurando backup: $backup_name"
+
+            # Intentar restaurar stash
+            if git stash list | grep -q "$backup_name"; then
+                local stash_index=$(git stash list | grep -n "$backup_name" | head -1 | cut -d: -f1)
+                ((stash_index--))
+                git stash apply "stash@{$stash_index}" || { echo "❌ Error: Falló restaurar stash."; return 1; }
+                echo "✅ Stash restaurado: $backup_name"
+            # Intentar checkout de rama backup
+            elif git branch | grep -q "^  $backup_name$"; then
+                git checkout "$backup_name" || { echo "❌ Error: Falló checkout de rama backup."; return 1; }
+                echo "✅ Rama backup restaurada: $backup_name"
+            else
+                echo "❌ Backup no encontrado: $backup_name"
+                return 1
+            fi
+
+            log_history "Restored backup: $backup_name"
+            ;;
+    esac
+}
+
+# Comando: sf pr (Pull Request / Issue)
+create_pr_issue() {
+    local action="pr"
+    local title=""
+    local body=""
+
+    # Parsear argumentos
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            pr)
+                action="pr"
+                shift
+                ;;
+            issue)
+                action="issue"
+                shift
+                ;;
+            --title)
+                if [[ -n "$2" ]]; then
+                    title="$2"
+                    shift 2
+                else
+                    echo "❌ Uso: --title <título>"
+                    return 1
+                fi
+                ;;
+            --body)
+                if [[ -n "$2" ]]; then
+                    body="$2"
+                    shift 2
+                else
+                    echo "❌ Uso: --body <descripción>"
+                    return 1
+                fi
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Opciones:"
+                echo "  pr                 Crear Pull Request (por defecto)"
+                echo "  issue              Crear Issue"
+                echo "  --title <texto>    Título personalizado"
+                echo "  --body <texto>     Descripción personalizada"
+                return 1
+                ;;
+        esac
+    done
+
+    get_current_branch
+
+    # Generar título por defecto
+    if [[ -z "$title" ]]; then
+        case $action in
+            pr)
+                title="feat: $CURRENT_BRANCH"
+                ;;
+            issue)
+                title="Issue: $CURRENT_BRANCH"
+                ;;
+        esac
+    fi
+
+    # Generar descripción por defecto
+    if [[ -z "$body" ]]; then
+        case $action in
+            pr)
+                body="Pull Request for branch: $CURRENT_BRANCH\n\nChanges:\n$(git log --oneline master.."$CURRENT_BRANCH" 2>/dev/null || echo "New branch")"
+                ;;
+            issue)
+                body="Issue related to branch: $CURRENT_BRANCH"
+                ;;
+        esac
+    fi
+
+    echo "🔗 Creando $action..."
+
+    # Verificar si GitHub CLI está disponible
+    if command -v gh &> /dev/null; then
+        echo "✅ GitHub CLI detectado. Creando $action automáticamente..."
+
+        case $action in
+            pr)
+                gh pr create --title "$title" --body "$body" || { echo "❌ Error: Falló crear PR."; return 1; }
+                ;;
+            issue)
+                gh issue create --title "$title" --body "$body" || { echo "❌ Error: Falló crear issue."; return 1; }
+                ;;
+        esac
+
+        log_history "Created $action via GitHub CLI: $title"
+        echo "✅ $action creado exitosamente."
+
+    else
+        echo "⚠️  GitHub CLI no detectado. Aquí están las instrucciones manuales:"
+        echo ""
+        echo "Para crear un $action manualmente:"
+        echo ""
+        echo "1. Ve a tu repositorio en GitHub/GitLab"
+        echo "2. Crea un nuevo $action con estos detalles:"
+        echo ""
+        echo "Título: $title"
+        echo "Descripción:"
+        echo "$body"
+        echo ""
+        echo "Comandos alternativos:"
+        echo "- Instala GitHub CLI: https://cli.github.com/"
+        echo "- O usa la interfaz web de tu plataforma Git"
+
+        log_history "Generated $action instructions: $title"
+    fi
+}
+
+# Comando: sf init
+
+# Comando: sf init
+init_project() {
+    echo "🚀 Inicializando proyecto sf..."
+
+    # Análisis inteligente del estado actual
+    local needs_init=false
+    local existing_config=""
+
+    if [[ -f ".env" ]]; then
+        existing_config+="✅ .env existe\n"
+        source .env 2>/dev/null
+        if [[ -n "$SHOPIFY_STORE" && -n "$SHOPIFY_THEME_ID" ]]; then
+            existing_config+="✅ Variables de entorno configuradas\n"
+        else
+            existing_config+="⚠️  Variables de entorno incompletas\n"
+            needs_init=true
+        fi
+    else
+        existing_config+="❌ .env no existe\n"
+        needs_init=true
+    fi
+
+    if [[ -x "sf" ]]; then
+        existing_config+="✅ Script sf es ejecutable\n"
+    else
+        existing_config+="❌ Script sf no es ejecutable\n"
+        needs_init=true
+    fi
+
+    if [[ -d ".git" ]]; then
+        existing_config+="✅ Repositorio Git inicializado\n"
+    else
+        existing_config+="❌ Repositorio Git no inicializado\n"
+        needs_init=true
+    fi
+
+    echo "📊 Estado actual del proyecto:"
+    echo -e "$existing_config"
+
+    if [[ "$needs_init" == false ]]; then
+        echo ""
+        echo "🎉 El proyecto ya está completamente inicializado."
+        echo "💡 Si quieres reinicializar, ejecuta: sf init --force"
+        echo ""
+        echo "Para verificar configuración: sf status"
+        return 0
+    fi
+
+    # Verificar si se fuerza reinicialización
+    if [[ "$1" == "--force" ]]; then
+        echo "🔄 Forzando reinicialización completa..."
+    else
+        echo ""
+        if ! confirm_action "¿Proceder con la inicialización?" "y"; then
+            echo "🚫 Inicialización cancelada."
+            return 1
+        fi
+    fi
+
+    # 1. Verificar dependencias
+    echo ""
+    echo "📦 Verificando dependencias..."
+    validate_dependencies
+
+    # 2. Hacer script ejecutable
+    echo "🔧 Configurando permisos del script..."
+    chmod +x sf || { echo "❌ Error: No se pudieron configurar permisos."; return 1; }
+
+    # 3. Crear .env si no existe
+    if [[ ! -f ".env" ]]; then
+        echo "📝 Creando archivo .env..."
+        cat > .env << EOF
+# Variables de entorno para el proyecto
+# Configuración de Shopify
+SHOPIFY_STORE="tu-tienda.myshopify.com"
+SHOPIFY_THEME_ID="123456789"
+EOF
+        echo "✅ Archivo .env creado. Edítalo con tus valores reales."
+    else
+        echo "✅ Archivo .env ya existe."
+    fi
+
+    # 4. Verificar/inicializar repositorio Git
+    if [[ ! -d ".git" ]]; then
+        echo "📚 Inicializando repositorio Git..."
+        git init || { echo "❌ Error: No se pudo inicializar Git."; return 1; }
+        git checkout -b master 2>/dev/null || git switch -c master 2>/dev/null || { echo "❌ Error: No se pudo crear rama master."; return 1; }
+        echo "✅ Repositorio Git inicializado."
+    else
+        echo "✅ Repositorio Git ya existe."
+    fi
+
+    # 5. Configurar alias
+    echo "🔗 Configurando alias global..."
+    local script_path="$(pwd)/sf"
+    if ! grep -q "alias sf=" ~/.bashrc 2>/dev/null && ! grep -q "alias sf=" ~/.zshrc 2>/dev/null; then
+        echo "alias sf=\"$script_path\"" >> ~/.bashrc
+        source ~/.bashrc 2>/dev/null || true
+        echo "✅ Alias configurado en ~/.bashrc"
+        echo "💡 Reinicia tu terminal o ejecuta: source ~/.bashrc"
+    else
+        echo "✅ Alias ya configurado."
+    fi
+
+    # 6. Crear .gitignore si no existe
+    if [[ ! -f ".gitignore" ]]; then
+        echo "📄 Creando .gitignore básico..."
+        cat > .gitignore << EOF
+# sf
+.env
+.sf_history
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+EOF
+        echo "✅ Archivo .gitignore creado."
+    fi
+
+    log_history "Project initialized"
+    echo ""
+    echo "🎉 ¡Proyecto inicializado exitosamente!"
+    echo ""
+    echo "📋 Checklist completado:"
+    echo "  ✅ Dependencias verificadas"
+    echo "  ✅ Script configurado"
+    echo "  ✅ Variables de entorno"
+    echo "  ✅ Repositorio Git"
+    echo "  ✅ Alias global"
+    echo "  ✅ .gitignore"
+    echo ""
+    suggest_next_steps "init"
+}
+
+# Comando: sf help
+show_help() {
+    echo "sf - Shopify Flow CLI"
+    echo ""
+    echo "Comandos disponibles:"
+    echo "  sf init      - Inicializa el proyecto y configura sf"
+    echo "  sf start     - Inicia un nuevo flujo de trabajo creando una rama"
+    echo "  sf commit    - Confirma cambios en la rama actual"
+    echo "  sf publish   - Fusiona rama a master y publica en Shopify"
+    echo "  sf sync      - Sincroniza cambios desde Shopify Admin"
+    echo "  sf status    - Muestra estado de Git y Shopify"
+    echo "  sf finish    - Elimina la rama actual después de publicar"
+    echo "  sf stash     - Guarda cambios locales en stash"
+    echo "  sf log       - Muestra historial de acciones"
+    echo "  sf diff      - Compara diferencias entre ramas o con Shopify"
+    echo "  sf clean     - Limpia ramas merged o antiguas"
+    echo "  sf backup    - Gestiona copias de seguridad"
+    echo "  sf pr        - Crea Pull Requests o Issues"
+    echo "  sf help      - Muestra esta ayuda"
+    echo ""
+    echo "Flags globales disponibles:"
+    echo "  --dry-run    Simula la operación sin ejecutarla"
+    echo "  --force      Omite confirmaciones y validaciones de seguridad"
+    echo "  --verbose    Muestra información detallada"
+    echo ""
+    echo "Asegúrate de configurar SHOPIFY_STORE y SHOPIFY_THEME_ID."
+}
+
+# Función principal
+main() {
+    case "${1:-help}" in
+        init) init_project ;;
+        *) 
+            load_env
+            validate_dependencies
+
+            # Validaciones preventivas inteligentes
+            if ! preventive_checks "$1"; then
+                return 1
+            fi
+
+            # Sugerencias inteligentes
+            smart_suggestions "$1"
+
+            case "$1" in
+                start) start_branch ;;
+                commit) commit_changes ;;
+                publish) publish_changes ;;
+                sync) sync_changes ;;
+                status) show_status ;;
+                finish) finish_branch ;;
+                stash) stash_changes ;;
+                log) shift; show_log "$@" ;;
+                diff) shift; show_diff "$@" ;;
+                clean) shift; clean_branches "$@" ;;
+                backup) shift; create_backup "$@" ;;
+                pr) shift; create_pr_issue pr "$@" ;;
+                help|--help|-h) show_help ;;
+                *) echo "❌ Comando desconocido: $1"; show_help; exit 1 ;;
+            esac
+            ;;
+    esac
+}
+
+main "$@"
