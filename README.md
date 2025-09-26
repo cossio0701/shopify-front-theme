@@ -50,7 +50,16 @@ sf init
 # ✅ Crea .env si no existe
 # ✅ Valida dependencias (Git, Shopify CLI)
 # ✅ Configura hooks de Git si es necesario
+
+# Reinicializar proyecto completamente
+sf init --force
+# ✅ Fuerza reinicialización sin confirmación
+# ✅ Reconfigura todos los componentes
 ```
+
+**Opciones disponibles:**
+
+- `--force`: Reinicializa el proyecto completamente sin pedir confirmación
 
 ### 2. `sf sync` - Sincronizar con Shopify Admin
 
