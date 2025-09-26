@@ -189,6 +189,31 @@ suggest_next_steps() {
     esac
 }
 
+# Función para resolver conflictos con cambios de Shopify
+resolve_shopify_conflicts() {
+    local conflicted_files=("$@")
+    if [[ ${#conflicted_files[@]} -gt 0 ]]; then
+        echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge granulares..."
+        for file in "${conflicted_files[@]}"; do
+            local base_file=$(mktemp)
+            local ours_file=$(mktemp)
+            local theirs_file=$(mktemp)
+            echo "" > "$base_file"
+            git show HEAD:"$file" > "$ours_file" 2>/dev/null || echo "" > "$ours_file"
+            cat "$file" > "$theirs_file"
+            git merge-file "$ours_file" "$base_file" "$theirs_file" >/dev/null 2>&1
+            cat "$ours_file" > "$file"
+            rm "$base_file" "$ours_file" "$theirs_file"
+        done
+        echo "✅ Marcadores de merge granulares creados en ${#conflicted_files[@]} archivo(s)."
+        echo "🔧 Resuelve los conflictos editando los archivos, luego:"
+        echo "  git add <archivo>"
+        echo "  git commit -m 'resolve: conflictos sync Shopify'"
+        return 1
+    fi
+    return 0
+}
+
 # Función para verificar cambios sin commit
 check_uncommitted_changes() {
     if ! git diff --quiet || ! git diff --staged --quiet; then
@@ -679,11 +704,24 @@ publish_changes() {
         local shopify_changes_after=$(git status --porcelain | wc -l)
         if [[ $shopify_changes_after -gt $shopify_changes_before ]]; then
             echo "✅ Se incorporaron cambios recientes desde Shopify Admin."
+            # Verificar conflictos con committed
+            local conflicted_files=()
+            for file in $(git diff --name-only); do
+                if git diff HEAD "$file" >/dev/null 2>&1; then
+                    conflicted_files+=("$file")
+                fi
+            done
+            resolve_shopify_conflicts "${conflicted_files[@]}"
+            if [[ $? -eq 1 ]]; then
+                echo "  Después, vuelve a ejecutar sf publish"
+                return 1
+            fi
             # Hacer commit automático de los cambios de Shopify
-            git add . && git commit -m "sync: cambios desde admin Shopify antes de publicar" || {
-                echo "⚠️  No se pudieron confirmar los cambios de Shopify automáticamente."
-                echo "💡 Continuando con la publicación..."
-            }
+                git add . && git commit -m "sync: cambios desde admin Shopify antes de publicar" || {
+                    echo "⚠️  No se pudieron confirmar los cambios de Shopify automáticamente."
+                    echo "💡 Continuando con la publicación..."
+                }
+            fi
         else
             echo "✅ Master está sincronizado con Shopify Admin."
         fi
@@ -818,23 +856,8 @@ sync_changes() {
                     conflicted_files+=("$file")
                 fi
             done
-            if [[ ${#conflicted_files[@]} -gt 0 ]]; then
-                echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge granulares..."
-                for file in "${conflicted_files[@]}"; do
-                    local base_file=$(mktemp)
-                    local ours_file=$(mktemp)
-                    local theirs_file=$(mktemp)
-                    echo "" > "$base_file"
-                    git show HEAD:"$file" > "$ours_file" 2>/dev/null || echo "" > "$ours_file"
-                    cat "$file" > "$theirs_file"
-                    git merge-file "$ours_file" "$base_file" "$theirs_file" >/dev/null 2>&1
-                    cat "$ours_file" > "$file"
-                    rm "$base_file" "$ours_file" "$theirs_file"
-                done
-                echo "✅ Marcadores de merge granulares creados en ${#conflicted_files[@]} archivo(s)."
-                echo "🔧 Resuelve los conflictos editando los archivos, luego:"
-                echo "  git add <archivo>"
-                echo "  git commit -m 'resolve: conflictos sync Shopify'"
+            resolve_shopify_conflicts "${conflicted_files[@]}"
+            if [[ $? -eq 1 ]]; then
                 return 1
             fi
         else
