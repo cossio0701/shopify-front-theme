@@ -944,10 +944,11 @@ resolve_conflicts() {
         return 1
     fi
 
-    # Verificar que hay cambios para confirmar
-    if git diff --quiet && git diff --staged --quiet; then
-        echo "❌ Error: No hay cambios para confirmar."
-        echo "💡 Asegúrate de haber resuelto los conflictos y agregado los archivos."
+    # Verificar que estamos en medio de un merge o hay cambios para confirmar
+    if git diff --quiet && git diff --staged --quiet && ! [[ -f .git/MERGE_HEAD ]]; then
+        echo "❌ Error: No hay conflictos para resolver ni cambios para confirmar."
+        echo "💡 Asegúrate de estar en medio de un merge conflict o tener cambios resueltos para confirmar."
+        echo "💡 Si ya resolviste los conflictos, ejecuta 'git add .' y luego 'sf resolve'."
         return 1
     fi
 
