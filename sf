@@ -811,6 +811,32 @@ sync_changes() {
         if [[ $changes_after -gt $changes_before ]]; then
             local shopify_has_changes=true
             echo "✅ Se encontraron cambios nuevos desde Shopify Admin."
+            # Verificar si hay conflictos con cambios committed
+            local conflicted_files=()
+            for file in $(git diff --name-only); do
+                if git diff HEAD "$file" >/dev/null 2>&1; then
+                    conflicted_files+=("$file")
+                fi
+            done
+            if [[ ${#conflicted_files[@]} -gt 0 ]]; then
+                echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge..."
+                for file in "${conflicted_files[@]}"; do
+                    local head_content=$(git show HEAD:"$file" 2>/dev/null || echo "")
+                    local pulled_content=$(cat "$file")
+                    cat > "$file" << EOF
+<<<<<<< HEAD
+$head_content
+=======
+$pulled_content
+>>>>>>> Shopify
+EOF
+                done
+                echo "✅ Marcadores de merge creados en ${#conflicted_files[@]} archivo(s)."
+                echo "🔧 Resuelve los conflictos editando los archivos, luego:"
+                echo "  git add <archivo>"
+                echo "  git commit -m 'resolve: conflictos sync Shopify'"
+                return 1
+            fi
         else
             local shopify_has_changes=false
             echo "✅ No hay cambios nuevos en Shopify Admin."
