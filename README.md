@@ -202,16 +202,16 @@ sf publish --force           # Omite validaciones de seguridad
 
 ### 7. `sf resolve` - Resolver Conflictos
 
-**¿Qué hace?** Confirma cambios resueltos después de un conflicto y los publica automáticamente.
+**¿Qué hace?** Confirma cambios resueltos después de un conflicto (solo confirma en Git, no publica a Shopify).
 
 **Cuándo usarlo:** Después de resolver conflictos manualmente en los archivos.
 
 ```bash
 sf resolve
 # ✅ Agrega todos los archivos resueltos
-# ✅ Confirma con mensaje "resolve: conflictos sync Shopify"
+# ✅ Confirma con mensaje "resolve: conflictos de merge"
 # ✅ Sube cambios a repositorio remoto
-# ✅ Publica en Shopify Admin
+# ✅ NO publica automáticamente a Shopify
 ```
 
 **Flujo típico de resolución:**
@@ -219,7 +219,9 @@ sf resolve
 1. Un comando como `sf sync` o `sf merge` detecta conflictos
 2. Resuelve conflictos manualmente editando los archivos
 3. Ejecuta `git add <archivos>` para marcar como resueltos
-4. Usa `sf resolve` para confirmar y publicar automáticamente
+4. Usa `sf resolve` para confirmar automáticamente
+5. **Prueba los cambios:** `sf dev --test`
+6. **Publica manualmente:** `sf publish` cuando estés seguro
 
 ### 8. `sf finish` - Finalizar Trabajo
 
@@ -266,11 +268,13 @@ git status
 # 3. Agrega los archivos resueltos
 git add archivo-conflicto.js
 
-# 4. Confirma y publica automáticamente
+# 4. Confirma automáticamente (sin publicar a Shopify)
 sf resolve
 
-# O continúa manualmente si prefieres
-git commit -m "Resolve conflicts"
+# 5. Prueba los cambios antes de publicar
+sf dev --test
+
+# 6. Publica a Shopify cuando estés seguro
 sf publish
 ```
 

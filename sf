@@ -199,8 +199,9 @@ suggest_next_steps() {
             echo "3. Inicia nuevo trabajo: sf start"
             ;;
         resolve)
-            echo "1. Verifica que todo funciona: sf status"
-            echo "2. Inicia nuevo trabajo: sf start"
+            echo "1. Prueba los cambios localmente: sf dev --test"
+            echo "2. Si todo funciona, publica a Shopify: sf publish"
+            echo "3. Inicia nuevo trabajo: sf start"
             ;;
         finish)
             echo "1. Verifica que todo está bien: sf status"
@@ -1166,11 +1167,11 @@ resolve_conflicts() {
     if git diff --quiet && git diff --staged --quiet && ! [[ -f .git/MERGE_HEAD ]]; then
         echo "ℹ️  No hay conflictos pendientes ni cambios para confirmar."
         echo ""
-        echo "� Estado actual del repositorio:"
+        echo "📊 Estado actual del repositorio:"
         detect_project_state
         echo ""
         echo "💡 Si quieres sincronizar los cambios actuales con Shopify Admin:"
-        echo "   shopify theme push -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
+        echo "   sf publish"
         echo ""
         echo "💡 O si tienes cambios en una rama de trabajo, considera:"
         echo "   sf merge  # Para fusionar cambios desde una rama de trabajo"
@@ -1182,27 +1183,23 @@ resolve_conflicts() {
     git add . || { echo "❌ Error: Falló git add."; return 1; }
 
     # Confirmar con mensaje específico
-    local commit_message="resolve: conflictos sync Shopify"
+    local commit_message="resolve: conflictos de merge"
     echo "✅ Confirmando cambios con mensaje: '$commit_message'"
     git commit -m "$commit_message" || { echo "❌ Error: Falló git commit."; return 1; }
 
-    # Publicar cambios
+    # Publicar cambios a remoto
     echo "📤 Publicando cambios a remoto..."
     git push origin master || { echo "❌ Error: Falló git push."; return 1; }
 
-    # Publicar en Shopify
-    echo "📤 Publicando en Shopify..."
-    shopify theme push -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
-        echo "❌ Error: Falló shopify theme push."
-        echo "💡 Los cambios se confirmaron y subieron a git, pero falló la publicación en Shopify."
-        echo "   Puedes intentar nuevamente o publicar manualmente."
-        return 1
-    }
-
     log_history "Resolved conflicts and committed changes"
-    echo "✅ Conflictos resueltos y publicados exitosamente."
+    echo "✅ Conflictos resueltos y confirmados exitosamente."
+    echo ""
+    echo "💡 Próximos pasos recomendados:"
+    echo "1. Prueba los cambios localmente: sf dev --test"
+    echo "2. Si todo funciona bien, publica a Shopify: sf publish"
+    echo "3. Inicia nuevo trabajo: sf start"
 
-    suggest_next_steps "resolve"
+    # No llamar a suggest_next_steps aquí, ya que damos sugerencias específicas
 }
 
 # Comando: sf status
