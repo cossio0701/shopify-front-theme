@@ -268,7 +268,7 @@ sf status
 ```bash
 sf dev
 # ✅ Inicia servidor de desarrollo con shopify theme dev
-# ✅ Usa configuración por defecto (tema live/producción)
+# ✅ Usa configuración por defecto (tema de desarrollo)
 # ✅ Recarga automática al guardar cambios
 # ✅ Acceso local en http://127.0.0.1:9292
 # ✅ Verificación de procesos existentes
@@ -297,7 +297,7 @@ sf dev --test
 - **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
 **Características:**
 
-- **🎯 Tema Live/Producción:** Los cambios se reflejan directamente en producción
+- **🎯 Tema de Desarrollo:** Ambiente seguro para probar cambios antes de publicar
 - **🔄 Recarga automática:** Los cambios se reflejan inmediatamente
 - **🌐 Acceso local:** Servidor disponible en puerto configurable
 - **🛡️ Verificación:** Detecta si ya hay un servidor corriendo

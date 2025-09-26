@@ -1560,7 +1560,7 @@ start_dev_server() {
     validate_env
 
     echo "🚀 Iniciando servidor de desarrollo..."
-    echo "🎯 Usando configuración por defecto de Shopify CLI (tema live/producción)"
+    echo "🎯 Usando configuración por defecto de Shopify CLI (tema de desarrollo)"
     echo ""
 
     # Parsear argumentos PRIMERO
