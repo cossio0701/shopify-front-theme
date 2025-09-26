@@ -90,16 +90,35 @@ sf start
 
 ### 4. `sf commit` - Confirmar Cambios
 
-**¿Qué hace?** Guarda tus cambios locales en la rama actual con un mensaje descriptivo.
+**¿Qué hace?** Guarda tus cambios locales en la rama actual con un mensaje descriptivo siguiendo el formato Conventional Commits.
 
 **Cuándo usarlo:** Después de hacer cambios en el código y antes de publicar.
 
 ```bash
 sf commit
-# Ingresa mensaje de commit obligatorio
+# ✅ Valida formato Conventional Commits (tipo: descripción)
+# ✅ Sugiere tipo de commit basado en archivos modificados
+# ✅ Muestra ejemplos si el formato es incorrecto
 # ✅ Valida que hay cambios para commitear
 # ✅ Crea commit con mensaje proporcionado
 ```
+
+**Formatos de commit recomendados:**
+
+- `feat: agregar nueva funcionalidad de login`
+- `fix: corregir error en validación de email`
+- `docs: actualizar documentación de instalación`
+- `style: formatear código con prettier`
+- `refactor: renombrar variables para mayor claridad`
+- `test: agregar pruebas para componente header`
+- `chore: actualizar dependencias`
+
+**Características inteligentes:**
+
+- **Validación automática:** Verifica que el mensaje siga el formato `tipo: descripción`
+- **Sugerencias inteligentes:** Propone el tipo de commit basado en los archivos modificados
+- **Ejemplos interactivos:** Muestra ejemplos de formatos válidos cuando es necesario
+- **Flexibilidad:** Permite continuar con mensajes no convencionales si se confirma
 
 ### 5. `sf publish` - Publicar Cambios
 
