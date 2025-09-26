@@ -183,8 +183,12 @@ suggest_next_steps() {
             ;;
         sync)
             echo "1. Verifica cambios: sf status"
-            echo "2. Si hay conflictos, resuélvelos manualmente"
+            echo "2. Si hay conflictos, resuélvelos y confirma: sf resolve"
             echo "3. Inicia nuevo trabajo: sf start"
+            ;;
+        resolve)
+            echo "1. Verifica que todo funciona: sf status"
+            echo "2. Inicia nuevo trabajo: sf start"
             ;;
         finish)
             echo "1. Verifica que todo está bien: sf status"
@@ -245,7 +249,7 @@ preventive_checks() {
 
     # Solo ejecutar para comandos que modifican estado
     case "$command" in
-        start|commit|publish|finish)
+        start|commit|publish|finish|resolve)
             # Verificar si estamos en un repo Git
             if [[ ! -d ".git" ]]; then
                 echo "❌ Error: No estás en un repositorio Git."
@@ -943,6 +947,46 @@ sync_changes() {
     fi
 
     suggest_next_steps "sync"
+}
+
+# Comando: sf resolve
+resolve_conflicts() {
+    validate_env
+    echo "🔧 Resolviendo conflictos y confirmando cambios..."
+
+    get_current_branch
+
+    # Verificar que estamos en master
+    if [[ "$CURRENT_BRANCH" != "master" ]]; then
+        echo "❌ Error: Debes estar en la rama master para resolver conflictos."
+        echo "💡 Cambia a master: git checkout master"
+        return 1
+    fi
+
+    # Verificar que hay cambios para confirmar
+    if git diff --quiet && git diff --staged --quiet; then
+        echo "❌ Error: No hay cambios para confirmar."
+        echo "💡 Asegúrate de haber resuelto los conflictos y agregado los archivos."
+        return 1
+    fi
+
+    # Agregar todos los cambios
+    echo "📝 Agregando archivos resueltos..."
+    git add . || { echo "❌ Error: Falló git add."; return 1; }
+
+    # Confirmar con mensaje específico
+    local commit_message="resolve: conflictos sync Shopify"
+    echo "✅ Confirmando cambios con mensaje: '$commit_message'"
+    git commit -m "$commit_message" || { echo "❌ Error: Falló git commit."; return 1; }
+
+    # Publicar cambios
+    echo "📤 Publicando cambios a remoto..."
+    git push origin master || { echo "❌ Error: Falló git push."; return 1; }
+
+    log_history "Resolved conflicts and committed changes"
+    echo "✅ Conflictos resueltos y publicados exitosamente."
+
+    suggest_next_steps "resolve"
 }
 
 # Comando: sf status
@@ -1694,6 +1738,7 @@ show_help() {
     echo "  sf commit    - Confirma cambios en la rama actual"
     echo "  sf publish   - Fusiona rama a master y publica en Shopify"
     echo "  sf sync      - Sincroniza cambios desde Shopify Admin"
+    echo "  sf resolve   - Resuelve conflictos y confirma cambios"
     echo "  sf status    - Muestra estado de Git y Shopify"
     echo "  sf dev       - Inicia servidor de desarrollo local"
     echo "  sf finish    - Elimina la rama actual después de publicar"
@@ -1810,7 +1855,7 @@ main() {
                 start) start_branch ;;
                 commit) commit_changes ;;
                 publish) shift; publish_changes "$@" ;;
-                sync) shift; sync_changes "$@" ;;
+                resolve) resolve_conflicts ;;
                 status) show_status ;;
                 finish) finish_branch ;;
                 stash) stash_changes ;;
