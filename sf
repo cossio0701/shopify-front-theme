@@ -104,10 +104,21 @@ validate_env() {
     fi
 }
 
-# Función para registrar en historial
-log_history() {
-    local message="$1"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $message" >> "$HISTORY_FILE"
+# Función para verificar si la terminal soporta colores
+supports_colors() {
+    [[ -t 1 ]] && [[ "${TERM:-}" != "dumb" ]] && command -v tput >/dev/null 2>&1 && [[ $(tput colors 2>/dev/null || echo 0) -ge 8 ]]
+}
+
+# Función para colorear texto si es soportado
+color_text() {
+    local color_code="$1"
+    local text="$2"
+    
+    if supports_colors; then
+        echo -e "\033[${color_code}m${text}\033[0m"
+    else
+        echo "$text"
+    fi
 }
 
 # Función para confirmar acción
@@ -430,7 +441,7 @@ detect_project_state() {
     local commits_ahead=$(git rev-list origin/master..HEAD --count 2>/dev/null || git rev-list master..HEAD --count 2>/dev/null || echo "0")
 
     # Mostrar estado
-    echo "🌿 Rama actual: $current_branch"
+    echo "🌿 Rama actual: $(color_text "1;34" "$current_branch")"
 
     if [[ $staged_changes -gt 0 ]]; then
         echo "📝 Cambios preparados: $staged_changes archivo(s)"
@@ -796,7 +807,7 @@ show_status() {
     detect_project_state
 
     echo ""
-    echo "🔗 Shopify Store: $SHOPIFY_STORE"
+    echo "🔗 Shopify Store: $(color_text "1;32" "$SHOPIFY_STORE")"
     echo "🆔 Theme ID: $SHOPIFY_THEME_ID"
     echo ""
     echo "💡 Para verificar cambios en Shopify Admin:"
