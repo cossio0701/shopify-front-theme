@@ -946,10 +946,17 @@ resolve_conflicts() {
 
     # Verificar que estamos en medio de un merge o hay cambios para confirmar
     if git diff --quiet && git diff --staged --quiet && ! [[ -f .git/MERGE_HEAD ]]; then
-        echo "❌ Error: No hay conflictos para resolver ni cambios para confirmar."
-        echo "💡 Asegúrate de estar en medio de un merge conflict o tener cambios resueltos para confirmar."
-        echo "💡 Si ya resolviste los conflictos, ejecuta 'git add .' y luego 'sf resolve'."
-        return 1
+        echo "ℹ️  No hay conflictos pendientes ni cambios para confirmar."
+        echo ""
+        echo "� Estado actual del repositorio:"
+        detect_project_state
+        echo ""
+        echo "💡 Si quieres sincronizar los cambios actuales con Shopify Admin:"
+        echo "   shopify theme push -s \"$SHOPIFY_STORE\" -t \"$SHOPIFY_THEME_ID\""
+        echo ""
+        echo "💡 O si tienes cambios en una rama de trabajo, considera:"
+        echo "   sf publish  # Para publicar cambios desde una rama de trabajo"
+        return 0
     fi
 
     # Agregar todos los cambios
