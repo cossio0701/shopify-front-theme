@@ -1573,8 +1573,8 @@ main() {
             case "$1" in
                 start) start_branch ;;
                 commit) commit_changes ;;
-                publish) publish_changes ;;
-                sync) sync_changes ;;
+                publish) shift; publish_changes "$@" ;;
+                sync) shift; sync_changes "$@" ;;
                 status) show_status ;;
                 finish) finish_branch ;;
                 stash) stash_changes ;;
