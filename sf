@@ -819,13 +819,19 @@ sync_changes() {
                 fi
             done
             if [[ ${#conflicted_files[@]} -gt 0 ]]; then
-                echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge..."
+                echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge granulares..."
                 for file in "${conflicted_files[@]}"; do
-                    local head_content=$(git show HEAD:"$file" 2>/dev/null || echo "")
-                    local pulled_content=$(cat "$file")
-                    printf '<<<<<<< HEAD\n%s\n=======\n%s\n>>>>>>> Shopify\n' "$head_content" "$pulled_content" > "$file"
+                    local base_file=$(mktemp)
+                    local ours_file=$(mktemp)
+                    local theirs_file=$(mktemp)
+                    git show HEAD:"$file" > "$base_file" 2>/dev/null || echo "" > "$base_file"
+                    git show HEAD:"$file" > "$ours_file" 2>/dev/null || echo "" > "$ours_file"
+                    cat "$file" > "$theirs_file"
+                    git merge-file "$ours_file" "$base_file" "$theirs_file" >/dev/null 2>&1
+                    cat "$ours_file" > "$file"
+                    rm "$base_file" "$ours_file" "$theirs_file"
                 done
-                echo "✅ Marcadores de merge creados en ${#conflicted_files[@]} archivo(s)."
+                echo "✅ Marcadores de merge granulares creados en ${#conflicted_files[@]} archivo(s)."
                 echo "🔧 Resuelve los conflictos editando los archivos, luego:"
                 echo "  git add <archivo>"
                 echo "  git commit -m 'resolve: conflictos sync Shopify'"
