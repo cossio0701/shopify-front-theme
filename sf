@@ -823,13 +823,7 @@ sync_changes() {
                 for file in "${conflicted_files[@]}"; do
                     local head_content=$(git show HEAD:"$file" 2>/dev/null || echo "")
                     local pulled_content=$(cat "$file")
-                    cat > "$file" << EOF
-<<<<<<< HEAD
-$head_content
-=======
-$pulled_content
->>>>>>> Shopify
-EOF
+                    printf '<<<<<<< HEAD\n%s\n=======\n%s\n>>>>>>> Shopify\n' "$head_content" "$pulled_content" > "$file"
                 done
                 echo "✅ Marcadores de merge creados en ${#conflicted_files[@]} archivo(s)."
                 echo "🔧 Resuelve los conflictos editando los archivos, luego:"
