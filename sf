@@ -721,7 +721,6 @@ publish_changes() {
                     echo "⚠️  No se pudieron confirmar los cambios de Shopify automáticamente."
                     echo "💡 Continuando con la publicación..."
                 }
-            fi
         else
             echo "✅ Master está sincronizado con Shopify Admin."
         fi
