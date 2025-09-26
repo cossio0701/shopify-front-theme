@@ -416,6 +416,44 @@ start_branch() {
     suggest_next_steps "start"
 }
 
+# Función para detectar el estado del proyecto
+detect_project_state() {
+    # Obtener rama actual
+    local current_branch=$(git branch --show-current 2>/dev/null || echo "desconocida")
+
+    # Contar cambios
+    local staged_changes=$(git diff --staged --name-only | wc -l)
+    local unstaged_changes=$(git diff --name-only | wc -l)
+    local untracked_files=$(git ls-files --others --exclude-standard | wc -l)
+
+    # Commits por publicar
+    local commits_ahead=$(git rev-list origin/master..HEAD --count 2>/dev/null || git rev-list master..HEAD --count 2>/dev/null || echo "0")
+
+    # Mostrar estado
+    echo "🌿 Rama actual: $current_branch"
+
+    if [[ $staged_changes -gt 0 ]]; then
+        echo "📝 Cambios preparados: $staged_changes archivo(s)"
+    fi
+
+    if [[ $unstaged_changes -gt 0 ]]; then
+        echo "✏️  Cambios sin preparar: $unstaged_changes archivo(s)"
+    fi
+
+    if [[ $untracked_files -gt 0 ]]; then
+        echo "📄 Archivos no rastreados: $untracked_files archivo(s)"
+    fi
+
+    if [[ $commits_ahead -gt 0 ]]; then
+        echo "⬆️  Commits por publicar: $commits_ahead"
+    fi
+
+    # Estado general
+    if [[ $staged_changes -eq 0 && $unstaged_changes -eq 0 && $untracked_files -eq 0 ]]; then
+        echo "✅ Repositorio limpio"
+    fi
+}
+
 # Función para validar formato de conventional commits
 validate_commit_message() {
     local message="$1"

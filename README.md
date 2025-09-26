@@ -234,20 +234,22 @@ sf backup restore nombre-del-backup
 
 ```bash
 sf status
-# ✅ Análisis completo del estado del proyecto
-# ✅ Detección inteligente de rama actual y cambios locales
-# ✅ Validaciones preventivas (archivos .env, dependencias)
-# ✅ Sugerencias contextuales de próximos pasos
-# ✅ Estado de sincronización con Shopify Admin
-# ✅ Alertas de posibles conflictos o problemas
+# ✅ Rama actual del proyecto
+# ✅ Conteo de cambios preparados y sin preparar
+# ✅ Archivos no rastreados por Git
+# ✅ Commits pendientes por publicar
+# ✅ Estado general del repositorio (limpio o con cambios)
+# ✅ Información de conexión con Shopify Admin
 ```
 
-**Características inteligentes:**
+**Información mostrada:**
 
-- **Detección de estado:** Analiza automáticamente el estado de Git, archivos de configuración y dependencias
-- **Sugerencias de flujo:** Te indica qué comando ejecutar a continuación basado en tu estado actual
-- **Validaciones preventivas:** Detecta problemas antes de que ocurran (como archivos faltantes o configuraciones incorrectas)
-- **Guía contextual:** Mensajes específicos según tu situación actual en el flujo de desarrollo
+- **🌿 Rama actual:** En qué rama estás trabajando
+- **📝 Cambios preparados:** Archivos agregados al staging area
+- **✏️ Cambios sin preparar:** Modificaciones no confirmadas
+- **📄 Archivos no rastreados:** Nuevos archivos no agregados a Git
+- **⬆️ Commits por publicar:** Cantidad de commits locales no enviados al remoto
+- **✅ Estado general:** Indicador de si el repositorio está limpio
 
 ### `sf stash` - Guardar Cambios Temporales
 
@@ -324,6 +326,19 @@ Crea un archivo `.env` en la raíz del proyecto:
 SHOPIFY_STORE="tu-tienda.myshopify.com"
 SHOPIFY_THEME_ID="123456789"
 ```
+
+### Configuración Automática de Git
+
+El script sf configura automáticamente el archivo `.gitignore` para excluir archivos que no deben versionarse:
+
+```bash
+# Archivos excluidos automáticamente:
+.sf_history        # Historial de comandos del script sf
+.env              # Variables de entorno sensibles
+.shopify/         # Archivos temporales de Shopify CLI
+```
+
+**Nota:** El archivo `.sf_history` contiene el historial de comandos ejecutados y se mantiene localmente pero se excluye del repositorio Git.
 
 ### Alias Global (Recomendado)
 
