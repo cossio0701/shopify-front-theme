@@ -419,9 +419,9 @@ start_branch() {
         fi
     fi
 
-    # Sincronizar con remoto antes de crear rama
-    echo "🔄 Sincronizando con remoto..."
-    git pull origin master || { echo "❌ Error: Falló git pull. Verifica conexión."; return 1; }
+    # Sincronizar con Shopify y remoto antes de crear rama
+    echo "🔄 Sincronizando con Shopify y remoto..."
+    sync_changes --force || { echo "❌ Error: Falló sincronización."; return 1; }
 
     # Menú interactivo para seleccionar tipo de flujo
     if ! interactive_menu; then
