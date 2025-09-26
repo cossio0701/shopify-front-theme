@@ -1537,6 +1537,7 @@ show_help() {
     echo "  sf publish   - Fusiona rama a master y publica en Shopify"
     echo "  sf sync      - Sincroniza cambios desde Shopify Admin"
     echo "  sf status    - Muestra estado de Git y Shopify"
+    echo "  sf dev       - Inicia servidor de desarrollo local"
     echo "  sf finish    - Elimina la rama actual después de publicar"
     echo "  sf stash     - Guarda cambios locales en stash"
     echo "  sf log       - Muestra historial de acciones"
@@ -1552,6 +1553,84 @@ show_help() {
     echo "  --verbose    Muestra información detallada"
     echo ""
     echo "Asegúrate de configurar SHOPIFY_STORE y SHOPIFY_THEME_ID."
+}
+
+# Comando: sf dev
+start_dev_server() {
+    validate_env
+
+    echo "🚀 Iniciando servidor de desarrollo..."
+    echo "🔗 Shopify Store: $SHOPIFY_STORE"
+    echo "🆔 Theme ID: $SHOPIFY_THEME_ID"
+    echo ""
+
+    # Parsear argumentos PRIMERO
+    local test_mode=false
+    local port="9292"
+    local host="127.0.0.1"
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                echo "Uso: sf dev [opciones]"
+                echo ""
+                echo "Opciones:"
+                echo "  --test     Modo informativo de pruebas (sin cambios funcionales)"
+                echo "  --port N   Puerto del servidor (default: 9292)"
+                echo "  --host IP  Host del servidor (default: 127.0.0.1)"
+                echo "  --help     Mostrar esta ayuda"
+                return 0
+                ;;
+            --test)
+                test_mode=true
+                shift
+                ;;
+            --port)
+                port="$2"
+                shift 2
+                ;;
+            --host)
+                host="$2"
+                shift 2
+                ;;
+            *)
+                echo "❌ Opción desconocida: $1"
+                echo "Usa 'sf dev --help' para ver opciones disponibles."
+                return 1
+                ;;
+        esac
+    done
+
+    # Verificar si ya hay un servidor corriendo
+    if pgrep -f "shopify theme dev" > /dev/null; then
+        echo "⚠️  Parece que ya hay un servidor de desarrollo corriendo."
+        echo "💡 Si quieres detenerlo, usa: pkill -f 'shopify theme dev'"
+        echo ""
+        if ! confirm_action "¿Iniciar otro servidor de todas formas?" "n"; then
+            return 0
+        fi
+    fi
+
+    # Construir comando
+    local cmd="shopify theme dev --store=\"$SHOPIFY_STORE\" --theme=\"$SHOPIFY_THEME_ID\" --port=\"$port\" --host=\"$host\""
+
+    if [[ "$test_mode" == true ]]; then
+        echo "🧪 Modo de pruebas activado (desarrollo sin recarga automática)"
+        echo "💡 En modo pruebas, los cambios no se reflejan automáticamente"
+    else
+        echo "🔄 Modo desarrollo con recarga automática"
+    fi
+
+    echo "📡 Comando: $cmd"
+    echo ""
+    echo "🌐 Una vez iniciado, podrás acceder a:"
+    echo "   http://$host:$port"
+    echo ""
+    echo "💡 Presiona Ctrl+C para detener el servidor"
+    echo ""
+
+    # Ejecutar comando
+    eval "$cmd"
 }
 
 # Función principal
@@ -1583,6 +1662,7 @@ main() {
                 clean) shift; clean_branches "$@" ;;
                 backup) shift; create_backup "$@" ;;
                 pr) shift; create_pr_issue pr "$@" ;;
+                dev) shift; start_dev_server "$@" ;;
                 help|--help|-h) show_help ;;
                 *) echo "❌ Comando desconocido: $1"; show_help; exit 1 ;;
             esac

@@ -260,6 +260,50 @@ sf status
 - **⬆️ Commits por publicar:** Cantidad de commits locales no enviados al remoto
 - **✅ Estado general:** Indicador de si el repositorio está limpio
 
+### `sf dev` - Servidor de Desarrollo Local
+
+**¿Cuándo usarlo?** Para desarrollar y probar cambios localmente antes de publicar.
+
+```bash
+```bash
+sf dev
+# ✅ Inicia servidor de desarrollo con shopify theme dev
+# ✅ Recarga automática al guardar cambios
+# ✅ Acceso local en http://127.0.0.1:9292
+# ✅ Verificación de procesos existentes
+```
+
+**Características:**
+
+- **🔄 Recarga automática:** Los cambios se reflejan inmediatamente
+- **🌐 Acceso local:** Servidor disponible en puerto configurable
+- **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
+- **⚙️ Configurable:** Puerto, host y opciones personalizables
+
+```bash
+- **⚙️ Configurable:** Puerto, host y opciones personalizables
+
+```bash
+# Modo de pruebas (informativo)
+sf dev --test
+
+```
+
+**Características:**
+
+- **🔄 Recarga automática:** Los cambios se reflejan inmediatamente
+- **🌐 Acceso local:** Servidor disponible en puerto configurable
+- **🛡️ Verificación:** Detecta si ya hay un servidor corriendo
+- **⚙️ Configurable:** Puerto, host y opciones personalizables
+
+```bash
+# Modo de pruebas (informativo)
+sf dev --test
+
+# Opciones personalizadas
+sf dev --port 3000 --host 0.0.0.0
+```
+
 ### `sf stash` - Guardar Cambios Temporales
 
 **¿Cuándo usarlo?** Cuando necesitas cambiar de rama pero tienes cambios sin commitear.
