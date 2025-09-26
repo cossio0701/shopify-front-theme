@@ -1499,11 +1499,9 @@ clean_branches() {
             echo "Buscando ramas ya merged en master..."
             # Obtener ramas locales merged
             while IFS= read -r branch; do
-                if [[ "$branch" != "master" && "$branch" != "*" ]]; then
-                    branch=${branch#* }
-                    if git merge-base --is-ancestor "$branch" master 2>/dev/null; then
-                        branches_to_clean+=("$branch")
-                    fi
+                branch=$(echo "$branch" | sed 's/^[ *]*//')
+                if [[ "$branch" != "master" ]] && [[ "$branch" != "main" ]]; then
+                    branches_to_clean+=("$branch")
                 fi
             done < <(git branch --merged master)
             ;;
