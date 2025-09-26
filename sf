@@ -747,16 +747,26 @@ sync_changes() {
 
     # Verificar cambios en Shopify antes de descargar
     echo "🔍 Verificando cambios en Shopify Admin..."
-    local shopify_has_changes=false
-    if shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" --dry-run 2>/dev/null; then
-        echo "📥 Descargando cambios desde Shopify..."
-        shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
-            echo "❌ Error: Falló shopify theme pull."
-            return 1
-        }
-        shopify_has_changes=true
+    
+    # Recordar estado antes del pull
+    local changes_before=$(git status --porcelain | wc -l)
+    
+    # Intentar descargar cambios desde Shopify
+    echo "📥 Descargando cambios desde Shopify..."
+    if shopify theme pull -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" 2>/dev/null; then
+        # Verificar si realmente había cambios comparando con el estado anterior
+        local changes_after=$(git status --porcelain | wc -l)
+        if [[ $changes_after -gt $changes_before ]]; then
+            local shopify_has_changes=true
+            echo "✅ Se encontraron cambios nuevos desde Shopify Admin."
+        else
+            local shopify_has_changes=false
+            echo "✅ No hay cambios nuevos en Shopify Admin."
+        fi
     else
-        echo "✅ No hay cambios nuevos en Shopify Admin."
+        echo "❌ Error: Falló shopify theme pull."
+        echo "💡 Verifica tu conexión y credenciales de Shopify."
+        return 1
     fi
 
     # Sincronizar con remoto
