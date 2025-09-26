@@ -1385,6 +1385,12 @@ create_pr_issue() {
 init_project() {
     echo "🚀 Inicializando proyecto sf..."
 
+    # Verificar si se fuerza reinicialización ANTES de cualquier análisis
+    if [[ "$1" == "--force" ]]; then
+        echo "🔄 Forzando reinicialización completa..."
+        echo ""
+    fi
+
     # Análisis inteligente del estado actual
     local needs_init=false
     local existing_config=""
@@ -1420,7 +1426,7 @@ init_project() {
     echo "📊 Estado actual del proyecto:"
     echo -e "$existing_config"
 
-    if [[ "$needs_init" == false ]]; then
+    if [[ "$needs_init" == false && "$1" != "--force" ]]; then
         echo ""
         echo "🎉 El proyecto ya está completamente inicializado."
         echo "💡 Si quieres reinicializar, ejecuta: sf init --force"
@@ -1429,10 +1435,8 @@ init_project() {
         return 0
     fi
 
-    # Verificar si se fuerza reinicialización
-    if [[ "$1" == "--force" ]]; then
-        echo "🔄 Forzando reinicialización completa..."
-    else
+    # Verificar confirmación (solo si no es --force)
+    if [[ "$1" != "--force" ]]; then
         echo ""
         if ! confirm_action "¿Proceder con la inicialización?" "y"; then
             echo "🚫 Inicialización cancelada."
@@ -1553,7 +1557,7 @@ show_help() {
 # Función principal
 main() {
     case "${1:-help}" in
-        init) init_project ;;
+        init) shift; init_project "$@" ;;
         *) 
             load_env
             validate_dependencies
