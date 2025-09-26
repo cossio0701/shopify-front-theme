@@ -1127,6 +1127,15 @@ resolve_conflicts() {
     echo "📤 Publicando cambios a remoto..."
     git push origin master || { echo "❌ Error: Falló git push."; return 1; }
 
+    # Publicar en Shopify
+    echo "📤 Publicando en Shopify..."
+    shopify theme push -s "$SHOPIFY_STORE" -t "$SHOPIFY_THEME_ID" || {
+        echo "❌ Error: Falló shopify theme push."
+        echo "💡 Los cambios se confirmaron y subieron a git, pero falló la publicación en Shopify."
+        echo "   Puedes intentar nuevamente o publicar manualmente."
+        return 1
+    }
+
     log_history "Resolved conflicts and committed changes"
     echo "✅ Conflictos resueltos y publicados exitosamente."
 
