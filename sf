@@ -193,7 +193,7 @@ suggest_next_steps() {
 resolve_shopify_conflicts() {
     local conflicted_files=("$@")
     if [[ ${#conflicted_files[@]} -gt 0 ]]; then
-        echo "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge granulares..."
+        echo "$(color_text "1;31" "⚠️  Se detectaron conflictos con cambios committed. Creando marcadores de merge granulares...")"
         for file in "${conflicted_files[@]}"; do
             local base_file=$(mktemp)
             local ours_file=$(mktemp)
@@ -872,7 +872,7 @@ sync_changes() {
     # Sincronizar con remoto
     echo "🔄 Sincronizando con repositorio remoto..."
     git pull origin master || {
-        echo "❌ Error: Falló git pull. Posible conflicto con cambios remotos."
+        echo "$(color_text "1;31" "❌ Error: Falló git pull. Posible conflicto con cambios remotos.")"
         echo "💡 Resuelve manualmente: git pull origin master"
         return 1
     }
@@ -887,9 +887,9 @@ sync_changes() {
             if git diff --quiet && git diff --staged --quiet; then
                 echo "✅ No hay conflictos entre cambios locales y de Shopify."
             else
-                echo "⚠️  Hay conflictos entre tus cambios locales y los de Shopify."
+                echo "$(color_text "1;31" "⚠️  Hay conflictos entre tus cambios locales y los de Shopify.")"
                 echo ""
-                echo "📝 Archivos con conflictos:"
+                echo "$(color_text "1;31" "📝 Archivos con conflictos:")"
                 git status --porcelain | grep "^UU\|^AA\|^DD" | head -10
                 echo ""
                 echo "🔧 Para resolver conflictos:"
