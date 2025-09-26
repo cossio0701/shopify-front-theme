@@ -48,4 +48,7 @@ build/
 
 # Other
 *.tgz
+
+# sf CLI history
+.sf_history
 .yarn-integrity
