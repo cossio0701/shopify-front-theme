@@ -1862,6 +1862,7 @@ main() {
                 start) start_branch ;;
                 commit) commit_changes ;;
                 publish) shift; publish_changes "$@" ;;
+                sync) shift; sync_changes "$@" ;;
                 resolve) resolve_conflicts ;;
                 status) show_status ;;
                 finish) finish_branch ;;
