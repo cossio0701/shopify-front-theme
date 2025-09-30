@@ -1,0 +1,60 @@
+{%- comment -%}
+  Date Visibility Snippet
+  Validates if content should be visible based on start and end dates.
+  Supports simulated date from query params (e.g., ?simulatedDate=2025-09-30 14:30).
+  Assumes dates are in YYYY-MM-DD HH:MM format.
+  Outputs 'true' or 'false'.
+  Parameters: start_date, end_date
+{%- endcomment -%}
+
+{%- liquid
+  assign is_visible = true
+
+  # Get simulated date from query params only if on Shopify preview domain
+  assign host = request.host
+  if host contains '.shopify.com'
+    assign simulated_date = request.query_string | split: 'simulatedDate=' | last | split: '&' | first
+  else
+    assign simulated_date = blank
+  endif
+
+  if simulated_date == blank
+    assign current_date = 'now'
+  else
+    assign current_date = simulated_date
+  endif
+  assign current_ts = current_date | date: '%s'
+
+  if start_date != blank and end_date != blank
+    assign start_ts = start_date | date: '%s'
+    assign end_ts = end_date | date: '%s'
+    if start_ts and end_ts
+      if current_ts < start_ts or current_ts > end_ts
+        assign is_visible = false
+      endif
+    else
+      # Invalid date format, assume not visible
+      assign is_visible = false
+    endif
+  elsif start_date != blank
+    assign start_ts = start_date | date: '%s'
+    if start_ts
+      if current_ts < start_ts
+        assign is_visible = false
+      endif
+    else
+      assign is_visible = false
+    endif
+  elsif end_date != blank
+    assign end_ts = end_date | date: '%s'
+    if end_ts
+      if current_ts > end_ts
+        assign is_visible = false
+      endif
+    else
+      assign is_visible = false
+    endif
+  endif
+
+  echo is_visible
+-%}

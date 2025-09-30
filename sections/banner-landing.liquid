@@ -1,0 +1,62 @@
+{%- comment -%}
+  Banner Landing Section
+  Renders a single responsive image (100% width, auto height) from the first active banner based on priority order and date validation.
+  Uses date-visibility snippet for date checks.
+  Banners are stored in shop metafields (namespace: banner_landing, key: banners, structure: { "items": [...] }).
+{%- endcomment -%}
+
+{%- assign active_image = blank -%}
+{%- assign active_url = blank -%}
+
+{%- assign banners = shop.metafields.banner_landing.banners.items -%}
+
+<!-- Debug: {{ banners | json }} -->
+
+<script>
+  try {
+    console.log('Banner landing metafield:', {{ shop.metafields.banner_landing }});
+    console.log('Product metafields:', {{ product.metafields.custom.model_size }});
+    console.log('Banners object:', {{ shop.metafields.banner_landing.banners }});
+    console.log('Banners items:', {{ banners }});
+  } catch (e) {
+    console.log('Debug error:', e.message);
+  }
+</script>
+
+{%- if banners -%}
+  {%- for banner in banners -%}
+    {%- capture is_visible -%}
+      {%- render 'date-visibility', start_date: banner.start_date, end_date: banner.end_date -%}
+    {%- endcapture -%}
+
+    {%- if is_visible == 'true' -%}
+      {%- assign active_image = banner.image -%}
+      {%- assign active_url = banner.url -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if active_image -%}
+  {%- if active_url -%}
+    <a href="{{ active_image | image_url }}" class="banner-landing__link">
+      <img src="{{ active_image | image_url }}" alt="{{ active_image.alt | default: 'Banner image' }}" width="{{ active_image.width }}" height="{{ active_image.height }}" style="width: 100%; height: auto;" class="banner-landing__image">
+    </a>
+  {%- else -%}
+    <img src="{{ active_image | image_url }}" alt="{{ active_image.alt | default: 'Banner image' }}" width="{{ active_image.width }}" height="{{ active_image.height }}" style="width: 100%; height: auto;" class="banner-landing__image">
+  {%- endif -%}
+{%- endif -%}
+
+{%- schema -%}
+{
+  "name": "Banner Landing",
+  "tag": "section",
+  "class": "banner-landing",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Banner Landing"
+    }
+  ]
+}
+{%- endschema -%}
