@@ -9,12 +9,6 @@
  */
 {
   "sections": {
-<<<<<<< /tmp/tmp.GGiwhBDdJP
-    "banner": {
-      "type": "main-search-banner",
-      "settings": {
-      }
-=======
     "banner-landing": {
       "type": "banner-landing",
       "settings": {}
@@ -22,7 +16,6 @@
     "banner": {
       "type": "main-search-banner",
       "settings": {}
->>>>>>> /tmp/tmp.fF0Cy4O6M5
     },
     "main": {
       "type": "main-search",
@@ -33,10 +26,7 @@
     }
   },
   "order": [
-<<<<<<< /tmp/tmp.GGiwhBDdJP
-=======
     "banner-landing",
->>>>>>> /tmp/tmp.fF0Cy4O6M5
     "banner",
     "main"
   ]

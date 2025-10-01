@@ -9,13 +9,10 @@
  */
 {
   "sections": {
-<<<<<<< /tmp/tmp.brlscKdiZt
-=======
     "banner-landing": {
       "type": "banner-landing",
       "settings": {}
     },
->>>>>>> /tmp/tmp.JijmwDfV4i
     "banner": {
       "type": "page-banner",
       "disabled": true,
@@ -135,10 +132,7 @@
     }
   },
   "order": [
-<<<<<<< /tmp/tmp.brlscKdiZt
-=======
     "banner-landing",
->>>>>>> /tmp/tmp.JijmwDfV4i
     "banner",
     "full_width_banner_3B7RPW",
     "main",
