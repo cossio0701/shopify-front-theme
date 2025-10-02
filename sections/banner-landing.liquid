@@ -5,12 +5,7 @@
   Banners are stored in shop metafields (namespace: banner_landing, key: banners, structure: { "items": [...] }).
 {%- endcomment -%}
 
-{%- assign active_image = blank -%}
-{%- assign active_url = blank -%}
-
 {%- assign banners = shop.metafields.banner_landing.banners.value -%}
-
-<!-- Debug: {{ banners | json }} -->
 
 {%- if banners -%}
   {%- for banner in banners -%}
@@ -19,15 +14,18 @@
     {%- endcapture -%}
 
     {%- if is_visible == 'true' -%}
-      <a href="{{ active_url }}" class="banner-landing__link">
-        <img
-          src="{{ banner.image }}"
-          alt="{{ banner.alt | default: 'Banner image' }}"
-          width="{{ banner.width }}"
-          height="{{ banner.height }}"
-          style="width: 100%; height: auto;"
-          class="banner-landing__image"
-        >
+      <a href="{{ banner.url }}" class="banner-landing__link">
+        <picture>
+          <source media="(max-width: 767px)" srcset="{{ banner.mobile_image | default: banner.desktop_image }}">
+          <img
+            src="{{ banner.desktop_image }}"
+            alt="{{ banner.alt | default: 'Banner image' }}"
+            width="1200"
+            height="600"
+            style="width: 100%; height: auto;"
+            class="banner-landing__image"
+          >
+        </picture>
       </a>
       {%- break -%}
     {%- endif -%}
