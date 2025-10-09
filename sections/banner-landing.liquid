@@ -13,37 +13,52 @@
       {%- render 'date-visibility', date_ranges: banner.date_ranges -%}
     {%- endcapture -%}
     {%- if is_visible contains 'true' -%}
-      <div class="banner-landing">
-        {%- if banner.url != blank -%}
-          <a href="{{ banner.url }}" class="banner-landing__link">
-        {%- endif -%}
-
-        <picture>
-          {%- if banner.mobile_image != blank -%}
-            <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}">
+      {%- capture should_display -%}
+        {%- render 'display-rule' display_rule: banner.display_rule, urls: banner.urls -%}
+      {%- endcapture -%}
+      {%- if should_display contains 'true' -%}
+        <div class="banner-landing">
+          {%- if banner.url != blank -%}
+            <a
+              href="{{ banner.url }}"
+              class="banner-landing__link"
+              {% if banner.link_behavior == 'new_page' %}
+                target="_blank"
+              {% endif %}
+            >
           {%- endif -%}
-          <img
-            srcset="{{ banner.desktop_image }}"
-            alt="{{ banner.alt | default: 'Banner' }}"
-            width="1200"
-            height="600"
-            loading="eager"
-            style="width: 100%; height: auto; display: block;"
-          >
-        </picture>
 
-        {%- if banner.url != blank -%}
-          </a>
-        {%- endif -%}
-      </div>
+          <picture>
+            {%- if banner.mobile_image != blank -%}
+              <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}">
+            {%- endif -%}
+            <img
+              srcset="{{ banner.desktop_image }}"
+              alt="{{ banner.alt | default: 'Banner' }}"
+              width="1200"
+              height="600"
+              loading="eager"
+              style="width: 100%; height: auto; display: block;"
+            >
+          </picture>
+
+          {%- if banner.url != blank -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
       {%- break -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
 
 <style>
-  .banner-landing { width: 100%; }
-  .banner-landing__link { display: block; }
+  .banner-landing {
+    width: 100%;
+  }
+  .banner-landing__link {
+    display: block;
+  }
 </style>
 
 {%- schema -%}
