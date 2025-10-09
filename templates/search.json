@@ -9,13 +9,10 @@
  */
 {
   "sections": {
-    "banner-landing": {
-      "type": "banner-landing",
-      "settings": {}
-    },
     "banner": {
       "type": "main-search-banner",
-      "settings": {}
+      "settings": {
+      }
     },
     "main": {
       "type": "main-search",
@@ -26,7 +23,6 @@
     }
   },
   "order": [
-    "banner-landing",
     "banner",
     "main"
   ]

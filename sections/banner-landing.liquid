@@ -1,47 +1,56 @@
 {%- comment -%}
   Banner Landing Section
-  Renders a single responsive image (100% width, auto height) from the first active banner based on priority order and date validation.
-  Uses date-visibility snippet for date checks.
-  Banners are stored in shop metafields (namespace: banner_landing, key: banners, structure: { "items": [...] }).
+  Displays first visible banner based on date_ranges configuration.
 {%- endcomment -%}
 
-{%- assign banners = shop.metafields.banner_landing.banners.value -%}
+{%- liquid
+  assign banners = shop.metafields.custom.banner_landing.value
+-%}
 
 {%- if banners -%}
   {%- for banner in banners -%}
     {%- capture is_visible -%}
-      {%- render 'date-visibility', start_date: banner.start_date, end_date: banner.end_date -%}
+      {%- render 'date-visibility', date_ranges: banner.date_ranges -%}
     {%- endcapture -%}
+    {%- if is_visible contains 'true' -%}
+      <div class="banner-landing">
+        {%- if banner.url != blank -%}
+          <a href="{{ banner.url }}" class="banner-landing__link">
+        {%- endif -%}
 
-    {%- if is_visible == 'true' -%}
-      <a href="{{ banner.url }}" class="banner-landing__link">
         <picture>
-          <source media="(max-width: 767px)" srcset="{{ banner.mobile_image | default: banner.desktop_image }}">
+          {%- if banner.mobile_image != blank -%}
+            <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}">
+          {%- endif -%}
           <img
-            src="{{ banner.desktop_image }}"
-            alt="{{ banner.alt | default: 'Banner image' }}"
+            srcset="{{ banner.desktop_image }}"
+            alt="{{ banner.alt | default: 'Banner' }}"
             width="1200"
             height="600"
-            style="width: 100%; height: auto;"
-            class="banner-landing__image"
+            loading="eager"
+            style="width: 100%; height: auto; display: block;"
           >
         </picture>
-      </a>
+
+        {%- if banner.url != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
       {%- break -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
 
+<style>
+  .banner-landing { width: 100%; }
+  .banner-landing__link { display: block; }
+</style>
+
 {%- schema -%}
 {
   "name": "Banner Landing",
   "tag": "section",
-  "class": "banner-landing",
   "settings": [],
-  "presets": [
-    {
-      "name": "Banner Landing"
-    }
-  ]
+  "presets": [{ "name": "Banner Landing" }]
 }
 {%- endschema -%}

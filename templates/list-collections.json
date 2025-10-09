@@ -9,6 +9,10 @@
  */
 {
   "sections": {
+    "banner_landing_scheduled": {
+      "type": "banner-landing",
+      "settings": {}
+    },
     "page_banner_gViVwa": {
       "type": "page-banner",
       "disabled": true,
@@ -107,6 +111,7 @@
     }
   },
   "order": [
+    "banner_landing_scheduled",
     "page_banner_gViVwa",
     "main",
     "90f0172d-db82-4963-95c4-6a1724783cd8"

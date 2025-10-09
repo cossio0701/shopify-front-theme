@@ -9,7 +9,7 @@
  */
 {
   "sections": {
-    "banner-landing": {
+    "banner_landing_scheduled": {
       "type": "banner-landing",
       "settings": {}
     },
@@ -59,10 +59,7 @@
           }
         }
       },
-      "block_order": [
-        "breadcrumbs_EVFTEc",
-        "heading_tFG36r"
-      ],
+      "block_order": ["breadcrumbs_EVFTEc", "heading_tFG36r"],
       "settings": {
         "enable_transparent_header": true,
         "media_position": "background",
@@ -132,9 +129,9 @@
     }
   },
   "order": [
-    "banner-landing",
     "banner",
     "full_width_banner_3B7RPW",
+    "banner_landing_scheduled",
     "main",
     "f8303da3-c3cb-4a90-a63a-7a628615aa6f",
     "173696262020bc1b10"

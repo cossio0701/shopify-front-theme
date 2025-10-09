@@ -9,6 +9,10 @@
  */
 {
   "sections": {
+    "banner_landing_scheduled": {
+      "type": "banner-landing",
+      "settings": {}
+    },
     "banner": {
       "type": "page-banner",
       "disabled": true,
@@ -193,6 +197,7 @@
     }
   },
   "order": [
+    "banner_landing_scheduled",
     "banner",
     "featured_collections_JQrJUx",
     "main",

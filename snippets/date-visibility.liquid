@@ -1,15 +1,44 @@
 {%- comment -%}
   Date Visibility Snippet
-  Validates if content should be visible based on start and end dates.
-  Supports simulated date from query params (e.g., ?simulatedDate=2025-09-30 14:30).
-  Assumes dates are in YYYY-MM-DD HH:MM format.
-  Outputs 'true' or 'false'.
-  Parameters: start_date, end_date
+  
+  Validates if content should be visible based on multiple date and time ranges.
+  Supports simulated date from query params for testing (e.g., ?simulatedDate=2025-09-30T14:30:00Z).
+  Uses Shopify store timezone - ensure your store is configured to "America/Bogota" (UTC-5)
+  in Settings > General > Store details > Timezone.
+  
+  Outputs: 'true' or 'false'
+  
+  Parameters:
+    - date_ranges: (optional) JSON array of date range objects. If empty/not provided, returns true.
+      Example structure:
+      [
+        {
+          "start_date": "2024-07-10T00:00:00Z",
+          "end_date": "2024-07-26T00:00:00Z",
+          "time_ranges": [
+            {
+              "start_time": "19:30",
+              "end_time": "10:00",
+              "label": "Noches"
+            }
+          ]
+        }
+      ]
+  
+  Logic:
+    - If date_ranges is empty → returns true (visible by default)
+    - Iterates through each date range
+    - For each valid date range:
+      - If no time_ranges defined → visible for entire day
+      - If time_ranges exist → checks if current time falls within any range
+      - Handles midnight crossover (e.g., 19:30 to 10:00)
+    - Returns true if ANY date range with ANY time range matches
 {%- endcomment -%}
 
 {%- liquid
+  # Initialize visibility to true (visible by default if no ranges defined)
   assign is_visible = true
-
+  
   # Get simulated date from query params only if on Shopify preview domain
   assign host = request.host
   if host contains '.shopify.com'
@@ -18,43 +47,93 @@
     assign simulated_date = blank
   endif
 
+  # Determine current date/time
   if simulated_date == blank
     assign current_date = 'now'
   else
     assign current_date = simulated_date
   endif
+  
+  # Extract current timestamp and time components
   assign current_ts = current_date | date: '%s'
-
-  if start_date != blank and end_date != blank
-    assign start_ts = start_date | date: '%s'
-    assign end_ts = end_date | date: '%s'
-    if start_ts and end_ts
-      if current_ts < start_ts or current_ts > end_ts
-        assign is_visible = false
-      endif
-    else
-      # Invalid date format, assume not visible
-      assign is_visible = false
-    endif
-  elsif start_date != blank
-    assign start_ts = start_date | date: '%s'
-    if start_ts
-      if current_ts < start_ts
-        assign is_visible = false
-      endif
-    else
-      assign is_visible = false
-    endif
-  elsif end_date != blank
-    assign end_ts = end_date | date: '%s'
-    if end_ts
-      if current_ts > end_ts
-        assign is_visible = false
-      endif
-    else
-      assign is_visible = false
-    endif
+  assign current_hour = current_date | date: '%H' | plus: 0
+  assign current_minute = current_date | date: '%M' | plus: 0
+  assign current_time_in_minutes = current_hour | times: 60 | plus: current_minute
+  
+  # Check if date_ranges parameter exists and is not empty
+  if date_ranges != blank and date_ranges.size > 0
+    # Start with visibility false (must match at least one range)
+    assign is_visible = false
+    assign found_match = false
+    
+    # Iterate through each date range
+    for date_range in date_ranges
+      # Skip if already found a match (simulates early exit)
+      unless found_match
+        # Validate current date is within this date range
+        assign start_ts = date_range.start_date | date: '%s'
+        assign end_ts = date_range.end_date | date: '%s'
+        
+        if current_ts >= start_ts and current_ts <= end_ts
+          # Current date is within range
+          
+          # Check if time_ranges exist for this date range
+          if date_range.time_ranges != blank and date_range.time_ranges.size > 0
+            # Iterate through time ranges
+            for time_range in date_range.time_ranges
+              unless found_match
+                # Parse start_time (e.g., "19:30")
+                assign start_time_parts = time_range.start_time | split: ':'
+                assign start_hour = start_time_parts[0] | plus: 0
+                assign start_minute = start_time_parts[1] | plus: 0
+                assign start_time_in_minutes = start_hour | times: 60 | plus: start_minute
+                
+                # Parse end_time (e.g., "10:00")
+                assign end_time_parts = time_range.end_time | split: ':'
+                assign end_hour = end_time_parts[0] | plus: 0
+                assign end_minute = end_time_parts[1] | plus: 0
+                assign end_time_in_minutes = end_hour | times: 60 | plus: end_minute
+                
+                # Handle midnight crossover (e.g., 19:30 to 10:00)
+                if end_time_in_minutes < start_time_in_minutes
+                  # Crosses midnight: valid if current >= start OR current <= end
+                  if current_time_in_minutes >= start_time_in_minutes or current_time_in_minutes <= end_time_in_minutes
+                    assign is_visible = true
+                    assign found_match = true
+                  endif
+                else
+                  # Normal range: valid if current is between start and end
+                  if current_time_in_minutes >= start_time_in_minutes and current_time_in_minutes <= end_time_in_minutes
+                    assign is_visible = true
+                    assign found_match = true
+                  endif
+                endif
+              endunless
+            endfor
+          else
+            # No time restrictions for this date range, entire day is valid
+            assign is_visible = true
+            assign found_match = true
+          endif
+        endif
+      endunless
+    endfor
   endif
-
+  
   echo is_visible
 -%}
+
+{%- comment -%}
+  TODO [CONTEXT]: Enhanced date-visibility snippet with support for multiple date_ranges and time_ranges.
+  Implements midnight crossover logic using minutes-based comparison.
+  
+  TODO [NEXT]: Consider adding error logging for invalid date/time formats in development environments.
+  Consider adding support for recurring weekly patterns (e.g., "every Friday 19:30-22:00").
+  
+  TODO [REF]: This snippet should be included in sections that need time-based visibility control.
+  Typical usage: {% render 'date-visibility', date_ranges: block.settings.date_ranges %}
+  
+  TODO [REVIEW]: Verify that Shopify store timezone is correctly configured to "America/Bogota" (UTC-5).
+  Test midnight crossover scenarios thoroughly (19:30 to 10:00 should work across day boundary).
+  Validate JSON structure of date_ranges matches expected format in section schema definitions.
+{%- endcomment -%}
