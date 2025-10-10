@@ -1,0 +1,257 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-block-start: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_top }});
+    padding-block-end: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_bottom }});
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+    --button-bg-color: {{ section.settings.button_bg_color | default: '#ffffff' }};
+    --button-text-color: {{ section.settings.button_text_color | default: '#000000' }};
+    --products-bg-color: {{ section.settings.products_bg_color | default: '#ffffff' }};
+    --heading-size-desktop: {{ section.settings.heading_size_desktop | default: 48 }}px;
+    --heading-size-mobile: {{ section.settings.heading_size_mobile | default: 28 }}px;
+  }
+{%- endstyle -%}
+
+<section class="featured-collection-split color-{{ section.settings.color_scheme }}">
+  <div class="featured-collection-split__container size-{{ section.settings.section_size }}">
+    {{ 'featured-collection-split.css' | asset_url | stylesheet_tag }}
+    {{ 'featured-collection-split.js' | asset_url | script_tag }}
+    
+    <!-- Mitad izquierda: Imagen -->
+    <div class="featured-collection-split__image" 
+         style="background-image: url({{ section.settings.image | image_url }});">
+      <div class="featured-collection-split__overlay">
+        {% if section.settings.heading != blank %}
+          <h2 class="featured-collection-split__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <div class="featured-collection-split__description">{{ section.settings.description }}</div>
+        {% endif %}
+        {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="featured-collection-split__button">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Mitad derecha: Productos -->
+    <div class="featured-collection-split__products">
+      {% if section.settings.collection != blank %}
+        {% assign collection = collections[section.settings.collection] %}
+        <div class="product-grid">
+          {% for i in (0..3) %}
+            {% assign product = collection.products[i] %}
+            {% if product %}
+              <div class="product-card">
+                <div class="product-card__media">
+                  <a href="{{ product.url }}" class="product-card__image-link">
+                    <div class="aspect-ratio">
+                      {% comment %} Detectar si hay video {% endcomment %}
+                      {% assign has_video = false %}
+                      {% assign video_media = null %}
+                      {% for media in product.media limit: 1 %}
+                        {% if media.media_type == 'video' or media.media_type == 'external_video' %}
+                          {% assign has_video = true %}
+                          {% assign video_media = media %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+
+                      {% if has_video and video_media %}
+                        {% if video_media.media_type == 'external_video' %}
+                          <div class="external-video">
+                            {{ video_media | external_video_tag: autoplay: true, loop: true, muted: true }}
+                          </div>
+                        {% elsif video_media.media_type == 'video' %}
+                          <video class="product-card__video" autoplay muted loop playsinline>
+                            {% for source in video_media.sources %}
+                              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                            {% endfor %}
+                            {% if video_media.preview_image %}
+                              <img src="{{ video_media.preview_image | image_url }}" 
+                                   alt="{{ product.title }}" 
+                                   class="product-card__image">
+                            {% endif %}
+                          </video>
+                        {% endif %}
+                      {% else %}
+                        {% if product.featured_image %}
+                          <img src="{{ product.featured_image | image_url }}" 
+                               alt="{{ product.title }}" 
+                               class="product-card__image">
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </a>
+                  
+                  {% if product.compare_at_price > product.price %}
+                    <span class="product-card__badge">SALE</span>
+                  {% endif %}
+                  
+                  <button class="product-card__wishlist">♡</button>
+                  
+                  <div class="product-card__quick-add">
+                    <div class="variant-options">
+                      {% if product.variants.size > 1 %}
+                        {% for variant in product.variants limit: 3 %}
+                          <span class="variant" data-variant-id="{{ variant.id }}">
+                            {{ variant.option1 | truncate: 2, '' }}
+                          </span>
+                        {% endfor %}
+                      {% else %}
+                        <span class="variant">S</span>
+                        <span class="variant">M</span>
+                        <span class="variant">L</span>
+                      {% endif %}
+                    </div>
+                    <button class="add-to-cart" data-product-id="{{ product.id }}">
+                      Agregar →
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="product-card__info">
+                  <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
+                  <div class="product-card__price">
+                    <span class="current-price">{{ product.price | money }}</span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="compare-price">{{ product.compare_at_price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="product-card">
+                <div class="product-card__media">
+                  <div class="aspect-ratio" style="background:#f5f5f5;"></div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Selecciona una colección</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Split Simple",
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_size",
+      "label": "Tamaño",
+      "options": [
+        {"value": "small", "label": "Pequeño"},
+        {"value": "medium", "label": "Mediano"},
+        {"value": "large", "label": "Grande"}
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título"
+    },
+    {
+      "type": "number",
+      "id": "heading_size_desktop",
+      "label": "Tamaño título desktop",
+      "default": 48
+    },
+    {
+      "type": "number",
+      "id": "heading_size_mobile",
+      "label": "Tamaño título móvil",
+      "default": 28
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Descripción"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto botón"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link botón"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color texto",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Color botón",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color texto botón",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "products_bg_color",
+      "label": "Color fondo productos",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "spacing_top",
+      "label": "Espaciado arriba",
+      "options": [
+        {"value": "0", "label": "Ninguno"},
+        {"value": "1", "label": "Pequeño"},
+        {"value": "2", "label": "Mediano"},
+        {"value": "4", "label": "Grande"}
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "spacing_bottom",
+      "label": "Espaciado abajo",
+      "options": [
+        {"value": "0", "label": "Ninguno"},
+        {"value": "1", "label": "Pequeño"},
+        {"value": "2", "label": "Mediano"},
+        {"value": "4", "label": "Grande"}
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Split Simple"
+    }
+  ]
+}
+{% endschema %}

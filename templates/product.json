@@ -1,0 +1,283 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "goback_zMzywG": {
+          "type": "goback",
+          "settings": {
+            "goback_style": "text",
+            "goback_label": "",
+            "display_goback_mobile": "on-media",
+            "show_on": "desktop"
+          }
+        },
+        "breadcrumbs_JRrp9d": {
+          "type": "breadcrumbs",
+          "settings": {}
+        },
+        "badge_dC66pN": {
+          "type": "badge",
+          "settings": {
+            "spacing_bottom": "1",
+            "show_badges": true,
+            "show_badges_discount": true,
+            "show_badges_sold": true
+          }
+        },
+        "1e0c79e9-7de0-4eee-b9c5-f27132635fb8": {
+          "type": "title",
+          "settings": {
+            "spacing_bottom": "1"
+          }
+        },
+        "8effeb43-55b7-4ec4-ab9b-68bcd89b865b": {
+          "type": "price",
+          "settings": {
+            "spacing_bottom": "1",
+            "show_price_tax_info": true,
+            "show_price_shipping_info": true,
+            "show_price_custom_info": ""
+          }
+        },
+        "divider_YGyX7i": {
+          "type": "divider",
+          "settings": {
+            "spacing_bottom": "1"
+          }
+        },
+        "1e939cd6-0955-4135-a9e5-c50faef01437": {
+          "type": "purchase_options",
+          "settings": {
+            "spacing_bottom": "1",
+            "show_subscription_title": true,
+            "show_subscription_custom_info": "",
+            "show_subscription_policy": true
+          }
+        },
+        "b2dabe12-2158-4ba6-bc54-9baae453acf5": {
+          "type": "text",
+          "settings": {
+            "spacing_bottom": "2",
+            "heading": "{{ product.metafields.custom.recommended_size.value }}",
+            "icon": "",
+            "link_to_resource": "none",
+            "text_before_link": false,
+            "heading_secondary": "",
+            "metafield_for_product_variant": "",
+            "show_block_content": true
+          }
+        },
+        "1e939cd6-0958-4135-a9e5-c50faef01437": {
+          "type": "variant_picker",
+          "settings": {
+            "spacing_bottom": "3",
+            "title": "Variant picker",
+            "picker_type": "swatch",
+            "variant_options_with_thumbnails": "Color",
+            "size_guide_page": "{{ product.metafields.my_fields.size_chart.value }}",
+            "sizes_option": "Size"
+          }
+        },
+        "text_wccNYj": {
+          "type": "text",
+          "settings": {
+            "spacing_bottom": "1",
+            "heading": "{{ product.metafields.custom.model_size.value }}",
+            "icon": "",
+            "link_to_resource": "none",
+            "text_before_link": false,
+            "heading_secondary": "",
+            "metafield_for_product_variant": "",
+            "show_block_content": true
+          }
+        },
+        "8604a6ff-ad0b-44dd-8068-1de4e062f8e8": {
+          "type": "buy_buttons",
+          "settings": {
+            "spacing_bottom": "3",
+            "show_quantity": true,
+            "layout": "seperate",
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "content_grid_W3Mqy6": {
+          "type": "content_grid",
+          "settings": {
+            "heading": "FREE SHIPPING  ON ORDERS $150+",
+            "icon": "theme-box"
+          }
+        },
+        "content_grid_iCJFCN": {
+          "type": "content_grid",
+          "settings": {
+            "heading": "Free returns",
+            "icon": "theme-return"
+          }
+        },
+        "complementary_products_Gizc6p": {
+          "type": "complementary_products",
+          "settings": {
+            "spacing_bottom": "0",
+            "heading": "Buy it with",
+            "icon": "{{ product.vendor }}",
+            "limit": 4
+          }
+        },
+        "divider_MgiKBB": {
+          "type": "divider",
+          "settings": {
+            "spacing_bottom": "1"
+          }
+        }
+      },
+      "block_order": [
+        "goback_zMzywG",
+        "breadcrumbs_JRrp9d",
+        "badge_dC66pN",
+        "1e0c79e9-7de0-4eee-b9c5-f27132635fb8",
+        "8effeb43-55b7-4ec4-ab9b-68bcd89b865b",
+        "divider_YGyX7i",
+        "1e939cd6-0955-4135-a9e5-c50faef01437",
+        "b2dabe12-2158-4ba6-bc54-9baae453acf5",
+        "1e939cd6-0958-4135-a9e5-c50faef01437",
+        "text_wccNYj",
+        "8604a6ff-ad0b-44dd-8068-1de4e062f8e8",
+        "content_grid_W3Mqy6",
+        "content_grid_iCJFCN",
+        "complementary_products_Gizc6p",
+        "divider_MgiKBB"
+      ],
+      "settings": {
+        "product_media_layout": "product__media-layout--full",
+        "product_media_layout_mobile": "product__media-layout--full--sm",
+        "product_media_aspect_ratio": "auto",
+        "product_media_object_fit": "contain",
+        "product_slider_auto_height": false,
+        "media_transparent_background": false,
+        "display_media_zoom": "trigger",
+        "product_media_with_thumbs": "desktop_and_mobile",
+        "product_media_thumbs_ratio": "auto",
+        "product_media_thumbs_object_fit": "cover",
+        "gallery_arrows_show_on": "desktop",
+        "display_media_gallery_pagination": "none",
+        "media_gallery_info": "",
+        "metafield_as_seen_on": "",
+        "color_scheme_gallery": "scheme-1",
+        "enable_sticky_info": true,
+        "enable_actions_bar": true,
+        "media_grid_size": "large",
+        "media_grid_position": "start",
+        "grid_gap": "4",
+        "spacing_grid": 1.6,
+        "grid_content_alignment": "start",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "0",
+        "spacing_bottom": "2"
+      }
+    },
+    "complete_the_set_TR6ND9": {
+      "type": "complete-the-set",
+      "blocks": {
+        "collapsible_tJn3Qj": {
+          "type": "collapsible",
+          "settings": {
+            "block_type": "collapsible",
+            "heading": "Description",
+            "link": "",
+            "content": "<p>[description]</p>",
+            "page": ""
+          }
+        },
+        "collapsible_rwmG98": {
+          "type": "collapsible",
+          "settings": {
+            "block_type": "collapsible",
+            "heading": "Product Details",
+            "link": "",
+            "content": "{{ product.metafields.custom.product_composition | metafield_tag }}",
+            "page": ""
+          }
+        },
+        "collapsible_ErYKdV": {
+          "type": "collapsible",
+          "settings": {
+            "block_type": "collapsible",
+            "heading": "Contact us",
+            "link": "",
+            "content": "<p>Email: <a href=\"mailto:support@chevignon.us\" title=\"mailto:support@chevignon.us\">support@chevignon.us</a></p><p>Phone: 786-767-6583</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_tJn3Qj",
+        "collapsible_rwmG98",
+        "collapsible_ErYKdV"
+      ],
+      "settings": {
+        "heading": "More info",
+        "content_heading": "",
+        "heading_size": "h3",
+        "content_type": "image",
+        "featured_image": "shopify://shop_images/BANNER_HOME_MOB_copia_3.jpg",
+        "featured_image_aspect_ratio": "1/1",
+        "open_first_collapsible": true,
+        "flip_desktop": true,
+        "flip_mobile": true,
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "layout": "layout-1",
+        "enable_slideshow_overflow": false,
+        "heading": "You may also like",
+        "heading_size": "h3",
+        "subheading": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "button--filled",
+        "show_navigation_arrows": true,
+        "slider_autoplay": 10,
+        "tabs_button_style": "tab-btn-filled",
+        "max_products": 10,
+        "show_unavailable_products": false,
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "4",
+        "spacing_bottom": "4"
+      }
+    },
+    "1750283209d223444d": {
+      "type": "apps",
+      "settings": {}
+    },
+    "1753226369417674c0": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "complete_the_set_TR6ND9",
+    "recommendations",
+    "1750283209d223444d",
+    "1753226369417674c0"
+  ]
+}

@@ -1,0 +1,127 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "text_slide_RVgGMe": {
+          "type": "text-slide",
+          "settings": {
+            "content": "<p><strong>ENVIO GRATIS POR COMPRAS SUPERIORES A $400.000</strong></p>",
+            "icon": ""
+          }
+        },
+        "link_qJzTi3": {
+          "type": "link",
+          "settings": {
+            "show_on": "desktop",
+            "link_label": "Rastrear pedido",
+            "link": "/",
+            "icon": ""
+          }
+        },
+        "link_EF3tRJ": {
+          "type": "link",
+          "settings": {
+            "show_on": "desktop",
+            "link_label": "Ayuda",
+            "link": "/",
+            "icon": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_slide_RVgGMe",
+        "link_qJzTi3",
+        "link_EF3tRJ"
+      ],
+      "settings": {
+        "text_block_behaviour": "slider",
+        "slider_autoplay_interval": 4,
+        "font_weight": "500",
+        "section_width": "max-w-fluid",
+        "color_scheme": "scheme-2bee5a80-7981-4d92-86f8-b798298e461f"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "sticky": true,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-1",
+        "logo": "shopify://shop_images/new_header_logo.svg",
+        "logo_transparent": "shopify://shop_images/new_header_logo2.svg",
+        "logo_svg_code": "",
+        "logo_width": 100,
+        "logo_width_mobile": 100,
+        "logo_font_size": 1,
+        "layout_initial": "column-center",
+        "gap_initial": 2,
+        "padding_top_initial": 2,
+        "padding_bottom_initial": 2,
+        "padding_horizontal": 0,
+        "logo_order_initial": 1,
+        "utils_order_initial": 2,
+        "logo_margin_bottom_initial": 1,
+        "utils_position_initial": "absolute",
+        "utils_alignment_initial": "top-right",
+        "utils_offset_top": 1,
+        "utils_offset_bottom": 1,
+        "utils_offset_horizontal": 0,
+        "layout_scrolled": "row-space-between",
+        "gap_scrolled": 2,
+        "padding_top_scrolled": 1,
+        "padding_bottom_scrolled": 1,
+        "logo_order_scrolled": 1,
+        "utils_order_scrolled": 2,
+        "layout_mobile": "row-space-between",
+        "gap_mobile": 1,
+        "padding_top_mobile": 1,
+        "padding_bottom_mobile": 1,
+        "padding_horizontal_mobile": 1,
+        "logo_order_mobile": 1,
+        "utils_order_mobile": 2,
+        "show_search": true,
+        "show_account": true,
+        "show_cart": true,
+        "icons_gap": 1.5,
+        "icons_direction": "row",
+        "show_navigation": true,
+        "show_nav_mobile": false,
+        "nav_order_initial": 2,
+        "nav_order_scrolled": 2,
+        "nav_order_mobile": 2,
+        "nav_position_initial": "relative",
+        "nav_alignment_initial": "bottom-center",
+        "nav_offset_top": 0,
+        "nav_offset_bottom": 0,
+        "nav_offset_horizontal": 0,
+        "nav_link_color": "#ffffff",
+        "nav_link_hover_color": "#000000",
+        "nav_link_active_color": "#000000",
+        "nav_highlight_color": "#ff0000",
+        "nav_link_font_size": 15,
+        "nav_link_font_weight": 500,
+        "nav_link_padding_vertical": 2,
+        "nav_link_padding_horizontal": 2.5,
+        "nav_gap": 0,
+        "nav_dropdown_bg": "#ffffff",
+        "nav_dropdown_width": 800
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

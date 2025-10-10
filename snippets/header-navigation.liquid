@@ -1,0 +1,325 @@
+{% comment %}
+  Snippet: header-navigation.liquid
+  Uso: {% render 'header-navigation' %}
+{% endcomment %}
+
+{% assign menu_items = shop.metafields.custom.menu_data.value %}
+
+<style>
+  .mega-menu__container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-menu__list {
+    display: flex;
+    gap: var(--nav-gap, 0);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mega-menu__item {
+    position: relative;
+  }
+
+  .mega-menu__link {
+    display: flex;
+    align-items: center;
+    padding: var(--nav-link-padding, 2rem 2.5rem);
+    color: var(--nav-link-color, #1f2937);
+    text-decoration: none;
+    font-weight: var(--nav-link-font-weight, 500);
+    font-size: var(--nav-link-font-size, 15px);
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .mega-menu__link:hover,
+  .header:hover .mega-menu__link,
+  .header__inner:hover .mega-menu__link {
+    color: var(--nav-link-hover-color, #000000);
+  }
+
+  .mega-menu__link:focus {
+    outline: none;
+    color: var(--nav-link-hover-color, #000000);
+  }
+
+  /* Scrolled state - cambiar color de links */
+  body.is-scrolled .mega-menu__link {
+    color: #1f2937;
+  }
+
+  body.is-scrolled .mega-menu__link:hover,
+  body.is-scrolled .header:hover .mega-menu__link,
+  body.is-scrolled .header__inner:hover .mega-menu__link {
+    color: #000000;
+  }
+
+  body.is-scrolled .mega-menu__link--highlight {
+    color: var(--nav-highlight-color, #dc2626);
+  }
+
+  /* Mantener color destacado siempre */
+  .mega-menu__link--highlight,
+  .header:hover .mega-menu__link--highlight,
+  .header__inner:hover .mega-menu__link--highlight,
+  body.is-scrolled .header:hover .mega-menu__link--highlight,
+  body.is-scrolled .header__inner:hover .mega-menu__link--highlight {
+    color: var(--nav-highlight-color, #dc2626) !important;
+  }
+
+  .mega-menu__link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 2.5rem;
+    right: 2.5rem;
+    height: 3px;
+    background: var(--nav-link-active-color, #000000);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .mega-menu__link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .mega-menu__link--highlight {
+    color: var(--nav-highlight-color, #dc2626);
+    font-weight: 600;
+  }
+
+  .mega-menu__link--highlight:hover {
+    color: var(--nav-highlight-color, #dc2626);
+    opacity: 0.8;
+  }
+
+  .mega-menu__link--highlight::after {
+    background: var(--nav-highlight-color, #dc2626);
+  }
+
+  .mega-menu__icon {
+    margin-left: 0.6rem;
+    transition: transform 0.3s ease;
+    font-size: 1.2rem;
+  }
+
+  .mega-menu__item:hover .mega-menu__icon {
+    transform: rotate(180deg);
+  }
+
+  /* Dropdown */
+  .mega-menu__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--nav-dropdown-bg, #ffffff);
+    min-width: var(--nav-dropdown-width, 800px);
+    border-radius: 0 0 1.2rem 1.2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1rem);
+    transition: all 0.3s ease;
+    padding: 3.2rem;
+    display: grid;
+    grid-template-columns: 1fr 30rem;
+    gap: 4rem;
+    z-index: 100;
+  }
+
+  .mega-menu__item:hover .mega-menu__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mega-menu__submenu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 3.2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-menu__submenu-item {
+    margin: 0;
+  }
+
+  .mega-menu__submenu-link {
+    display: block;
+    padding: 1rem 1.6rem;
+    color: #6b7280;
+    text-decoration: none;
+    border-radius: 0.8rem;
+    transition: all 0.2s ease;
+    font-size: 1.4rem;
+  }
+
+  .mega-menu__submenu-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #374151;
+    transform: translateX(0.4rem);
+  }
+
+  /* Featured Section */
+  .mega-menu__featured {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
+    border-radius: 1.2rem;
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .mega-menu__featured-image {
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .mega-menu__featured-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--nav-link-color, #1f2937);
+    margin: 0 0 0.8rem 0;
+  }
+
+  .mega-menu__featured-subtitle {
+    font-size: 1.3rem;
+    color: var(--nav-link-color, #6b7280);
+    opacity: 0.7;
+    margin: 0 0 1.6rem 0;
+  }
+
+  .mega-menu__cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: var(--nav-link-active-color, #000000);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+  }
+
+  .mega-menu__cta:hover {
+    opacity: 0.85;
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.15);
+  }
+
+  .mega-menu__cta-arrow {
+    margin-left: 0.8rem;
+    transition: transform 0.3s ease;
+  }
+
+  .mega-menu__cta:hover .mega-menu__cta-arrow {
+    transform: translateX(0.4rem);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .mega-menu__dropdown {
+      min-width: 60rem;
+      grid-template-columns: 1fr;
+      gap: 2.4rem;
+    }
+
+    .mega-menu__submenu {
+      grid-template-columns: 1fr;
+    }
+
+    .mega-menu__featured {
+      display: none;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .mega-menu__list {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .mega-menu__link {
+      padding: 1.6rem 1.2rem;
+      font-size: 1.4rem;
+    }
+
+    .mega-menu__dropdown {
+      min-width: 100%;
+      left: -2rem;
+      right: -2rem;
+      width: calc(100% + 4rem);
+      border-radius: 0;
+    }
+  }
+</style>
+
+<nav class="mega-menu">
+  <div class="mega-menu__container">
+    <ul class="mega-menu__list">
+      {% for item in menu_items %}
+        <li class="mega-menu__item">
+          <a 
+            href="{{ item.url }}" 
+            class="mega-menu__link {% if item.highlight %}mega-menu__link--highlight{% endif %}"
+          >
+            {{ item.label }}
+            {% if item.submenu %}
+              <span class="mega-menu__icon">▼</span>
+            {% endif %}
+          </a>
+
+          {% if item.submenu %}
+            <div class="mega-menu__dropdown">
+              <ul class="mega-menu__submenu">
+                {% for subitem in item.submenu %}
+                  <li class="mega-menu__submenu-item">
+                    <a href="{{ subitem.url }}" class="mega-menu__submenu-link">
+                      {{ subitem.label }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              {% if item.featuredImage or item.cta %}
+                <div class="mega-menu__featured">
+                  {% if item.featuredImage %}
+                    <div>
+                      <img 
+                        src="{{ item.featuredImage.url | asset_url }}" 
+                        alt="{{ item.featuredImage.alt }}"
+                        class="mega-menu__featured-image"
+                        loading="lazy"
+                      >
+                      <h3 class="mega-menu__featured-title">{{ item.featuredImage.title }}</h3>
+                      <p class="mega-menu__featured-subtitle">{{ item.featuredImage.alt }}</p>
+                    </div>
+                  {% endif %}
+
+                  {% if item.cta %}
+                    <a href="{{ item.cta.url }}" class="mega-menu__cta">
+                      {{ item.cta.label }}
+                      <span class="mega-menu__cta-arrow">→</span>
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>

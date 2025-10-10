@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# sf - Shopify Flow CLI para gestionar cambios entre Git y Shopify Admin
+# Versión: 1.0
+# Autor: Asistente de desarrollo
+
+# Variables globales
+SHOPIFY_STORE="${SHOPIFY_STORE:-}"
+SHOPIFY_THEME_ID="${SHOPIFY_THEME_ID:-}"
+CURRENT_BRANCH=""
+HISTORY_FILE=".sf_history"
+
+# Función principal
+main() {
+    case "${1:-help}" in
+        init) source scripts/commands/init.sh; init "$@" ;;
+        *) 
+            source scripts/utils/env.sh
+            load_env
+            validate_dependencies
+
+            # Validaciones preventivas inteligentes
+            source scripts/utils/git.sh
+            if ! preventive_checks "$1"; then
+                return 1
+            fi
+
+            # Sugerencias inteligentes
+            smart_suggestions "$1"
+
+            case "$1" in
+                start) source scripts/commands/start.sh; start ;;
+                commit) source scripts/commands/commit.sh; commit ;;
+                merge) shift; source scripts/commands/merge.sh; merge "$@" ;;
+                publish) shift; source scripts/commands/publish.sh; publish "$@" ;;
+                sync) shift; source scripts/commands/sync.sh; sync "$@" ;;
+                resolve) source scripts/commands/resolve.sh; resolve ;;
+                status) source scripts/commands/status.sh; status ;;
+                finish) source scripts/commands/finish.sh; finish ;;
+                stash) source scripts/commands/stash.sh; stash ;;
+                log) shift; source scripts/commands/log.sh; log "$@" ;;
+                diff) shift; source scripts/commands/diff.sh; diff "$@" ;;
+                clean) shift; source scripts/commands/clean.sh; clean "$@" ;;
+                backup) shift; source scripts/commands/backup.sh; backup "$@" ;;
+                pr) shift; source scripts/commands/pr.sh; pr "$@" ;;
+                dev) shift; source scripts/commands/dev.sh; dev "$@" ;;
+                help|--help|-h) source scripts/commands/help.sh; help ;;
+                *) echo "❌ Comando desconocido: $1"; source scripts/commands/help.sh; help; exit 1 ;;
+            esac
+            ;;
+    esac
+}
+
+# Para agregar un nuevo comando 'nuevo':
+# 1. Crear scripts/commands/nuevo.sh con la función 'nuevo()'
+# 2. En main(), agregar: source scripts/commands/nuevo.sh; nuevo "$@"
+# 3. Asegurar que source los utils necesarios en nuevo.sh
+# 4. Si llama a otros comandos, sourcearlos en nuevo.sh
+
+main "$@"

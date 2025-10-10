@@ -1,0 +1,165 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer_HdRag6": {
+      "type": "footer",
+      "blocks": {
+        "link_list_9gjBPB": {
+          "type": "link_list",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "menu_layout": "vertical",
+            "menu": "footer",
+            "title": "",
+            "title_url": "",
+            "menu_link_opacity": 100,
+            "show_first_menu_on_mobile": false
+          }
+        },
+        "link_list_UdnAAM": {
+          "type": "link_list",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "menu_layout": "vertical",
+            "menu": "footer",
+            "title": "",
+            "title_url": "",
+            "menu_link_opacity": 100,
+            "show_first_menu_on_mobile": false
+          }
+        },
+        "link_list_NFpTGq": {
+          "type": "link_list",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "menu_layout": "vertical",
+            "menu": "footer",
+            "title": "",
+            "title_url": "",
+            "menu_link_opacity": 100,
+            "show_first_menu_on_mobile": false
+          }
+        },
+        "link_list_GzNm6D": {
+          "type": "link_list",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "menu_layout": "vertical",
+            "menu": "footer",
+            "title": "",
+            "title_url": "",
+            "menu_link_opacity": 100,
+            "show_first_menu_on_mobile": false
+          }
+        }
+      },
+      "block_order": [
+        "link_list_9gjBPB",
+        "link_list_UdnAAM",
+        "link_list_NFpTGq",
+        "link_list_GzNm6D"
+      ],
+      "name": "t:sections.footer.presets.default.name",
+      "settings": {
+        "spacing_grid": "6",
+        "show_border_top": false,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-2868df83-d682-4b90-bdd0-eafd48c1419f",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    },
+    "footer_YpqYKi": {
+      "type": "footer",
+      "blocks": {
+        "richtext_bhyyw4": {
+          "type": "richtext",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "heading": "",
+            "text": "<p>COMODÍN S.A.S / NIT:800069933-6 / Calle 14 # 52 A 372 Medellín, Colombia</p>",
+            "content_position_vertical": "start",
+            "content_alignment": "start",
+            "content_alignment_for_mobile": "start"
+          }
+        },
+        "spacer_FwqDNr": {
+          "type": "spacer",
+          "settings": {
+            "show_on": "desktop",
+            "column_factor": 1,
+            "row_factor": 1
+          }
+        },
+        "richtext_6HYR7V": {
+          "type": "richtext",
+          "settings": {
+            "column_factor": 2,
+            "row_factor": 1,
+            "heading": "",
+            "text": "<p>© 2025 ESPRIT, todos los derechos reservados</p>",
+            "content_position_vertical": "start",
+            "content_alignment": "start",
+            "content_alignment_for_mobile": "start"
+          }
+        },
+        "spacer_KCaYdY": {
+          "type": "spacer",
+          "settings": {
+            "show_on": "desktop",
+            "column_factor": 1,
+            "row_factor": 1
+          }
+        },
+        "social_media_UNgEeD": {
+          "type": "social_media",
+          "settings": {
+            "column_factor": 1,
+            "row_factor": 1,
+            "icons": true,
+            "social_links_in_new_tab": true,
+            "heading": "",
+            "content_position_vertical": "start",
+            "content_alignment": "start",
+            "content_alignment_for_mobile": "start"
+          }
+        }
+      },
+      "block_order": [
+        "richtext_bhyyw4",
+        "spacer_FwqDNr",
+        "richtext_6HYR7V",
+        "spacer_KCaYdY",
+        "social_media_UNgEeD"
+      ],
+      "name": "t:sections.footer.presets.default.name",
+      "settings": {
+        "spacing_grid": "1",
+        "show_border_top": true,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-2bee5a80-7981-4d92-86f8-b798298e461f",
+        "spacing_top": "0",
+        "spacing_bottom": "1"
+      }
+    }
+  },
+  "order": [
+    "footer_HdRag6",
+    "footer_YpqYKi"
+  ]
+}

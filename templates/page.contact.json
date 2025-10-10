@@ -1,0 +1,205 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "breadcrumbs": true,
+        "show_page_title": false,
+        "page_title_alignment": "text-start",
+        "info_title": "Opening hours",
+        "info_content": "",
+        "section_width": "max-w-narrower",
+        "color_scheme": "scheme-1",
+        "spacing_top": "2",
+        "spacing_bottom": "0"
+      }
+    },
+    "trust_indicators_Kin9VH": {
+      "type": "trust-indicators",
+      "blocks": {
+        "indicator_jxR7Yf": {
+          "type": "indicator",
+          "settings": {
+            "title": "email",
+            "subheading": "support@chevignon.us",
+            "link_label": "",
+            "link": "/",
+            "icon": "theme-box"
+          }
+        },
+        "indicator_cepDBT": {
+          "type": "indicator",
+          "disabled": true,
+          "settings": {
+            "title": "Phone Number",
+            "subheading": "786 - 767 - 6583",
+            "link_label": "",
+            "link": "/",
+            "icon": "theme-box"
+          }
+        },
+        "indicator_M8imeH": {
+          "type": "indicator",
+          "settings": {
+            "title": "STORE",
+            "subheading": "<strong>The Galleria Mall  </strong>5135 W Alabama st Suite 7130 Houston TX 77056",
+            "link_label": "",
+            "link": "/",
+            "icon": "theme-pin"
+          }
+        }
+      },
+      "block_order": [
+        "indicator_jxR7Yf",
+        "indicator_cepDBT",
+        "indicator_M8imeH"
+      ],
+      "disabled": true,
+      "settings": {
+        "swipe_on_mobile": true,
+        "slideshow_autoplay_interval": 3,
+        "content_direction": "vertical",
+        "content_alignment": "text-center",
+        "content_size": "h6",
+        "color_scheme_for_blocks": "scheme-5",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "1",
+        "spacing_bottom": "2"
+      }
+    },
+    "form": {
+      "type": "form-contact",
+      "blocks": {
+        "field_qaqAeN": {
+          "type": "field",
+          "settings": {
+            "column_factor": "3",
+            "heading": "First Name",
+            "type": "text",
+            "required": true,
+            "checked": false,
+            "placeholder": "",
+            "binding": "first_name",
+            "label_description": "",
+            "option_1": "",
+            "option_2": "",
+            "option_3": "",
+            "option_4": ""
+          }
+        },
+        "field_p8UeqH": {
+          "type": "field",
+          "settings": {
+            "column_factor": "3",
+            "heading": "Last Name",
+            "type": "text",
+            "required": true,
+            "checked": false,
+            "placeholder": "",
+            "binding": "last_name",
+            "label_description": "",
+            "option_1": "",
+            "option_2": "",
+            "option_3": "",
+            "option_4": ""
+          }
+        },
+        "field_CQfU3F": {
+          "type": "field",
+          "settings": {
+            "column_factor": "6",
+            "heading": "Contact Method",
+            "type": "checkbox",
+            "required": true,
+            "checked": false,
+            "placeholder": "",
+            "binding": "custom",
+            "label_description": "How do you want us to contact you?",
+            "option_1": "Email",
+            "option_2": "Phone",
+            "option_3": "SMS",
+            "option_4": ""
+          }
+        },
+        "field_WKj4AY": {
+          "type": "field",
+          "settings": {
+            "column_factor": "6",
+            "heading": "ORDER NUMBER",
+            "type": "text",
+            "required": false,
+            "checked": false,
+            "placeholder": "",
+            "binding": "custom",
+            "label_description": "",
+            "option_1": "",
+            "option_2": "",
+            "option_3": "",
+            "option_4": ""
+          }
+        },
+        "field_V4KtCE": {
+          "type": "field",
+          "settings": {
+            "column_factor": "6",
+            "heading": "PHONE",
+            "type": "text",
+            "required": true,
+            "checked": false,
+            "placeholder": "",
+            "binding": "phone",
+            "label_description": "",
+            "option_1": "",
+            "option_2": "",
+            "option_3": "",
+            "option_4": ""
+          }
+        }
+      },
+      "block_order": [
+        "field_qaqAeN",
+        "field_p8UeqH",
+        "field_CQfU3F",
+        "field_WKj4AY",
+        "field_V4KtCE"
+      ],
+      "disabled": true,
+      "settings": {
+        "section_width": "max-w-narrower",
+        "color_scheme": "scheme-1",
+        "spacing_top": "0",
+        "spacing_bottom": "2"
+      }
+    },
+    "map": {
+      "type": "map",
+      "disabled": true,
+      "settings": {
+        "api_key": "",
+        "address_query": " 5085 Westheimer Rd, Houston, TX 77056",
+        "zoom_level": 11,
+        "section_width": "max-w-fluid",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust_indicators_Kin9VH",
+    "form",
+    "map"
+  ]
+}

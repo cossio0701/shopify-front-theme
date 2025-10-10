@@ -1,0 +1,271 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "callout_banner_n3NTAD": {
+      "type": "callout-banner",
+      "disabled": true,
+      "settings": {
+        "section_layout": "horizontal",
+        "image": "shopify://shop_images/denim_56.jpg",
+        "media_position": "full",
+        "subheading": "DOUBLE UP ON DENIM",
+        "heading": "BUY ONE, GET ONE 30% OFF",
+        "heading_size": "h4",
+        "text": "<p>Automatically applies at checkout* </p>",
+        "action_preference": "button",
+        "button_label": "",
+        "button_link": "",
+        "newsletter_button_label": "",
+        "button_style": "button--outlined",
+        "show_timer": true,
+        "timer_layout": "1",
+        "timer_size": "h4",
+        "timer_year": 2024,
+        "timer_month": "01",
+        "timer_day": 1,
+        "timer_hour": 0,
+        "timer_minute": 0,
+        "timer_end_message": "BUY ONE, GET ONE 30% OFF",
+        "show_timer_days": false,
+        "show_timer_hours": false,
+        "show_timer_minutes": false,
+        "show_timer_seconds": false,
+        "section_width": "max-w-full",
+        "color_scheme": "",
+        "color_scheme_for_content": "scheme-1ef0d596-d42e-4e4e-bfcc-0c92e5b48b7e",
+        "spacing_top": "0",
+        "spacing_bottom": "0"
+      }
+    },
+    "banner": {
+      "type": "page-banner",
+      "disabled": true,
+      "settings": {
+        "enable_transparent_header": true,
+        "heading": "",
+        "heading_size": "h3",
+        "text": "",
+        "show_default_description": true,
+        "show_on_description": "desktop",
+        "content_position": "center",
+        "content_alignment": "center",
+        "media_position": "bottom",
+        "page_menu": "",
+        "enable_breadcrumbs": true,
+        "section_height": "33svh",
+        "content_width": "100%",
+        "video_external": "",
+        "show_controls_on_video": false,
+        "section_height_mobile": "auto",
+        "video_external_mobile": "",
+        "show_controls_on_video_mobile": false,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-1",
+        "color_scheme_for_media": "scheme-1",
+        "spacing_top": "1",
+        "spacing_bottom": "0"
+      }
+    },
+    "full_width_banner_TUqKA8": {
+      "type": "full-width-banner",
+      "blocks": {
+        "heading_7qBVxW": {
+          "type": "heading",
+          "settings": {
+            "heading": "MEN'S JEANS",
+            "heading_size": "h4"
+          }
+        },
+        "breadcrumbs_7aNBGW": {
+          "type": "breadcrumbs",
+          "settings": {
+            "show_on": "both"
+          }
+        }
+      },
+      "block_order": [
+        "heading_7qBVxW",
+        "breadcrumbs_7aNBGW"
+      ],
+      "settings": {
+        "enable_transparent_header": true,
+        "media_position": "background",
+        "section_height": "auto",
+        "content_position": "start",
+        "content_alignment": "start",
+        "video_external": "",
+        "show_controls_on_video": false,
+        "aspect_ratio": "auto",
+        "section_height_mobile": "auto",
+        "content_position_mobile": "center",
+        "content_alignment_mobile": "center",
+        "video_external_mobile": "",
+        "show_controls_on_video_mobile": false,
+        "aspect_ratio_mobile": "auto",
+        "section_width": "max-w-fluid",
+        "color_scheme": "scheme-7",
+        "color_scheme_for_content": "scheme-7",
+        "spacing_inner": "1",
+        "spacing_top": "0",
+        "spacing_bottom": "0"
+      }
+    },
+    "featured_collections_JQrJUx": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_slide_mgrYeF": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "relaxed-fit-jeans",
+            "image": "shopify://shop_images/FITS_MEN_RELAXED.jpg",
+            "heading": "Relaxed",
+            "heading_size": "h5",
+            "subheading": "Relaxed shape with comfortable, roomier leg and high waist silhouette."
+          }
+        },
+        "collection_slide_a6Hh3H": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "straight-fit-jeans",
+            "image": "shopify://shop_images/FITS_MEN_STRAIGHT_2.jpg",
+            "heading": "Straight",
+            "heading_size": "h5",
+            "subheading": "Straight fit throughout with a classic bootcut for a balanced style."
+          }
+        },
+        "collection_slide_eCyGr7": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "slim-fit-jeans",
+            "image": "shopify://shop_images/FITS_MEN_SLIM.jpg",
+            "heading": "Slim",
+            "heading_size": "h5",
+            "subheading": "Slender fit with tapered boot, mid-rise waist, zip fly closure."
+          }
+        },
+        "collection_slide_K4fkLm": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "super-slim-fit-jeans",
+            "image": "shopify://shop_images/FITS_MEN_SKINNY.jpg",
+            "heading": "Super Slim",
+            "heading_size": "h5",
+            "subheading": "Super Slim Fit-Rider jeans feature a skinny leg."
+          }
+        }
+      },
+      "block_order": [
+        "collection_slide_mgrYeF",
+        "collection_slide_a6Hh3H",
+        "collection_slide_eCyGr7",
+        "collection_slide_K4fkLm"
+      ],
+      "settings": {
+        "layout": "layout-1",
+        "heading": "",
+        "heading_size": "h4",
+        "subheading": "",
+        "content_padding": "0",
+        "button_label": "",
+        "button_link": "shopify://collections",
+        "button_style": "button--filled",
+        "card_layout": "collection",
+        "card_style": "normal",
+        "image_aspect_ratio": "3/4",
+        "card_content_alignment": "center",
+        "card_title_style": "card-single-text",
+        "collection_product_count": "hide",
+        "slides_per_view": 4,
+        "slides_per_view_mobile": 2,
+        "show_carousel_arrows": false,
+        "slideshow_alignment_center": false,
+        "enable_slideshow_overflow": false,
+        "slideshow_border": "none",
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "color_scheme_for_cards": "scheme-7",
+        "spacing_top": "0",
+        "spacing_bottom": "1"
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "text_card_J6n8hn": {
+          "type": "text-card",
+          "settings": {
+            "color_scheme": "scheme-6",
+            "text": "<h5>Free Shipping<br/>on orders over<br/>$150+</h5>",
+            "button_link": "",
+            "link_type": "button",
+            "button_label": "",
+            "button_style": "button--text",
+            "content_position": "center",
+            "content_alignment": "center",
+            "content_position_mobile": "center",
+            "content_alignment_mobile": "center",
+            "position": 7,
+            "column_factor": 1,
+            "row_factor": 1,
+            "card_image": "shopify://shop_images/DENIM_WASHES_Mesa_de_trabajo_1.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "text_card_J6n8hn"
+      ],
+      "settings": {
+        "show_top_border_for_utilities_bar": false,
+        "enable_products_count": true,
+        "enable_sorting": true,
+        "enable_opened_accordions": false,
+        "filters": "sidebar",
+        "products_per_row": "3",
+        "products_per_row_mobile": "2",
+        "products_per_page": 29,
+        "pagination_style": "default",
+        "enable_infinity_scroll": false,
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "0",
+        "spacing_bottom": "2"
+      }
+    },
+    "f8303da3-c3cb-4a90-a63a-7a628615aa6f": {
+      "type": "seo-content",
+      "settings": {
+        "section_layout": "boxed",
+        "heading": "{{ collection.title }}",
+        "heading_size": "h4",
+        "text": "{{ collection.description }}",
+        "content_alignment": "center",
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-5",
+        "spacing_inner": "2",
+        "spacing_top": "1",
+        "spacing_bottom": "1"
+      }
+    },
+    "173696262020bc1b10": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "callout_banner_n3NTAD",
+    "banner",
+    "full_width_banner_TUqKA8",
+    "featured_collections_JQrJUx",
+    "main",
+    "f8303da3-c3cb-4a90-a63a-7a628615aa6f",
+    "173696262020bc1b10"
+  ]
+}

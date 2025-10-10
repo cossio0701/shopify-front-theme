@@ -1,0 +1,651 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-block-start: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_top }});
+    padding-block-end: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_bottom }});
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: {{ section.settings.alignment }};
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__title {
+    font-size: {{ section.settings.title_size_desktop }}px;
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.title_color }};
+    margin-bottom: {{ section.settings.title_margin_bottom }}px;
+    letter-spacing: {{ section.settings.title_letter_spacing }}px;
+    text-transform: {{ section.settings.title_transform }};
+    line-height: 1.2;
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.buttons_gap }}px;
+    justify-content: {{ section.settings.alignment }};
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__button {
+    display: inline-block;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+    text-decoration: none;
+    font-size: {{ section.settings.button_font_size }}px;
+    font-weight: {{ section.settings.button_font_weight }};
+    text-transform: {{ section.settings.button_text_transform }};
+    letter-spacing: {{ section.settings.button_letter_spacing }}px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__button:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+    color: {{ section.settings.button_hover_text_color }};
+    border-color: {{ section.settings.button_hover_border_color }};
+    transform: translateY({{ section.settings.button_hover_transform }}px);
+    box-shadow: {{ section.settings.button_hover_shadow }};
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__button:active {
+    transform: translateY(1px);
+  }
+
+  /* Responsive - Tablet */
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .trending-searches__title {
+      font-size: {{ section.settings.title_size_tablet }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trending-searches__button {
+      font-size: {{ section.settings.button_font_size_tablet }}px;
+      padding: {{ section.settings.button_padding_vertical_tablet }}px {{ section.settings.button_padding_horizontal_tablet }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trending-searches__container {
+      gap: {{ section.settings.buttons_gap_tablet }}px;
+    }
+  }
+
+  /* Responsive - Mobile */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .trending-searches {
+      padding: 0 15px;
+    }
+
+    #shopify-section-{{ section.id }} .trending-searches__title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+      margin-bottom: {{ section.settings.title_margin_bottom_mobile }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trending-searches__button {
+      font-size: {{ section.settings.button_font_size_mobile }}px;
+      padding: {{ section.settings.button_padding_vertical_mobile }}px {{ section.settings.button_padding_horizontal_mobile }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trending-searches__container {
+      gap: {{ section.settings.buttons_gap_mobile }}px;
+      justify-content: center;
+    }
+  }
+
+  /* Animación de entrada */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #shopify-section-{{ section.id }} .trending-searches__button {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  {% for block in section.blocks %}
+    #shopify-section-{{ section.id }} .trending-searches__button:nth-child({{ forloop.index }}) {
+      animation-delay: {{ forloop.index | times: 0.1 }}s;
+    }
+  {% endfor %}
+{%- endstyle -%}
+
+<section class="trending-searches color-{{ section.settings.color_scheme }}">
+  <div class="trending-searches">
+    
+    {% if section.settings.title != blank %}
+      <h2 class="trending-searches__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="trending-searches__container">
+      {% comment %} Términos configurados manualmente {% endcomment %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'search_term' %}
+            {% if block.settings.term != blank %}
+              <a href="/search?q={{ block.settings.term | url_param_escape }}" 
+                 class="trending-searches__button"
+                 aria-label="Buscar {{ block.settings.term }}">
+                {{ block.settings.display_text | default: block.settings.term }}
+              </a>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+
+      {% comment %} Términos automáticos basados en etiquetas populares {% endcomment %}
+      {% if section.settings.show_popular_tags and section.blocks.size == 0 %}
+        {% assign popular_tags = collections.all.all_tags | slice: 0, 10 %}
+        {% for tag in popular_tags %}
+          <a href="/search?q={{ tag | url_param_escape }}" 
+             class="trending-searches__button"
+             aria-label="Buscar {{ tag }}">
+            {{ tag }}
+          </a>
+        {% endfor %}
+      {% endif %}
+
+      {% comment %} Términos de respaldo si no hay configuración {% endcomment %}
+      {% if section.blocks.size == 0 and section.settings.show_popular_tags == false %}
+        {% assign fallback_terms = 'CAMISAS,PANTALONES,VESTIDOS,ZAPATOS,ACCESORIOS,JEANS,SUDADERAS,CHAQUETAS' | split: ',' %}
+        {% for term in fallback_terms %}
+          <a href="/search?q={{ term | downcase | url_param_escape }}" 
+             class="trending-searches__button"
+             aria-label="Buscar {{ term | downcase }}">
+            {{ term }}
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Búsquedas en Tendencia",
+  "tag": "section",
+  "class": "section--trending-searches",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Título"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "BÚSQUEDAS EN TENDENCIA"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño título - Desktop",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_size_tablet",
+      "min": 14,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño título - Tablet",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño título - Móvil",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Peso del título",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "title_transform",
+      "label": "Estilo del título",
+      "options": [
+        { "value": "none", "label": "Normal" },
+        { "value": "uppercase", "label": "MAYÚSCULAS" },
+        { "value": "lowercase", "label": "minúsculas" },
+        { "value": "capitalize", "label": "Primera Letra" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "min": -2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacio debajo del título",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom_mobile",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacio debajo del título - Móvil",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Alineación"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alineación del contenido",
+      "options": [
+        { "value": "flex-start", "label": "Izquierda" },
+        { "value": "center", "label": "Centro" },
+        { "value": "flex-end", "label": "Derecha" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Botones de búsqueda"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño texto - Desktop",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_tablet",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño texto - Tablet",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño texto - Móvil",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Peso del texto",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "Estilo del texto",
+      "options": [
+        { "value": "none", "label": "Normal" },
+        { "value": "uppercase", "label": "MAYÚSCULAS" },
+        { "value": "lowercase", "label": "minúsculas" },
+        { "value": "capitalize", "label": "Primera Letra" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "min": -1,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Espaciado botones"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 5,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding vertical - Desktop",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - Desktop",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical_tablet",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding vertical - Tablet",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal_tablet",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - Tablet",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical_mobile",
+      "min": 4,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding vertical - Móvil",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal_mobile",
+      "min": 6,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - Móvil",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "buttons_gap",
+      "min": 6,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Espacio entre botones - Desktop",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "buttons_gap_tablet",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Espacio entre botones - Tablet",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "buttons_gap_mobile",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Espacio entre botones - Móvil",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colores normales"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Color del borde",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Grosor del borde",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Redondez de las esquinas",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colores hover"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Color de fondo al pasar mouse",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Color del texto al pasar mouse",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Color del borde al pasar mouse",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_hover_transform",
+      "min": -5,
+      "max": 0,
+      "step": 1,
+      "unit": "px",
+      "label": "Movimiento vertical al pasar mouse",
+      "default": -2
+    },
+    {
+      "type": "text",
+      "id": "button_hover_shadow",
+      "label": "Sombra al pasar mouse",
+      "default": "0 4px 12px rgba(0,0,0,0.15)",
+      "info": "Ejemplo: 0 4px 12px rgba(0,0,0,0.15)"
+    },
+    {
+      "type": "header",
+      "content": "Términos automáticos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_popular_tags",
+      "label": "Mostrar etiquetas populares automáticamente",
+      "default": false,
+      "info": "Solo se aplicará si no hay términos configurados manualmente"
+    },
+    {
+      "type": "header",
+      "content": "Configuración general"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Esquema de color"
+    },
+    {
+      "type": "select",
+      "id": "spacing_top",
+      "label": "Espaciado superior",
+      "options": [
+        { "value": "0", "label": "Ninguno" },
+        { "value": "1", "label": "Pequeño" },
+        { "value": "2", "label": "Mediano" },
+        { "value": "4", "label": "Grande" },
+        { "value": "6", "label": "Extra grande" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "spacing_bottom",
+      "label": "Espaciado inferior",
+      "options": [
+        { "value": "0", "label": "Ninguno" },
+        { "value": "1", "label": "Pequeño" },
+        { "value": "2", "label": "Mediano" },
+        { "value": "4", "label": "Grande" },
+        { "value": "6", "label": "Extra grande" }
+      ],
+      "default": "2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "search_term",
+      "name": "Término de búsqueda",
+      "settings": [
+        {
+          "type": "text",
+          "id": "term",
+          "label": "Término de búsqueda",
+          "info": "La palabra que se buscará (ej: camisas)"
+        },
+        {
+          "type": "text",
+          "id": "display_text",
+          "label": "Texto a mostrar (opcional)",
+          "info": "Si quieres mostrar un texto diferente al término de búsqueda"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Búsquedas en Tendencia",
+      "blocks": [
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "camisas"
+          }
+        },
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "pantalones"
+          }
+        },
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "vestidos"
+          }
+        },
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "zapatos"
+          }
+        },
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "accesorios"
+          }
+        },
+        {
+          "type": "search_term",
+          "settings": {
+            "term": "jeans"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

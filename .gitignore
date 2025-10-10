@@ -1,0 +1,60 @@
+# Shopify theme .gitignore
+
+# Shopify CLI files
+.shopify/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# GitHub directory
+.github/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+*.log
+logs/
+
+# If using Node.js (though not detected in this project)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts (if any)
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Other
+*.tgz
+
+# Common directory
+common/
+
+# sf CLI history
+.sf_history
+.yarn-integrity

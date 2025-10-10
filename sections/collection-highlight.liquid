@@ -1,0 +1,549 @@
+<!-- sections/collection-highlight.liquid -->
+<section class="collection-highlight collection-highlight--{{ section.settings.section_size }} collection-highlight--{{ section.settings.content_position }}">
+  <div class="collection-highlight__container">
+    <!-- Contenido de texto -->
+    <div class="collection-highlight__content collection-highlight__content--{{ section.settings.content_vertical_position }}">
+      {% if section.settings.subheading != blank %}
+        <p class="collection-highlight__subheading" style="font-size: {{ section.settings.subheading_size }}px;">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <h2 class="collection-highlight__heading" style="font-size: {{ section.settings.heading_size }}px;">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+      
+      {% if section.settings.text != blank %}
+        <p class="collection-highlight__text" style="font-size: {{ section.settings.text_size }}px;">
+          {{ section.settings.text }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" 
+           class="collection-highlight__button" 
+           style="font-size: {{ section.settings.button_text_size }}px; padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Imagen o Video -->
+    <div class="collection-highlight__media">
+      {% if section.settings.media_type == 'image' and section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" 
+             alt="{{ section.settings.heading | escape }}" 
+             loading="lazy">
+      {% elsif section.settings.media_type == 'video' and section.settings.video != blank %}
+        <video autoplay loop muted playsinline>
+          <source src="{{ section.settings.video }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+.collection-highlight {
+  width: 100%;
+}
+
+.collection-highlight__container {
+  display: flex;
+  width: 100%;
+}
+
+/* TAMAÑOS DE SECCIÓN */
+.collection-highlight--small .collection-highlight__container {
+  height: 50vh;
+  min-height: 400px;
+}
+
+.collection-highlight--medium .collection-highlight__container {
+  height: 70vh;
+  min-height: 500px;
+}
+
+.collection-highlight--large .collection-highlight__container {
+  height: 100vh;
+  min-height: 600px;
+}
+
+/* POSICIONES DEL CONTENIDO */
+.collection-highlight--left .collection-highlight__container {
+  flex-direction: row;
+}
+
+.collection-highlight--right .collection-highlight__container {
+  flex-direction: row-reverse;
+}
+
+.collection-highlight--top .collection-highlight__container {
+  flex-direction: column;
+}
+
+.collection-highlight--bottom .collection-highlight__container {
+  flex-direction: column-reverse;
+}
+
+.collection-highlight__content {
+  width: 50%;
+  background: {{ section.settings.content_background_color | default: '#f7f3eb' }};
+  display: flex;
+  flex-direction: column;
+  padding: 0 5vw;
+  text-align: {{ section.settings.text_alignment }};
+}
+
+/* POSICIONAMIENTO VERTICAL DEL CONTENIDO */
+.collection-highlight__content--top {
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 5vh;
+}
+
+.collection-highlight__content--center {
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-highlight__content--bottom {
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-bottom: 5vh;
+}
+
+.collection-highlight__content--top-left {
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 5vh;
+}
+
+.collection-highlight__content--top-center {
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 5vh;
+}
+
+.collection-highlight__content--top-right {
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-top: 5vh;
+}
+
+.collection-highlight__content--center-left {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.collection-highlight__content--center-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-highlight__content--center-right {
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.collection-highlight__content--bottom-left {
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-bottom: 5vh;
+}
+
+.collection-highlight__content--bottom-center {
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 5vh;
+}
+
+.collection-highlight__content--bottom-right {
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-bottom: 5vh;
+}
+
+/* Ajustes para disposición vertical */
+.collection-highlight--top .collection-highlight__content,
+.collection-highlight--bottom .collection-highlight__content {
+  width: 100%;
+  height: 50%;
+  padding: 40px 5vw;
+}
+
+/* Mantenemos el posicionamiento interno incluso en disposición vertical */
+.collection-highlight--top .collection-highlight__content--top,
+.collection-highlight--bottom .collection-highlight__content--top {
+  padding-top: 3vh;
+}
+
+.collection-highlight--top .collection-highlight__content--bottom,
+.collection-highlight--bottom .collection-highlight__content--bottom {
+  padding-bottom: 3vh;
+}
+
+.collection-highlight__subheading {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: {{ section.settings.subheading_color | default: '#000' }};
+}
+
+.collection-highlight__heading {
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: {{ section.settings.heading_color | default: '#000' }};
+}
+
+.collection-highlight__text {
+  max-width: {{ section.settings.text_max_width }}px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: {{ section.settings.text_color | default: '#000' }};
+}
+
+/* Centrar texto cuando está alineado al centro */
+.collection-highlight__content[style*="text-align: center"] .collection-highlight__text {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.collection-highlight__button {
+  background: {{ section.settings.button_background_color | default: '#000' }};
+  color: {{ section.settings.button_text_color | default: '#fff' }};
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border-radius: {{ section.settings.button_border_radius }}px;
+}
+
+.collection-highlight__button:hover {
+  background: {{ section.settings.button_hover_color | default: '#333' }};
+  transform: translateY(-2px);
+}
+
+.collection-highlight__media {
+  width: 50%;
+}
+
+/* Ajustes para disposición vertical */
+.collection-highlight--top .collection-highlight__media,
+.collection-highlight--bottom .collection-highlight__media {
+  width: 100%;
+  height: 50%;
+}
+
+.collection-highlight__media img,
+.collection-highlight__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .collection-highlight__container {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  
+  .collection-highlight__content {
+    width: 100% !important;
+    height: auto !important;
+    padding: 40px 20px;
+  }
+  
+  .collection-highlight__media {
+    width: 100% !important;
+    height: 300px !important;
+  }
+  
+  .collection-highlight__text {
+    max-width: 100% !important;
+  }
+  
+  /* Tamaños de texto responsive */
+  .collection-highlight__subheading {
+    font-size: calc({{ section.settings.subheading_size }}px * 0.8) !important;
+  }
+  
+  .collection-highlight__heading {
+    font-size: calc({{ section.settings.heading_size }}px * 0.8) !important;
+  }
+  
+  .collection-highlight__text {
+    font-size: calc({{ section.settings.text_size }}px * 0.9) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .collection-highlight__subheading {
+    font-size: calc({{ section.settings.subheading_size }}px * 0.7) !important;
+  }
+  
+  .collection-highlight__heading {
+    font-size: calc({{ section.settings.heading_size }}px * 0.7) !important;
+  }
+  
+  .collection-highlight__text {
+    font-size: calc({{ section.settings.text_size }}px * 0.8) !important;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Collection Highlight",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configuración de Tamaño y Posición"
+    },
+    {
+      "type": "select",
+      "id": "section_size",
+      "label": "Tamaño de la sección",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "Pequeño (50vh)" },
+        { "value": "medium", "label": "Mediano (70vh)" },
+        { "value": "large", "label": "Grande (100vh)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Posición del contenido",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "right", "label": "Derecha" },
+        { "value": "top", "label": "Arriba" },
+        { "value": "bottom", "label": "Abajo" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_vertical_position",
+      "label": "Posición del contenido dentro del área",
+      "default": "center-left",
+      "options": [
+        { "value": "top-left", "label": "Arriba - Izquierda" },
+        { "value": "top-center", "label": "Arriba - Centro" },
+        { "value": "top-right", "label": "Arriba - Derecha" },
+        { "value": "center-left", "label": "Centro - Izquierda" },
+        { "value": "center-center", "label": "Centro - Centro" },
+        { "value": "center-right", "label": "Centro - Derecha" },
+        { "value": "bottom-left", "label": "Abajo - Izquierda" },
+        { "value": "bottom-center", "label": "Abajo - Centro" },
+        { "value": "bottom-right", "label": "Abajo - Derecha" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alineación del texto",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "center", "label": "Centro" },
+        { "value": "right", "label": "Derecha" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Meet our New Collection"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Tamaño del subtítulo (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Nomad"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Tamaño del título (px)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Descripción",
+      "default": "La colección perfecta para cualquier ocasión..."
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Tamaño del texto (px)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_max_width",
+      "label": "Ancho máximo del texto (px)",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Botón"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del botón",
+      "default": "CONOCER MÁS"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link del botón"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Tamaño del texto del botón (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Padding vertical del botón (px)",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Padding horizontal del botón (px)",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Borde redondeado del botón (px)",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Tipo de media",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Imagen" },
+        { "value": "video", "label": "Video" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen"
+    },
+    {
+      "type": "text",
+      "id": "video",
+      "label": "URL del video (MP4)"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "content_background_color",
+      "label": "Color de fondo del contenido",
+      "default": "#f7f3eb"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Color del subtítulo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color del título",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Color de fondo del botón",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color del texto del botón",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Color del botón al pasar el mouse",
+      "default": "#333333"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Highlight",
+      "settings": {
+        "section_size": "medium",
+        "content_position": "left",
+        "content_vertical_position": "center-left",
+        "text_alignment": "left"
+      }
+    }
+  ]
+}
+{% endschema %}

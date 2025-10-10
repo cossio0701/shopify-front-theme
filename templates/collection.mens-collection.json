@@ -1,0 +1,207 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner_landing_scheduled": {
+      "type": "banner-landing",
+      "settings": {}
+    },
+    "banner": {
+      "type": "page-banner",
+      "disabled": true,
+      "settings": {
+        "enable_transparent_header": true,
+        "heading": "",
+        "heading_size": "h3",
+        "text": "",
+        "show_default_description": false,
+        "show_on_description": "desktop",
+        "content_position": "center",
+        "content_alignment": "center",
+        "media_position": "top",
+        "page_menu": "",
+        "enable_breadcrumbs": false,
+        "section_height": "33svh",
+        "content_width": "100%",
+        "image": "shopify://shop_images/BANNER_HOME-04.jpg",
+        "video_external": "",
+        "show_controls_on_video": false,
+        "section_height_mobile": "auto",
+        "video_external_mobile": "",
+        "show_controls_on_video_mobile": false,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-7",
+        "color_scheme_for_media": "scheme-7",
+        "spacing_top": "1",
+        "spacing_bottom": "1"
+      }
+    },
+    "featured_collections_JQrJUx": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_slide_eCyGr7": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-jackets",
+            "heading": "Coats & Jackets",
+            "heading_size": "h6",
+            "subheading": ""
+          }
+        },
+        "collection_slide_a6Hh3H": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-jeans",
+            "heading": "Jeans",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_mgrYeF": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-shirts",
+            "heading": "Shirts",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_Jxp4QF": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-sweaters",
+            "heading": "Sweaters",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_yJVzU4": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-pants",
+            "heading": "Pants",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_JeHaQi": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "shorts",
+            "heading": "Shorts",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_FTD6Cq": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-polos",
+            "heading": "Polos",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        },
+        "collection_slide_73QVgH": {
+          "type": "collection-slide",
+          "settings": {
+            "collection": "mens-t-shirts",
+            "heading": "T-Shirts",
+            "heading_size": "h4",
+            "subheading": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_slide_eCyGr7",
+        "collection_slide_a6Hh3H",
+        "collection_slide_mgrYeF",
+        "collection_slide_Jxp4QF",
+        "collection_slide_yJVzU4",
+        "collection_slide_JeHaQi",
+        "collection_slide_FTD6Cq",
+        "collection_slide_73QVgH"
+      ],
+      "settings": {
+        "layout": "layout-2",
+        "heading": "SHOP BY CATEGORY",
+        "heading_size": "h4",
+        "subheading": "",
+        "content_padding": "0",
+        "button_label": "",
+        "button_link": "shopify://collections",
+        "button_style": "button--text",
+        "card_layout": "text",
+        "card_style": "normal",
+        "image_aspect_ratio": "1/1",
+        "card_content_alignment": "center",
+        "card_title_style": "card-single-text",
+        "collection_product_count": "hide",
+        "slides_per_view": 8,
+        "slides_per_view_mobile": 4,
+        "show_carousel_arrows": true,
+        "slideshow_alignment_center": true,
+        "enable_slideshow_overflow": false,
+        "slideshow_border": "none",
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-1",
+        "color_scheme_for_cards": "scheme-1",
+        "spacing_top": "2",
+        "spacing_bottom": "0"
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "show_top_border_for_utilities_bar": true,
+        "enable_products_count": true,
+        "enable_sorting": true,
+        "enable_opened_accordions": true,
+        "filters": "drawer",
+        "products_per_row": "3",
+        "products_per_row_mobile": "2",
+        "products_per_page": 29,
+        "pagination_style": "default",
+        "enable_infinity_scroll": false,
+        "section_width": "max-w-page",
+        "color_scheme": "",
+        "spacing_top": "0",
+        "spacing_bottom": "2"
+      }
+    },
+    "f8303da3-c3cb-4a90-a63a-7a628615aa6f": {
+      "type": "seo-content",
+      "settings": {
+        "section_layout": "normal",
+        "heading": "{{ collection.title }}",
+        "heading_size": "h5",
+        "text": "{{ collection.metafields.custom.seo | metafield_tag }}",
+        "content_alignment": "center",
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-5",
+        "spacing_inner": "2",
+        "spacing_top": "4",
+        "spacing_bottom": "4"
+      }
+    },
+    "173696262020bc1b10": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "banner_landing_scheduled",
+    "banner",
+    "featured_collections_JQrJUx",
+    "main",
+    "f8303da3-c3cb-4a90-a63a-7a628615aa6f",
+    "173696262020bc1b10"
+  ]
+}

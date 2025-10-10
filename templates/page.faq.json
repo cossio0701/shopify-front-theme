@@ -1,0 +1,182 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "e4a22221-96e8-47eb-8e41-ff9780104ed3": {
+      "type": "page-banner",
+      "settings": {
+        "enable_transparent_header": true,
+        "heading": "Frequently Asked Questions",
+        "heading_size": "h3",
+        "text": "<p>If you have a question, please consult our list of frequently asked questions before reaching out for assistance.</p>",
+        "show_default_description": true,
+        "show_on_description": "desktop",
+        "content_position": "center",
+        "content_alignment": "center",
+        "media_position": "background",
+        "page_menu": "",
+        "enable_breadcrumbs": true,
+        "section_height": "auto",
+        "content_width": "100%",
+        "video_external": "",
+        "show_controls_on_video": false,
+        "section_height_mobile": "auto",
+        "video_external_mobile": "",
+        "show_controls_on_video_mobile": false,
+        "section_width": "max-w-page",
+        "color_scheme": "scheme-5",
+        "color_scheme_for_media": "",
+        "spacing_top": "2",
+        "spacing_bottom": "1"
+      }
+    },
+    "15d37dcd-dfe5-404c-80f1-8f76c2017e23": {
+      "type": "accordions",
+      "blocks": {
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-0": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "HOW CAN I CHANGE THE DELIVERY ADDRESS FOR MY ORDER? ",
+            "text": "<p>If you see an error in your shipping address or want to modify/cancel your order, please email us at <span style=\"text-decoration:underline\">support@chevignon.us </span>as soon as possible and we'll try our best to help out. We fulfill our orders as quickly as possible and cannot promise that we’ll be able to stop your package from being sent out in time to change the address or cancel.</p>",
+            "page": ""
+          }
+        },
+        "topic_dc84qH": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "HOW CAN I REPORT AN ISSUE WITH AN ORDER?",
+            "text": "<p>To report an issue with your order, please email us at <span style=\"text-decoration:underline\">support@chevignon.us</span> with the following information: </p><ul><li>Name </li><li>Phone Number </li><li>Email </li><li>Order # </li><li>Issue description </li></ul>",
+            "page": ""
+          }
+        },
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-1": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "HOW DO I REDEEM A PROMOTIONAL OR DISCOUNT CODE?",
+            "text": "<p>You can enter a promotional code in the designated field just before proceeding to the checkout.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-0",
+        "topic_dc84qH",
+        "template--17062096503099__15d37dcd-dfe5-404c-80f1-8f76c2017e23-16696259764c4b7b62-1"
+      ],
+      "settings": {
+        "heading": "PLACED AN ORDER",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "scheme-1",
+        "spacing_top": "1",
+        "spacing_bottom": "1"
+      }
+    },
+    "accordions_AUAWib": {
+      "type": "accordions",
+      "blocks": {
+        "topic_FdANDz": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "WHAT IS CHEVIGNON’S RETURN POLICY?",
+            "text": "<p>Any purchase made from Chevignon stores can be returned or exchanged within 30 days (some exceptions may apply) with proof of purchase. Items must be unworn, unaltered and in new condition with all tags attached. Jeans that have been hemmed or altered are not eligible for return or exchange. Items marked <strong>“Final Sale”</strong> are not eligible for returns. The refund value of the merchandise returned is based on the original form and amount of payment. Please follow the instructions on the <a href=\"https://returns.chevignon.us/\" title=\"https://returns.chevignon.us/\">return portal</a> to proceed with a return. Chevignon only provides prepaid return labels for the contiguous United States. </p>",
+            "page": ""
+          }
+        },
+        "topic_7hrhpw": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "HOW DO I REQUEST A RETURN?",
+            "text": "<p>Visit <a href=\"https://returns.chevignon.us/\" target=\"_blank\" title=\"https://returns.chevignon.us/\">returns.chevignon.us</a> to begin your return/exchange. Enter your customer order number and email address to start.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "topic_FdANDz",
+        "topic_7hrhpw"
+      ],
+      "settings": {
+        "heading": "RETURNS",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "1",
+        "spacing_bottom": "1"
+      }
+    },
+    "accordions_DKVQMe": {
+      "type": "accordions",
+      "blocks": {
+        "topic_kFzkWj": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "WHEN WILL MY ORDER SHIP? ",
+            "text": "<p>Orders will be fulfilled on a first in, first out basis. We ship orders Monday through Friday 12 pm EST. Orders are not processed or shipped from Friday, 12 pm EST through Sunday, or holidays. For more details on shipping timelines, please see our <a href=\"https://chevignon.us/pages/shipping\" title=\"Shipping Policy\">shipping page</a>. If you need an item urgently, we recommend contacting us via email at <span style=\"text-decoration:underline\">support@chevignon.us.</span></p>",
+            "page": ""
+          }
+        },
+        "topic_ch7fkq": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "WHERE IS MY TRACKING NUMBER?",
+            "text": "<p>After your order ships, we will send you an email with your tracking number(s). Please note, after we send shipping confirmation, your tracking number may not have any information attached for up to 48 hours after leaving our warehouse. </p><p>Your order may arrive in multiple shipments due to different dispatch warehouses. If the shipment is generated from the USA warehouse, the carrier is UPS Ground. If the shipment is generated from Colombia, the carrier is DHL. You can enter your tracking number here: <a href=\"https://www.ups.com/track\" target=\"_blank\">UPS</a>  / <a href=\"https://www.dhl.com/us-en/home.html\" title=\"https://www.dhl.com/us-en/home.html\">DHL</a></p>",
+            "page": ""
+          }
+        },
+        "topic_riwCPR": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "WHAT ARE THE DELIVERY TIMES FOR DIFFERENT CITIES? ",
+            "text": "<p>Standard delivery times can vary from <strong>3 to 8 days</strong>, depending on the destination state.</p>",
+            "page": ""
+          }
+        },
+        "topic_NefVjA": {
+          "type": "topic",
+          "settings": {
+            "is_open": false,
+            "title": "SHIPPING POLICY",
+            "text": "<p>Descriptive topic content body text</p>",
+            "page": "shipping"
+          }
+        }
+      },
+      "block_order": [
+        "topic_kFzkWj",
+        "topic_ch7fkq",
+        "topic_riwCPR",
+        "topic_NefVjA"
+      ],
+      "settings": {
+        "heading": "Frequently asked questions",
+        "heading_size": "h4",
+        "section_width": "max-w-narrower",
+        "color_scheme": "",
+        "spacing_top": "2",
+        "spacing_bottom": "2"
+      }
+    }
+  },
+  "order": [
+    "e4a22221-96e8-47eb-8e41-ff9780104ed3",
+    "15d37dcd-dfe5-404c-80f1-8f76c2017e23",
+    "accordions_AUAWib",
+    "accordions_DKVQMe"
+  ]
+}
