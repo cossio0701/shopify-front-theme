@@ -1,0 +1,123 @@
+{% comment %}
+  Sección: Top Banners Programados
+  Usa Metaobjects "Top Banner" y sus periodos asociados.
+  Permite mostrar banners tipo imagen o texto según el campo "type".
+{% endcomment %}
+
+{% assign now = 'now' | date: "%s" %}
+{% assign banner_source = section.settings.banner_source.value %}
+{% if banner_source != blank %}
+  {% assign banners = shop.metaobjects.top_banner.values | where: "handle", banner_source %}
+{% else %}
+  {% assign banners = shop.metaobjects.top_banner.values %}
+{% endif %}
+
+{% assign active_banners = '' %}
+{% for banner in banners %}
+  {% assign is_active = false %}
+  {% for period in banner.periodos.value %}
+    {% assign start = period.start_date | date: "%s" %}
+    {% assign end = period.end_date | date: "%s" %}
+    {% if now >= start and now <= end %}
+      {% assign is_active = true %}
+    {% endif %}
+  {% endfor %}
+  {% if is_active %}
+    {% assign active_banners = active_banners | append: banner.id | append: ',' %}
+  {% endif %}
+{% endfor %}
+
+{% assign active_banners_array = active_banners | split: ',' | compact %}
+{% assign active_count = active_banners_array.size %}
+
+<div class="top-banners w-full overflow-hidden">
+  {% if active_count > 0 %}
+    <div class="swiper top-banner-swiper">
+      <div class="swiper-wrapper">
+        {% for banner in banners %}
+          {% assign is_active = false %}
+          {% for period in banner.periodos.value %}
+            {% assign start = period.start_date | date: "%s" %}
+            {% assign end = period.end_date | date: "%s" %}
+            {% if now >= start and now <= end %}
+              {% assign is_active = true %}
+            {% endif %}
+          {% endfor %}
+
+          {% if is_active %}
+            <div class="swiper-slide banner-item relative">
+              {% if banner.link != blank %}
+                <a href="{{ banner.link }}">
+              {% endif %}
+
+              {% if banner.tipo_de_banner.value == 'image' and banner.banner_image != blank %}
+                <img 
+                  src="{{ banner.banner_image | file_url }}" 
+                  alt="{{ banner.alt_text | escape }}" 
+                  loading="lazy" 
+                  class="w-full h-auto object-cover"
+                >
+              {% elsif banner.tipo_de_banner.value == 'text' and banner.banner_text != blank %}
+                <div class="text-banner flex items-center justify-center min-h-[300px] bg-gray-100 text-center">
+                  <div class="max-w-3xl p-6 text-lg leading-relaxed">
+                    {{ banner.banner_text }}
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if banner.link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if active_count > 1 %}
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="banner-default text-center py-10">
+      <p>No hay banners activos en este momento.</p>
+    </div>
+  {% endif %}
+</div>
+
+<script defer>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Swiper !== 'undefined') {
+      const swiper = new Swiper('.top-banner-swiper', {
+        loop: true,
+        autoplay: { delay: 5000 },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Top Banners Programados",
+  "settings": [
+    {
+      "type": "metaobject",
+      "id": "banner_source",
+      "label": "Seleccionar colección de Top Banners",
+      "metaobject_type": "top_banner"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Top Banners Programados",
+      "category": "Banners"
+    }
+  ]
+}
+{% endschema %}
