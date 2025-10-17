@@ -6,19 +6,19 @@ if (!customElements.get('collection-view')) {
       this.setInitialStates();
 
       this.addEventListener('click', e => {
-        const isBtn = e.target.classList.contains('js-view-btn');
+        // Buscar el botón más cercano (en caso de que clickee en SVG u otro elemento dentro)
+        const btnTarget = e.target.closest('.js-view-btn');
 
-        if (!isBtn) {
+        if (!btnTarget) {
           return;
         }
 
-        const productGrid = document.querySelector('#product-grid');
+        const productGrid = document.querySelector('.collection__grid');
 
         if (!productGrid) {
           return;
         }
 
-        const btnTarget = e.target;
         const btnSelected = this.querySelector('.js-view-btn[aria-pressed="true"]');
 
         this.updateStates(btnTarget, btnSelected, productGrid);
@@ -41,7 +41,7 @@ if (!customElements.get('collection-view')) {
         return;
       }
 
-      const productGrid = document.querySelector('#product-grid');
+      const productGrid = document.querySelector('.collection__grid');
 
       if (!productGrid) {
         return;
@@ -65,6 +65,8 @@ if (!customElements.get('collection-view')) {
       
       const viewStyle = newBtn.dataset.view;
       productGrid.dataset.viewStyle = viewStyle;
+      
+      // Remover clases view-* existentes
       productGrid.className = productGrid.className.replace(/view-\w+/g, '');
       productGrid.classList.add(`view-${viewStyle}`);
 

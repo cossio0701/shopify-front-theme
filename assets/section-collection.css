@@ -123,7 +123,7 @@
 }
 
 @media screen and (min-width: 750px) {
-  .collection__grid {
+  .collection__grid:not(.view-single):not(.view-double):not(.view-editorial) {
     grid-template-columns: repeat(3, 1fr);
     row-gap: calc(var(--grid-spacing) * 3);
   }
@@ -352,34 +352,42 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.collection__grid.view-editorial {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-flow: dense;
-}
-
-/* Editorial view item sizing */
-.collection__grid.view-editorial .card-product {
+/* Editorial view item sizing - Solo para desktop (se sobrescribe en media queries) */
+.collection__grid.view-editorial .product-card {
   grid-column: span 1;
   grid-row: span 1;
 }
 
-.collection__grid.view-editorial .card-product:nth-child(3n+1) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
 /* Responsive adjustments */
+/* MOBILE: Aplicar view toggle en mobile */
 @media screen and (max-width: 749px) {
-  .collection__grid,
-  .collection__grid.view-single,
-  .collection__grid.view-double,
-  .collection__grid.view-editorial {
-    grid-template-columns: repeat(var(--products_per_row), minmax(0, 1fr));
+  .collection__grid.view-single {
+    grid-template-columns: 1fr;
   }
   
-  .collection__grid.view-editorial .card-product:nth-child(3n+1) {
+  .collection__grid.view-double {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .collection__grid.view-editorial {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  /* En mobile, patrón: 2 pequeños, 2 pequeños, 1 grande (2x2), repeat */
+  .collection__grid.view-editorial .product-card {
     grid-column: span 1;
     grid-row: span 1;
+  }
+  
+  /* Cada 5to producto (5, 10, 15...) ocupan 2x2 */
+  .collection__grid.view-editorial .product-card:nth-child(5n) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  /* Por defecto en mobile (sin view toggle aplicado) */
+  .collection__grid:not(.view-single):not(.view-double):not(.view-editorial) {
+    grid-template-columns: repeat(var(--products_per_row), minmax(0, 1fr));
   }
 }
 
@@ -388,8 +396,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   
-  .collection__grid.view-editorial .card-product:nth-child(3n+1) {
+  .collection__grid.view-editorial .product-card:nth-child(3n+1) {
     grid-column: span 2;
+    grid-row: span 2;
   }
 }
 
@@ -412,6 +421,11 @@
   
   .collection__grid.view-editorial {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  
+  .collection__grid.view-editorial .product-card:nth-child(3n+1) {
+    grid-column: span 2;
+    grid-row: span 2;
   }
 }
 
