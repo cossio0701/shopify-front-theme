@@ -2763,6 +2763,9 @@
         "enable_sorting": {
           "label": "Enable sorting to sort products"
         },
+        "enable_view_toggle": {
+          "label": "Enable view toggle (single, double, editorial)"
+        },
         "enable_opened_filter_accordions": {
           "label": "Enable open state for filter accordions"
         },

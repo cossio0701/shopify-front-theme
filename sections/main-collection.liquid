@@ -28,6 +28,10 @@
   <script src="{{- 'facets.js' | asset_url -}}" defer="defer"></script>
 {%- endif -%}
 
+{%- if section.settings.enable_view_toggle -%}
+  <script src="{{- 'collection-view.js' | asset_url -}}" defer="defer"></script>
+{%- endif -%}
+
 {%- if section.settings.pagination_style == 'load_more' -%}
   <script src="{{- 'collection-load-more.js' | asset_url -}}" defer="defer"></script>
   <script src="{{- 'collection-load-previous.js' | asset_url -}}" defer="defer"></script>
@@ -85,6 +89,56 @@
         {%- endif -%}
         <div class="collection-grid-container collection-grid-container--{{ section.settings.filters }} js-collection-grid{% if section.settings.pagination_style == 'load_more' and section.settings.enable_infinity_scroll %} infinity-scroll-active{% endif %}">
 
+          {%- if section.settings.enable_view_toggle -%}
+            <collection-view class="collection-view-toggle">
+              <span class="collection-view-toggle__label">{{ 'collection.view' | t }}</span>
+              <button 
+                class="js-view-btn" 
+                data-view="single" 
+                aria-pressed="false"
+                aria-label="{{ 'collection.view_single' | t }}"
+                title="{{ 'collection.view_single' | t }}"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="3" y1="3" x2="21" y2="3"></line>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="3" y1="15" x2="21" y2="15"></line>
+                  <line x1="3" y1="21" x2="21" y2="21"></line>
+                </svg>
+              </button>
+              <button 
+                class="js-view-btn" 
+                data-view="double" 
+                aria-pressed="true"
+                aria-label="{{ 'collection.view_double' | t }}"
+                title="{{ 'collection.view_double' | t }}"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="3" width="9" height="9"></rect>
+                  <rect x="12" y="3" width="9" height="9"></rect>
+                  <rect x="3" y="12" width="9" height="9"></rect>
+                  <rect x="12" y="12" width="9" height="9"></rect>
+                </svg>
+              </button>
+              <button 
+                class="js-view-btn" 
+                data-view="editorial" 
+                aria-pressed="false"
+                aria-label="{{ 'collection.view_editorial' | t }}"
+                title="{{ 'collection.view_editorial' | t }}"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="3" width="5" height="5"></rect>
+                  <rect x="10" y="3" width="11" height="5"></rect>
+                  <rect x="3" y="10" width="5" height="5"></rect>
+                  <rect x="10" y="10" width="5" height="5"></rect>
+                  <rect x="17" y="10" width="4" height="5"></rect>
+                  <rect x="3" y="17" width="18" height="4"></rect>
+                </svg>
+              </button>
+            </collection-view>
+          {%- endif -%}
+
           {% if section.settings.pagination_style == 'load_more' and paginate.previous and paginate.pages > 1 and paginate.current_page <= paginate.pages %}
             <collection-load-previous class="text-center no-js-hidden color-{{ section.settings.color_scheme }}" data-current-page="{{- paginate.current_page -}}">
               {%- liquid
@@ -95,10 +149,11 @@
             </collection-load-previous>
           {% endif %}
           <div
-            class="collection__grid{% if section.settings.products_per_row_mobile != '2' %} collection__grid-single{% endif %}{% if section.settings.filters == 'drawer' %} collection-grid-container__products{% endif %}"
+            class="collection__grid{% if section.settings.products_per_row_mobile != '2' %} collection__grid-single{% endif %}{% if section.settings.filters == 'drawer' %} collection-grid-container__products{% endif %} view-double"
             id="product-grid"
             data-id="{{- section.id -}}"
             data-cols="{{- section.settings.products_per_row -}}"
+            data-view-style="double"
           >
             {%- if collection.products_count == 0 -%}
               <h3 class="collection__title collection__no-result text-center">
@@ -182,6 +237,12 @@
       "type": "checkbox",
       "id": "enable_sorting",
       "label": "t:sections.main-collection.settings.enable_sorting.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_view_toggle",
+      "label": "t:sections.main-collection.settings.enable_view_toggle.label",
       "default": true
     },
     {

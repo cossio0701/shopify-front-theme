@@ -6,7 +6,7 @@ if (!customElements.get('collection-view')) {
       this.setInitialStates();
 
       this.addEventListener('click', e => {
-        const isBtn = e.target.classList.contains('js-btn');
+        const isBtn = e.target.classList.contains('js-view-btn');
 
         if (!isBtn) {
           return;
@@ -19,7 +19,7 @@ if (!customElements.get('collection-view')) {
         }
 
         const btnTarget = e.target;
-        const btnSelected = this.querySelector('.js-btn[disabled]');
+        const btnSelected = this.querySelector('.js-view-btn[aria-pressed="true"]');
 
         this.updateStates(btnTarget, btnSelected, productGrid);
 
@@ -28,37 +28,45 @@ if (!customElements.get('collection-view')) {
         }
 
         localStorage.setItem(
-          'collection-grid-cols',
-          btnTarget.dataset.cols
+          'collection-view-style',
+          btnTarget.dataset.view
         );
       });
     }
 
     setInitialStates() {
-      const storedCols = localStorage.getItem('collection-grid-cols');
+      const storedView = localStorage.getItem('collection-view-style');
 
-      if (Shopify.designMode || !storedCols) {
+      if (Shopify.designMode || !storedView) {
         return;
       }
 
       const productGrid = document.querySelector('#product-grid');
 
-      if (!productGrid || productGrid.dataset.cols === storedCols) {
+      if (!productGrid) {
         return;
       }
 
       const newBtn = this.querySelector(
-        `.js-btn[data-cols="${storedCols}"]`
+        `.js-view-btn[data-view="${storedView}"]`
       );
-      const btnSelected = this.querySelector('.js-btn[disabled]');
+      const btnSelected = this.querySelector('.js-view-btn[aria-pressed="true"]');
 
-      this.updateStates(newBtn, btnSelected, productGrid);
+      if (newBtn && btnSelected && newBtn !== btnSelected) {
+        this.updateStates(newBtn, btnSelected, productGrid);
+      }
     }
 
     updateStates(newBtn, initialBtn, productGrid) {
-      newBtn.setAttribute('disabled', true);
-      initialBtn.removeAttribute('disabled');
-      productGrid.dataset.cols = newBtn.dataset.cols;
+      if (initialBtn) {
+        initialBtn.setAttribute('aria-pressed', 'false');
+      }
+      newBtn.setAttribute('aria-pressed', 'true');
+      
+      const viewStyle = newBtn.dataset.view;
+      productGrid.dataset.viewStyle = viewStyle;
+      productGrid.className = productGrid.className.replace(/view-\w+/g, '');
+      productGrid.classList.add(`view-${viewStyle}`);
 
       this.updateGridItems();
     }
@@ -72,7 +80,6 @@ if (!customElements.get('collection-view')) {
         return;
       }
 
-      // collectionLoadMore.setGridColsNumber();
       collectionLoadMore.toggleProductsVisibility();
     }
   }
