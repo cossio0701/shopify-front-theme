@@ -353,7 +353,7 @@
 }
 
 /* Editorial view item sizing - Solo para desktop (se sobrescribe en media queries) */
-.collection__grid.view-editorial .product-card {
+.collection__grid.view-editorial > product-card {
   grid-column: span 1;
   grid-row: span 1;
 }
@@ -374,13 +374,13 @@
   }
   
   /* En mobile, patrón: 2 pequeños, 2 pequeños, 1 grande (2x2), repeat */
-  .collection__grid.view-editorial .product-card {
+  .collection__grid.view-editorial > product-card {
     grid-column: span 1;
     grid-row: span 1;
   }
   
   /* Cada 5to producto (5, 10, 15...) ocupan 2x2 */
-  .collection__grid.view-editorial .product-card:nth-child(5n) {
+  .collection__grid.view-editorial > product-card:nth-child(5n) {
     grid-column: span 2;
     grid-row: span 2;
   }
@@ -396,7 +396,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   
-  .collection__grid.view-editorial .product-card:nth-child(3n+1) {
+  .collection__grid.view-editorial > product-card:nth-child(3n+1) {
     grid-column: span 2;
     grid-row: span 2;
   }
@@ -423,7 +423,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   
-  .collection__grid.view-editorial .product-card:nth-child(3n+1) {
+  .collection__grid.view-editorial > product-card:nth-child(3n+1) {
     grid-column: span 2;
     grid-row: span 2;
   }
