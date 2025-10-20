@@ -25,7 +25,7 @@
         "spacing_bottom": 2
       }
     },
-    "main_products": {
+    "main": {
       "type": "main-collection",
       "settings": {
         "show_top_border_for_utilities_bar": false,
@@ -43,38 +43,11 @@
         "spacing_top": "0",
         "spacing_bottom": "2"
       }
-    },
-    "promotion_seo_content": {
-      "type": "seo-content",
-      "settings": {
-        "section_layout": "normal",
-        "heading": "About {{ collection.title }}",
-        "heading_size": "h5",
-        "text": "{{ collection.metafields.custom.seo | metafield_tag }}",
-        "text_size_mobile": 14,
-        "text_size_tablet": 15,
-        "text_size_desktop": 16,
-        "text_size_unit": "px",
-        "content_alignment": "center",
-        "custom_background_color": "",
-        "custom_text_color": "",
-        "section_width": "max-w-page",
-        "color_scheme": "scheme-7",
-        "spacing_inner": "2",
-        "spacing_top": "2",
-        "spacing_bottom": "2"
-      }
-    },
-    "apps": {
-      "type": "apps",
-      "settings": {}
     }
   },
   "order": [
     "breadcrumbs",
     "page_title",
-    "main_products",
-    "promotion_seo_content",
-    "apps"
+    "main"
   ]
 }

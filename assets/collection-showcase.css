@@ -1,0 +1,205 @@
+/* Collection Showcase - Main Styles */
+.collection-showcase {
+  width: 100%;
+}
+
+.collection-showcase__toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.collection-showcase__toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgb(var(--color-foreground));
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.collection-showcase__toggle-btn:hover {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+.collection-showcase__toggle-btn.active {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+/* Grid Layouts */
+.collection-showcase__grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Mobile - 1 Column */
+.collection-showcase__grid--mobile-1col {
+  grid-template-columns: 1fr;
+}
+
+/* Mobile - 2 Columns */
+.collection-showcase__grid--mobile-2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Mobile - Editorial Layout */
+.collection-showcase__grid--mobile-editorial {
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+}
+
+.collection-showcase__grid--mobile-editorial .collection-showcase__item:nth-child(5n + 5) {
+  grid-column: 1 / -1;
+}
+
+/* Desktop Layouts - 4 Columns */
+@media (min-width: 750px) {
+  .collection-showcase__grid {
+    gap: 1.5rem;
+  }
+
+  .collection-showcase__grid--mobile-1col,
+  .collection-showcase__grid--mobile-2col,
+  .collection-showcase__grid--mobile-editorial {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Desktop Editorial - 2 big, 4 small pattern */
+  .collection-showcase__grid--mobile-editorial {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .collection-showcase__grid--mobile-editorial .collection-showcase__item:nth-child(5n + 1):nth-child(-n + 2),
+  .collection-showcase__grid--mobile-editorial .collection-showcase__item:nth-child(5n + 6):nth-child(-n + 7) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+/* Product Card */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.product-card__media {
+  position: relative;
+  overflow: hidden;
+  background: rgb(var(--color-background));
+  margin-bottom: 1rem;
+  aspect-ratio: 1;
+}
+
+.product-card__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.product-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card__image {
+  transform: scale(1.05);
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgb(var(--color-accent));
+  color: rgb(var(--color-background));
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px;
+}
+
+.product-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card__title a {
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+.product-card__title a:hover {
+  text-decoration: underline;
+}
+
+.product-card__price {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.price {
+  color: rgb(var(--color-foreground));
+}
+
+.price--sale {
+  color: rgb(var(--color-accent));
+}
+
+.price--compare {
+  text-decoration: line-through;
+  color: rgb(var(--color-foreground) / 0.5);
+  font-weight: var(--font-weight-normal);
+}
+
+.product-card__quick-add {
+  margin-top: auto;
+}
+
+.product-card__quick-add .button {
+  width: 100%;
+}
+
+.collection-showcase__view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 2rem;
+  color: rgb(var(--color-foreground) / 0.5);
+}
