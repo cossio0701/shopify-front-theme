@@ -38,17 +38,17 @@
             "heading_size": "h1"
           }
         },
-        "promotion_text": {
-          "type": "text",
+        "promotion_description": {
+          "type": "content",
           "settings": {
-            "text": "{{ collection.description }}"
+            "content": "{{ collection.description }}"
           }
         }
       },
       "block_order": [
         "breadcrumbs",
         "promotion_heading",
-        "promotion_text"
+        "promotion_description"
       ],
       "settings": {
         "enable_transparent_header": false,

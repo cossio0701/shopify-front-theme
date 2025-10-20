@@ -1,0 +1,24 @@
+.section-page-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-page-title__wrapper {
+  width: 100%;
+}
+
+.section-page-title__heading {
+  margin: 0;
+  color: rgb(var(--color-foreground));
+  font-weight: var(--font-weight-normal);
+}
+
+.section-page-title__heading--bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.section-page-title__heading--uppercase {
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-medium);
+}
