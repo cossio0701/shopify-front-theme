@@ -1,0 +1,255 @@
+{%- render 'css', css: 'collection-showcase.css' -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-block-start: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_top }});
+    padding-block-end: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_bottom }});
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="collection-showcase container {{ section.settings.section_width }}">
+    
+    {%- if section.settings.collection != blank -%}
+      {%- assign collection = collections[section.settings.collection] -%}
+      
+      {%- if section.settings.show_layout_toggle -%}
+        <div class="collection-showcase__toggle">
+          <button class="collection-showcase__toggle-btn" data-layout="mobile-1col" aria-label="1 columna">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="2" width="16" height="4"/><rect x="2" y="8" width="16" height="4"/><rect x="2" y="14" width="16" height="4"/>
+            </svg>
+          </button>
+          <button class="collection-showcase__toggle-btn" data-layout="mobile-2col" aria-label="2 columnas">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="2" width="7" height="4"/><rect x="11" y="2" width="7" height="4"/><rect x="2" y="8" width="7" height="4"/><rect x="11" y="8" width="7" height="4"/><rect x="2" y="14" width="7" height="4"/><rect x="11" y="14" width="7" height="4"/>
+            </svg>
+          </button>
+          <button class="collection-showcase__toggle-btn" data-layout="mobile-editorial" aria-label="Vista editorial">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="2" width="7" height="7"/><rect x="11" y="2" width="7" height="7"/><rect x="2" y="11" width="7" height="7"/><rect x="11" y="11" width="7" height="7"/>
+            </svg>
+          </button>
+        </div>
+      {%- endif -%}
+
+      <div class="collection-showcase__grid collection-showcase__grid--{{ section.settings.layout }}">
+        {%- for product in collection.products limit: section.settings.products_limit -%}
+          <div class="collection-showcase__item">
+            <div class="product-card">
+              <div class="product-card__media">
+                <a href="{{ product.url }}" class="product-card__link">
+                  {%- if product.featured_image -%}
+                    <img 
+                      src="{{ product.featured_image | image_url: width: 300 }}" 
+                      alt="{{ product.title }}"
+                      class="product-card__image"
+                      loading="lazy"
+                      width="300"
+                      height="300"
+                    >
+                  {%- endif -%}
+                </a>
+                
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="product-card__badge">Sale</span>
+                {%- endif -%}
+              </div>
+
+              <div class="product-card__content">
+                <h3 class="product-card__title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                
+                <div class="product-card__price">
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="price price--sale">{{ product.price | money }}</span>
+                    <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+                  {%- else -%}
+                    <span class="price">{{ product.price | money }}</span>
+                  {%- endif -%}
+                </div>
+
+                {%- if section.settings.show_quick_add -%}
+                  <form method="post" action="{{ routes.cart_add_url }}" class="product-card__quick-add">
+                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    <button type="submit" class="button button--small">
+                      Add to cart
+                    </button>
+                  </form>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if collection.products_count > section.settings.products_limit -%}
+        <div class="collection-showcase__view-all">
+          <a href="{{ collection.url }}" class="button button--outline">
+            View All
+          </a>
+        </div>
+      {%- endif -%}
+
+    {%- else -%}
+      <div class="placeholder">
+        <p>Please select a collection</p>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('[data-layout]');
+    const grid = document.querySelector('.collection-showcase__grid');
+    
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const layout = this.dataset.layout;
+        grid.className = 'collection-showcase__grid collection-showcase__grid--' + layout;
+        
+        toggleButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        localStorage.setItem('collection-showcase-layout', layout);
+      });
+    });
+
+    // Restaurar layout guardado
+    const savedLayout = localStorage.getItem('collection-showcase-layout') || '{{ section.settings.layout }}';
+    const activeButton = document.querySelector('[data-layout="' + savedLayout + '"]');
+    if (activeButton) {
+      activeButton.click();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Colección Showcase",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Selecciona una colección"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Vista por defecto (Mobile)",
+      "options": [
+        {
+          "value": "mobile-1col",
+          "label": "Mobile - 1 Columna"
+        },
+        {
+          "value": "mobile-2col",
+          "label": "Mobile - 2 Columnas"
+        },
+        {
+          "value": "mobile-editorial",
+          "label": "Mobile - Editorial"
+        }
+      ],
+      "default": "mobile-2col"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 6,
+      "max": 50,
+      "step": 1,
+      "label": "Límite de productos",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_layout_toggle",
+      "label": "Mostrar selector de vistas",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Mostrar 'Agregar al carrito' rápido",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "Accent 1"
+        },
+        {
+          "value": "accent-2",
+          "label": "Accent 2"
+        },
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "background-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "wrapper",
+          "label": "Wrapper"
+        },
+        {
+          "value": "wrapper--narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        }
+      ],
+      "default": "wrapper",
+      "label": "Section width"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "x",
+      "label": "Top spacing",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "x",
+      "label": "Bottom spacing",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Colección Showcase"
+    }
+  ]
+}
+{% endschema %}

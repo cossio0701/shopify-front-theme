@@ -34,6 +34,21 @@
         "spacing_bottom": 2
       }
     },
+    "collection_showcase": {
+      "type": "collection-showcase",
+      "disabled": true,
+      "settings": {
+        "collection": "",
+        "layout": "mobile-2col",
+        "products_limit": 12,
+        "show_layout_toggle": true,
+        "show_quick_add": true,
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 1
+      }
+    },
     "main": {
       "type": "main-page",
       "settings": {
@@ -52,6 +67,7 @@
   "order": [
     "breadcrumbs",
     "page_title",
+    "collection_showcase",
     "main"
   ]
 }
