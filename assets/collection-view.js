@@ -6,20 +6,25 @@ if (!customElements.get('collection-view')) {
       this.setInitialStates();
 
       this.addEventListener('click', e => {
-        const isBtn = e.target.classList.contains('js-btn');
+        // Buscar el botón más cercano (en caso de que clickee en SVG u otro elemento dentro)
+        const btnTarget = e.target.closest('.js-view-btn');
 
-        if (!isBtn) {
+        if (!btnTarget) {
+          console.log('❌ No es un botón, retornando');
           return;
         }
 
-        const productGrid = document.querySelector('#product-grid');
+        const productGrid = document.querySelector('.collection__grid');
+        console.log('🔍 Product grid encontrado:', productGrid);
 
         if (!productGrid) {
+          console.log('❌ No se encontró product grid');
           return;
         }
 
-        const btnTarget = e.target;
-        const btnSelected = this.querySelector('.js-btn[disabled]');
+        const btnSelected = this.querySelector('.js-view-btn[aria-pressed="true"]');
+        console.log('📌 Botón target:', btnTarget.dataset.view);
+        console.log('📌 Botón seleccionado actualmente:', btnSelected?.dataset.view);
 
         this.updateStates(btnTarget, btnSelected, productGrid);
 
@@ -28,37 +33,64 @@ if (!customElements.get('collection-view')) {
         }
 
         localStorage.setItem(
-          'collection-grid-cols',
-          btnTarget.dataset.cols
+          'collection-view-style',
+          btnTarget.dataset.view
         );
       });
     }
 
     setInitialStates() {
-      const storedCols = localStorage.getItem('collection-grid-cols');
+      console.log('🚀 CollectionView inicializando...');
+      const storedView = localStorage.getItem('collection-view-style');
+      console.log('💾 Vista guardada en localStorage:', storedView);
 
-      if (Shopify.designMode || !storedCols) {
+      if (Shopify.designMode || !storedView) {
+        console.log('⏭️  Saltando inicialización (designMode o sin vista guardada)');
         return;
       }
 
-      const productGrid = document.querySelector('#product-grid');
+      const productGrid = document.querySelector('.collection__grid');
+      console.log('🔍 Product grid encontrado:', productGrid);
 
-      if (!productGrid || productGrid.dataset.cols === storedCols) {
+      if (!productGrid) {
+        console.log('❌ No se encontró product grid en setInitialStates');
         return;
       }
 
       const newBtn = this.querySelector(
-        `.js-btn[data-cols="${storedCols}"]`
+        `.js-view-btn[data-view="${storedView}"]`
       );
-      const btnSelected = this.querySelector('.js-btn[disabled]');
+      const btnSelected = this.querySelector('.js-view-btn[aria-pressed="true"]');
+      console.log('🔍 Botón a aplicar:', newBtn?.dataset.view);
+      console.log('🔍 Botón seleccionado actual:', btnSelected?.dataset.view);
 
-      this.updateStates(newBtn, btnSelected, productGrid);
+      if (newBtn && btnSelected && newBtn !== btnSelected) {
+        console.log('✅ Aplicando vista guardada:', storedView);
+        this.updateStates(newBtn, btnSelected, productGrid);
+      }
     }
 
     updateStates(newBtn, initialBtn, productGrid) {
-      newBtn.setAttribute('disabled', true);
-      initialBtn.removeAttribute('disabled');
-      productGrid.dataset.cols = newBtn.dataset.cols;
+      console.log('🔄 updateStates llamado');
+      console.log('Grid antes:', productGrid.className);
+      
+      if (initialBtn) {
+        initialBtn.setAttribute('aria-pressed', 'false');
+      }
+      newBtn.setAttribute('aria-pressed', 'true');
+      
+      const viewStyle = newBtn.dataset.view;
+      console.log('📐 Aplicando vista:', viewStyle);
+      productGrid.dataset.viewStyle = viewStyle;
+      
+      // Remover clases view-* existentes
+      const oldClass = productGrid.className;
+      productGrid.className = productGrid.className.replace(/view-\w+/g, '');
+      console.log('Después de remover clases:', productGrid.className);
+      
+      productGrid.classList.add(`view-${viewStyle}`);
+      console.log('✅ Clases aplicadas al grid:', productGrid.className);
+      console.log('Grid después:', productGrid.className);
 
       this.updateGridItems();
     }
@@ -72,7 +104,6 @@ if (!customElements.get('collection-view')) {
         return;
       }
 
-      // collectionLoadMore.setGridColsNumber();
       collectionLoadMore.toggleProductsVisibility();
     }
   }

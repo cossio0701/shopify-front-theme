@@ -176,6 +176,10 @@
     "no_products": "No products in this collection",
     "product_show": "Showing",
     "all_products": "All Products",
+    "view": "View",
+    "view_single": "Single column",
+    "view_double": "Two columns",
+    "view_editorial": "Editorial",
     "product_count": {
       "one": "{{product_count}} of {{count}} product",
       "other": "{{product_count}} of {{count}} products"
