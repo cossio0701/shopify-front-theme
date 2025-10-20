@@ -75,47 +75,13 @@
       }
     },
     "full_width_banner_TUqKA8": {
-      "type": "full-width-banner",
-      "blocks": {
-        "heading_7qBVxW": {
-          "type": "heading",
-          "settings": {
-            "heading": "MEN'S JEANS",
-            "heading_size": "h4"
-          }
-        },
-        "breadcrumbs_7aNBGW": {
-          "type": "breadcrumbs",
-          "settings": {
-            "show_on": "both"
-          }
-        }
-      },
-      "block_order": [
-        "heading_7qBVxW",
-        "breadcrumbs_7aNBGW"
-      ],
+      "type": "breadcrumbs",
       "settings": {
-        "enable_transparent_header": true,
-        "media_position": "background",
-        "section_height": "auto",
-        "content_position": "start",
-        "content_alignment": "start",
-        "video_external": "",
-        "show_controls_on_video": false,
-        "aspect_ratio": "auto",
-        "section_height_mobile": "auto",
-        "content_position_mobile": "center",
-        "content_alignment_mobile": "center",
-        "video_external_mobile": "",
-        "show_controls_on_video_mobile": false,
-        "aspect_ratio_mobile": "auto",
-        "section_width": "max-w-fluid",
-        "color_scheme": "scheme-7",
-        "color_scheme_for_content": "scheme-7",
-        "spacing_inner": "1",
-        "spacing_top": "0",
-        "spacing_bottom": "0"
+        "alignment": "left",
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 1
       }
     },
     "featured_collections_JQrJUx": {
@@ -198,30 +164,6 @@
     },
     "main": {
       "type": "main-collection",
-      "blocks": {
-        "text_card_J6n8hn": {
-          "type": "text-card",
-          "settings": {
-            "color_scheme": "scheme-6",
-            "text": "<h5>Free Shipping<br/>on orders over<br/>$150+</h5>",
-            "button_link": "",
-            "link_type": "button",
-            "button_label": "",
-            "button_style": "button--text",
-            "content_position": "center",
-            "content_alignment": "center",
-            "content_position_mobile": "center",
-            "content_alignment_mobile": "center",
-            "position": 7,
-            "column_factor": 1,
-            "row_factor": 1,
-            "card_image": "shopify://shop_images/DENIM_WASHES_Mesa_de_trabajo_1.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "text_card_J6n8hn"
-      ],
       "settings": {
         "show_top_border_for_utilities_bar": false,
         "enable_products_count": true,

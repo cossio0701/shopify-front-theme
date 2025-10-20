@@ -131,11 +131,6 @@
 
               {%- case block.type -%}
 
-                {%- when 'breadcrumbs' -%}
-                  <div class="section-full-width-banner__breadcrumbs page-banner__breadcrumbs max-w-sm {{ show_on_class }}">
-                    {%- render 'breadcrumbs', alignment: 'center' -%}
-                  </div>
-
                 {%- when 'heading' -%}
                   <div class="section-full-width-banner__heading max-w-sm">
                     <{{ heading_tag }} class="section__heading {{ block.settings.heading_size }}">
@@ -826,33 +821,6 @@
           "id": "content",
           "label": "t:sections.global.element.text.label",
           "default": "<p>Add descriptive text to your full width banner.</p>"
-        }
-      ]
-    },
-    {
-      "type": "breadcrumbs",
-      "limit": 1,
-      "name": "t:sections.global.element.breadcrumbs.label",
-      "settings": [
-        {
-          "type": "select",
-          "id": "show_on",
-          "label": "t:sections.global.settings.show_on.label",
-          "options": [
-            {
-              "value": "desktop",
-              "label": "t:sections.global.settings.show_on.options.desktop.label"
-            },
-            {
-              "value": "mobile",
-              "label": "t:sections.global.settings.show_on.options.mobile.label"
-            },
-            {
-              "value": "both",
-              "label": "t:sections.global.settings.show_on.options.both.label"
-            }
-          ],
-          "default": "both"
         }
       ]
     },

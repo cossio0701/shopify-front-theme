@@ -9,33 +9,14 @@
  */
 {
   "sections": {
-    "banner": {
-      "type": "full-width-banner",
-      "blocks": {
-        "heading_KKwpjb": {
-          "type": "heading",
-          "settings": {
-            "heading": "Never miss a beat with our latest <em>news</em>",
-            "heading_size": "h1"
-          }
-        },
-        "breadcrumbs_EnCfjq": {
-          "type": "breadcrumbs",
-          "settings": {
-            "show_on": "both"
-          }
-        }
-      },
-      "block_order": [
-        "heading_KKwpjb",
-        "breadcrumbs_EnCfjq"
-      ],
+    "breadcrumbs": {
+      "type": "breadcrumbs",
       "settings": {
-        "section_width": "max-w-full",
-        "color_scheme": "scheme-1",
-        "color_scheme_for_content": "scheme-6",
-        "spacing_top": "0",
-        "spacing_bottom": "2"
+        "alignment": "left",
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 1
       }
     },
     "main": {
@@ -57,7 +38,7 @@
     }
   },
   "order": [
-    "banner",
+    "breadcrumbs",
     "main"
   ]
 }
