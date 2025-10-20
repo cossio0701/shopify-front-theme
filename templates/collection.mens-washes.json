@@ -48,6 +48,21 @@
         "spacing_bottom": 1
       }
     },
+    "page_title": {
+      "type": "page-title",
+      "settings": {
+        "title": "SHOP BY WASH",
+        "heading_tag": "h1",
+        "heading_size": "h0",
+        "alignment": "left",
+        "bold": true,
+        "uppercase": true,
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 2
+      }
+    },
     "featured_collections_JQrJUx": {
       "type": "featured-collections",
       "blocks": {
@@ -179,6 +194,7 @@
   "order": [
     "banner",
     "full_width_banner_9dbdEz",
+    "page_title",
     "featured_collections_JQrJUx",
     "main",
     "f8303da3-c3cb-4a90-a63a-7a628615aa6f",

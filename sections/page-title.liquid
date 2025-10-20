@@ -1,0 +1,205 @@
+{%- render 'css', css: 'section-page-title.css' -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} > div {
+    padding-block-start: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_top }});
+    padding-block-end: calc(var(--section-spacing-unit-size) * {{ section.settings.spacing_bottom }});
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="section-page-title container {{ section.settings.section_width }}">
+    <div class="section-page-title__wrapper text-{{ section.settings.alignment }} align-{{ section.settings.alignment }}">
+      <{{ section.settings.heading_tag }} class="section-page-title__heading {{ section.settings.heading_size }}{% if section.settings.bold %} section-page-title__heading--bold{% endif %}{% if section.settings.uppercase %} section-page-title__heading--uppercase{% endif %}">
+        {{- section.settings.title -}}
+      </{{ section.settings.heading_tag }}>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page Title",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Page Title"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading Tag (SEO)"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "options": [
+        {
+          "value": "h5",
+          "label": "2XS"
+        },
+        {
+          "value": "h4",
+          "label": "XS"
+        },
+        {
+          "value": "h3",
+          "label": "S"
+        },
+        {
+          "value": "h2",
+          "label": "M"
+        },
+        {
+          "value": "h1",
+          "label": "L"
+        },
+        {
+          "value": "h0",
+          "label": "XL"
+        },
+        {
+          "value": "h-1",
+          "label": "2XL"
+        },
+        {
+          "value": "h-2",
+          "label": "3XL"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Alignment"
+    },
+    {
+      "type": "checkbox",
+      "id": "bold",
+      "label": "Bold",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "Accent 1"
+        },
+        {
+          "value": "accent-2",
+          "label": "Accent 2"
+        },
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "background-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "wrapper",
+          "label": "Wrapper"
+        },
+        {
+          "value": "wrapper--narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        }
+      ],
+      "default": "wrapper",
+      "label": "Section width"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "x",
+      "label": "Top spacing",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "x",
+      "label": "Bottom spacing",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Title"
+    }
+  ]
+}
+{% endschema %}

@@ -9,6 +9,31 @@
  */
 {
   "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "alignment": "left",
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 1
+      }
+    },
+    "page_title": {
+      "type": "page-title",
+      "settings": {
+        "title": "{{ page.title }}",
+        "heading_tag": "h1",
+        "heading_size": "h2",
+        "alignment": "left",
+        "bold": true,
+        "uppercase": false,
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 2
+      }
+    },
     "main": {
       "type": "main-page",
       "settings": {
@@ -25,6 +50,8 @@
     }
   },
   "order": [
+    "breadcrumbs",
+    "page_title",
     "main"
   ]
 }

@@ -48,6 +48,21 @@
         "spacing_bottom": 1
       }
     },
+    "page_title": {
+      "type": "page-title",
+      "settings": {
+        "title": "WOMEN'S CLOTHES",
+        "heading_tag": "h1",
+        "heading_size": "h0",
+        "alignment": "left",
+        "bold": true,
+        "uppercase": true,
+        "color_scheme": "background-1",
+        "section_width": "wrapper",
+        "spacing_top": 1,
+        "spacing_bottom": 2
+      }
+    },
     "main": {
       "type": "main-collection",
       "settings": {
@@ -87,6 +102,7 @@
   "order": [
     "banner",
     "full_width_banner_3B7RPW",
+    "page_title",
     "main",
     "f8303da3-c3cb-4a90-a63a-7a628615aa6f"
   ]
