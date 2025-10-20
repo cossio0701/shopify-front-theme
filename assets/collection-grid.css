@@ -1,0 +1,180 @@
+/* ============================================================================
+   Collection Grid - Clean, modular, responsive grid system
+   ============================================================================ */
+
+/* Grid Container - Base: 2 columns (mobile default) */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-4, 1.6rem);
+  width: 100%;
+}
+
+/* View modes - explicit column counts */
+.collection-grid.view-col-1 {
+  grid-template-columns: 1fr;
+}
+
+.collection-grid.view-col-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.collection-grid.view-col-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.collection-grid__item {
+  display: flex;
+}
+
+/* View Toggle Control */
+.collection-grid__view-toggle {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-block-end: var(--spacing-5, 2.4rem);
+  padding-block: var(--spacing-4, 1.6rem);
+  border-block-end: 0.1rem solid rgba(var(--color-border, 0, 0, 0), 0.1);
+}
+
+.collection-grid__view-label {
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-xxs, 0.05em);
+  margin-inline-end: var(--spacing-2, 0.8rem);
+  white-space: nowrap;
+}
+
+.collection-grid__view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  padding: 0.4rem;
+  border: 0.1rem solid rgba(var(--color-border, 0, 0, 0), 0.2);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border-radius: var(--btn-corner-radius, 0.4rem);
+}
+
+.collection-grid__view-btn:hover {
+  border-color: rgba(var(--color-text, 0, 0, 0), 0.3);
+}
+
+.collection-grid__view-btn[aria-pressed="true"] {
+  background-color: rgb(var(--color-text, 0, 0, 0));
+  border-color: rgb(var(--color-text, 0, 0, 0));
+}
+
+.collection-grid__view-btn[aria-pressed="true"] svg {
+  stroke: rgb(var(--color-background, 255, 255, 255));
+  fill: rgb(var(--color-background, 255, 255, 255));
+}
+
+.collection-grid__view-btn svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  stroke: currentColor;
+  fill: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Empty State */
+.collection-grid__empty {
+  grid-column: 1 / -1;
+  padding-block: 8rem;
+  text-align: center;
+}
+
+.collection-grid__empty-title {
+  font-size: var(--font-size-md, 1rem);
+  color: rgba(var(--color-text, 0, 0, 0), 0.6);
+}
+
+/* ============================================================================
+   Responsive Breakpoints - Mobile (< 1024px) and Desktop (≥ 1024px)
+   ============================================================================ */
+
+/* Mobile: 1 column default, 2 columns with col-2 view */
+@media (max-width: 1023px) {
+  /* Hide col-4 button on mobile */
+  .collection-grid__view-btn[data-view="col-4"] {
+    display: none !important;
+  }
+
+  .collection-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4, 1.6rem);
+  }
+
+  /* 2 columns on mobile when explicitly set */
+  .collection-grid.view-col-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Editorial pattern on mobile: 2 small (1x1) + 2 small (1x1) + 1 large (2x2), repeat
+     Pattern: [1x1, 1x1, 1x1, 1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 2x2, ...]
+  */
+  .collection-grid.view-editorial {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(auto, 1fr);
+  }
+
+  /* Every 5th item (items 5, 10, 15, ...) spans 2x2 */
+  .collection-grid.view-editorial .collection-grid__item:nth-child(5n) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+/* Desktop: 4 columns as default, with explicit view modes */
+@media (min-width: 1024px) {
+  /* Hide col-1 and col-2 buttons on desktop */
+  .collection-grid__view-btn[data-view="col-1"],
+  .collection-grid__view-btn[data-view="col-2"] {
+    display: none !important;
+  }
+
+  /* Base: 4 columns for desktop */
+  .collection-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-6, 2.8rem);
+  }
+
+  /* col-1 view: 1 column (rarely used on desktop) */
+  .collection-grid.view-col-1 {
+    grid-template-columns: 1fr;
+  }
+
+  /* col-2 view: 2 columns (overrides the 4-column base) */
+  .collection-grid.view-col-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Editorial pattern on desktop: 2 large (2x2) + 4 small (1x1), repeat
+     Every 6 items: [2x2, 2x2, 1x1, 1x1, 1x1, 1x1]
+  */
+  .collection-grid.view-editorial {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+
+  /* Items 1-2 in each cycle of 6: span 2x2 */
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 1),
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 2) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  /* Items 3-6 in each cycle of 6: span 1x1 (normal) */
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 3),
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 4),
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 5),
+  .collection-grid.view-editorial .collection-grid__item:nth-child(6n + 6) {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
