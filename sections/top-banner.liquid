@@ -1,70 +1,84 @@
 {% comment %}
-  Sección: Top Banners Programados
-  Usa Metaobjects "Top Banner" y sus periodos asociados.
-  Permite mostrar banners tipo imagen o texto según el campo "type".
+  Sección: Top Banners Programados Usa Metaobjects "Top Banner" y
+  sus periodos asociados. Permite mostrar banners tipo imagen o texto según el
+  campo "tipo_de_banner".
 {% endcomment %}
-
-{% assign now = 'now' | date: "%s" %}
+{% assign now = 'now' | date: '%s' %}
 {% assign banner_source = section.settings.banner_source.value %}
 {% if banner_source != blank %}
-  {% assign banners = shop.metaobjects.top_banner.values | where: "handle", banner_source %}
+  {% assign banners = shop.metaobjects.top_banner.values | where: 'handle', banner_source %}
 {% else %}
   {% assign banners = shop.metaobjects.top_banner.values %}
 {% endif %}
-
 {% assign active_banners = '' %}
 {% for banner in banners %}
   {% assign is_active = false %}
   {% for period in banner.periodos.value %}
-    {% assign start = period.start_date | date: "%s" %}
-    {% assign end = period.end_date | date: "%s" %}
+    {% assign start = period.start_date | date: '%s' %}
+    {% assign end = period.end_date | date: '%s' %}
     {% if now >= start and now <= end %}
       {% assign is_active = true %}
     {% endif %}
   {% endfor %}
   {% if is_active %}
-    {% assign active_banners = active_banners | append: banner.id | append: ',' %}
+    {% assign active_banners = active_banners | append: banner.title | append: ',' %}
   {% endif %}
 {% endfor %}
-
 {% assign active_banners_array = active_banners | split: ',' | compact %}
 {% assign active_count = active_banners_array.size %}
 
-<div class="top-banners w-full overflow-hidden">
+<div class="top-banners w-full overflow-hidden ">
   {% if active_count > 0 %}
     <div class="swiper top-banner-swiper">
       <div class="swiper-wrapper">
         {% for banner in banners %}
           {% assign is_active = false %}
           {% for period in banner.periodos.value %}
-            {% assign start = period.start_date | date: "%s" %}
-            {% assign end = period.end_date | date: "%s" %}
+            {% assign start = period.start_date | date: '%s' %}
+            {% assign end = period.end_date | date: '%s' %}
             {% if now >= start and now <= end %}
               {% assign is_active = true %}
             {% endif %}
           {% endfor %}
-
           {% if is_active %}
-            <div class="swiper-slide banner-item relative">
+            <div class="swiper-slide relative">
+              <div class="links-container">
+                {% for link in banner.top_links.value %}
+                  <a
+                    href="{{ link.url }}"
+                    {% if link.blank %}
+                      target="_blank"
+                    {% endif %}
+                    style="color: {{ banner.text_color.value }};"
+                    class="tbn-link"
+                  >
+                    {{- link.label -}}
+                  </a>
+                {% endfor %}
+              </div>
               {% if banner.link != blank %}
-                <a href="{{ banner.link }}">
+                <a href="{{ banner.link }}" class="top_banner_link">
               {% endif %}
+              {% if banner.tipo_de_banner.value.customhandle == 'image' and banner.banner_image != blank %}
+                <div class="image-container" style="background-color: {{ banner.background_color.value }};">
+                  <img
+                    src="{{ banner.banner_image | file_url }}"
+                    alt="{{ banner.alt_text | escape }}"
+                    loading="lazy"
+                    class="w-full h-auto object-cover"
+                  >
+                </div>
 
-              {% if banner.tipo_de_banner.value == 'image' and banner.banner_image != blank %}
-                <img 
-                  src="{{ banner.banner_image | file_url }}" 
-                  alt="{{ banner.alt_text | escape }}" 
-                  loading="lazy" 
-                  class="w-full h-auto object-cover"
+              {% elsif banner.tipo_de_banner.value.customhandle == 'text' %}
+                <div
+                  class="text-banner text-center p-6"
+                  style="color: {{ banner.text_color.value }}; background-color: {{ banner.background_color.value }};"
                 >
-              {% elsif banner.tipo_de_banner.value == 'text' and banner.banner_text != blank %}
-                <div class="text-banner flex items-center justify-center min-h-[300px] bg-gray-100 text-center">
-                  <div class="max-w-3xl p-6 text-lg leading-relaxed">
-                    {{ banner.banner_text }}
-                  </div>
+                  <span style="color: {{ banner.text_color.value }};">
+                    {{ banner.title }}
+                  </span>
                 </div>
               {% endif %}
-
               {% if banner.link != blank %}
                 </a>
               {% endif %}
@@ -74,9 +88,14 @@
       </div>
 
       {% if active_count > 1 %}
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
+        {% unless section.settings.disable_arrows %}
+          <div class="swiper-button-next" style="color: {{ section.settings.arrow_color }}"></div>
+          <div class="swiper-button-prev" style="color: {{ section.settings.arrow_color }}"></div>
+        {% endunless %}
+
+        {% unless section.settings.disable_dots %}
+          <div class="swiper-pagination"></div>
+        {% endunless %}
       {% endif %}
     </div>
   {% else %}
@@ -87,11 +106,10 @@
 </div>
 
 <script defer>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {
       const swiper = new Swiper('.top-banner-swiper', {
         loop: true,
-        autoplay: { delay: 5000 },
         pagination: { el: '.swiper-pagination', clickable: true },
         navigation: {
           nextEl: '.swiper-button-next',
@@ -101,16 +119,168 @@
     }
   });
 </script>
+<style>
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #f3eddf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .links-container {
+    position: absolute;
+    right: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1.4px;
+  }
+
+  .tbn-link {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tbn-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #000;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+  }
+
+  .tbn-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .image-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide img {
+    height: 100%;
+    object-fit: contain;
+    max-width: 90%;
+  }
+
+  .swiper {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #000;
+    display: block !important;
+    cursor: pointer;
+    z-index: 20;
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    font-size: 20px;
+    width: 25px;
+    height: 25px;
+    top: 73%;
+  }
+
+  .swiper-pagination {
+    top: 20px !important;
+    width: fit-content;
+    left: 50% !important;
+    width: fit-content !important;
+  }
+
+  .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: {{ section.settings.bullet_color }} !important;
+  }
+
+  .top-banners {
+    height: 40px;
+  }
+
+  .top_banner_link {
+    width: 100%;
+    height: 100%;
+  }
+
+  .text-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 10px;
+    font-weight: bolder;
+    letter-spacing: 1.4px;
+  }
+</style>
 
 {% schema %}
 {
-  "name": "Top Banners Programados",
+  "name": "Top Banners Programadosx",
   "settings": [
     {
       "type": "metaobject",
       "id": "banner_source",
       "label": "Seleccionar colección de Top Banners",
       "metaobject_type": "top_banner"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Color de flechas",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bullet_color",
+      "label": "Color de bullets",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_arrows",
+      "label": "Desactivar las Flechas",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_dots",
+      "label": "Desactivar los Puntos de Paginación",
+      "default": false
     }
   ],
   "presets": [
