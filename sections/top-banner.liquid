@@ -3,114 +3,93 @@
   sus periodos asociados. Permite mostrar banners tipo imagen o texto según el
   campo "tipo_de_banner".
 {% endcomment %}
-{% assign now = 'now' | date: '%s' %}
-{% assign banner_source = section.settings.banner_source.value %}
-{% if banner_source != blank %}
-  {% assign banners = shop.metaobjects.top_banner.values | where: 'handle', banner_source %}
-{% else %}
-  {% assign banners = shop.metaobjects.top_banner.values %}
-{% endif %}
-{% assign active_banners = '' %}
-{% for banner in banners %}
-  {% assign is_active = false %}
-  {% for period in banner.periodos.value %}
-    {% assign start = period.start_date | date: '%s' %}
-    {% assign end = period.end_date | date: '%s' %}
-    {% if now >= start and now <= end %}
-      {% assign is_active = true %}
-    {% endif %}
-  {% endfor %}
-  {% if is_active %}
-    {% assign active_banners = active_banners | append: banner.title | append: ',' %}
-  {% endif %}
-{% endfor %}
-{% assign active_banners_array = active_banners | split: ',' | compact %}
-{% assign active_count = active_banners_array.size %}
+{%- liquid
+  assign tbn_data = shop.metafields.custom.top_banners.value[0]
+-%}
+{%- liquid
+  assign banners = tbn_data.records
+-%}
 
-<div class="top-banners w-full overflow-hidden ">
-  {% if active_count > 0 %}
+{% if banners %}
+  <div class="top-banners w-full overflow-hidden ">
     <div class="swiper top-banner-swiper">
       <div class="swiper-wrapper">
         {% for banner in banners %}
-          {% assign is_active = false %}
-          {% for period in banner.periodos.value %}
-            {% assign start = period.start_date | date: '%s' %}
-            {% assign end = period.end_date | date: '%s' %}
-            {% if now >= start and now <= end %}
-              {% assign is_active = true %}
-            {% endif %}
-          {% endfor %}
-          {% if is_active %}
-            <div class="swiper-slide relative">
-              <div class="links-container">
-                {% for link in banner.top_links.value %}
-                  <a
-                    href="{{ link.url }}"
-                    {% if link.blank %}
-                      target="_blank"
-                    {% endif %}
-                    style="color: {{ banner.text_color.value }};"
-                    class="tbn-link"
-                  >
-                    {{- link.label -}}
-                  </a>
-                {% endfor %}
-              </div>
-              {% if banner.link != blank %}
-                <a href="{{ banner.link }}" class="top_banner_link">
-              {% endif %}
-              {% if banner.tipo_de_banner.value.customhandle == 'image' and banner.banner_image != blank %}
-                <div class="image-container" style="background-color: {{ banner.background_color.value }};">
-                  <img
-                    src="{{ banner.banner_image | file_url }}"
-                    alt="{{ banner.alt_text | escape }}"
-                    loading="lazy"
-                    class="w-full h-auto object-cover"
-                  >
+          {%- capture is_visible -%}
+      {%- render 'date-visibility', date_ranges: banner.date_ranges -%}
+    {%- endcapture -%}
+          {%- if is_visible contains 'true' -%}
+            {%- capture should_display -%}
+        {%- render 'display-rule' display_rule: banner.display_rule, urls: banner.display_urls -%}
+      {%- endcapture -%}
+            {%- if should_display contains 'true' -%}
+              <div class="swiper-slide relative">
+                <div class="links-container">
+                  {% for link in banner.links %}
+                    <a
+                      href="{{ link.url }}"
+                      {% if link.blank %}
+                        target="_blank"
+                      {% endif %}
+                      style="color: {{ banner.text_color }};"
+                      class="tbn-link"
+                    >
+                      {{- link.label -}}
+                    </a>
+                  {% endfor %}
                 </div>
-
-              {% elsif banner.tipo_de_banner.value.customhandle == 'text' %}
-                <div
-                  class="text-banner text-center p-6"
-                  style="color: {{ banner.text_color.value }}; background-color: {{ banner.background_color.value }};"
-                >
-                  <span style="color: {{ banner.text_color.value }};">
-                    {{ banner.title }}
-                  </span>
-                </div>
-              {% endif %}
-              {% if banner.link != blank %}
+                <a href="{{ banner.url }}" class="top_banner_link">
+                  {% if banner.tipo_de_banner == 'image' %}
+                    <div class="image-container" style="background-color: {{ banner.background_color }};">
+                      <img
+                        src="{{ banner.image }}"
+                        alt="{{ banner.alt }}"
+                        loading="lazy"
+                        class="w-full h-auto object-cover"
+                      >
+                    </div>
+                  {% elsif banner.tipo_de_banner == 'text' %}
+                    <div
+                      class="text-banner text-center p-6"
+                      style="color: {{ banner.text_color }}; background-color: {{ banner.background_color }};"
+                    >
+                      <span style="color: {{ banner.text_color }};">
+                        {{ banner.banner_text }}
+                      </span>
+                    </div>
+                  {% endif %}
                 </a>
-              {% endif %}
-            </div>
+              </div>
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>
 
-      {% if active_count > 1 %}
-        {% unless section.settings.disable_arrows %}
-          <div class="swiper-button-next" style="color: {{ section.settings.arrow_color }}"></div>
-          <div class="swiper-button-prev" style="color: {{ section.settings.arrow_color }}"></div>
-        {% endunless %}
+      {% if tbn_data.arrows %}
+        <div class="swiper-button-next" style="color: {{ tbn_data.nav_color }}"></div>
+        <div class="swiper-button-prev" style="color: {{ tbn_data.nav_color }}"></div>
+      {% endif %}
 
-        {% unless section.settings.disable_dots %}
-          <div class="swiper-pagination"></div>
-        {% endunless %}
+      {% if tbn_data.dots %}
+        <div class="swiper-pagination"></div>
       {% endif %}
     </div>
-  {% else %}
-    <div class="banner-default text-center py-10">
-      <p>No hay banners activos en este momento.</p>
-    </div>
-  {% endif %}
-</div>
-
+  </div>
+{% else %}
+  <div class="banner-default text-center py-10">
+    <p>No hay banners activos en este momento.</p>
+  </div>
+{% endif %}
 <script defer>
   document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {
       const swiper = new Swiper('.top-banner-swiper', {
         loop: true,
         pagination: { el: '.swiper-pagination', clickable: true },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
@@ -189,7 +168,6 @@
   .swiper-button-next,
   .swiper-button-prev {
     color: #000;
-    display: block !important;
     cursor: pointer;
     z-index: 20;
   }
@@ -215,6 +193,7 @@
     top: 20px !important;
     width: fit-content;
     left: 50% !important;
+    transform: translateX(-50%);
     width: fit-content !important;
   }
 
@@ -224,7 +203,7 @@
   }
 
   .swiper-pagination-bullet-active {
-    background: {{ section.settings.bullet_color }} !important;
+    background: {{ tbn_data.nav_color }} !important;
   }
 
   .top-banners {
@@ -248,46 +227,11 @@
   }
 </style>
 
-{% schema %}
+{%- schema -%}
 {
-  "name": "Top Banners Programadosx",
-  "settings": [
-    {
-      "type": "metaobject",
-      "id": "banner_source",
-      "label": "Seleccionar colección de Top Banners",
-      "metaobject_type": "top_banner"
-    },
-    {
-      "type": "color",
-      "id": "arrow_color",
-      "label": "Color de flechas",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "bullet_color",
-      "label": "Color de bullets",
-      "default": "#000000"
-    },
-    {
-      "type": "checkbox",
-      "id": "disable_arrows",
-      "label": "Desactivar las Flechas",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "disable_dots",
-      "label": "Desactivar los Puntos de Paginación",
-      "default": false
-    }
-  ],
-  "presets": [
-    {
-      "name": "Top Banners Programados",
-      "category": "Banners"
-    }
-  ]
+  "name": "Top banners",
+  "tag": "section",
+  "settings": [],
+  "presets": [{ "name": "Top banners" }]
 }
-{% endschema %}
+{%- endschema -%}

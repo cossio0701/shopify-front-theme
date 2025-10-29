@@ -1,0 +1,143 @@
+<section class="banners-programables">
+  {% assign today = 'now' | date: '%s' %}
+
+  {% for banner in section.blocks %}
+    {% if banner.type == 'banner' %}
+      {% assign start_date = banner.settings.start_date | date: '%s' %}
+      {% assign end_date = banner.settings.end_date | date: '%s' %}
+
+      {% if today >= start_date and today <= end_date %}
+        <div class="banner" id="banner-{{ banner.id }}" style="position: relative;">
+          <picture>
+            <source media="(max-width: 767px)" srcset="{{ banner.settings.image_mobile | image_url }}">
+            <img src="{{ banner.settings.image_desktop | image_url }}" alt="{{ banner.settings.alt_text }}">
+          </picture>
+
+          {% for i in (1..5) %}
+            {% assign label_key = 'btn' | append: i | append: '_label' %}
+            {% assign link_key = 'btn' | append: i | append: '_link' %}
+            {% assign top_key = 'btn' | append: i | append: '_top' %}
+            {% assign left_key = 'btn' | append: i | append: '_left' %}
+            {% assign right_key = 'btn' | append: i | append: '_right' %}
+            {% assign bottom_key = 'btn' | append: i | append: '_bottom' %}
+            {% assign width_key = 'btn' | append: i | append: '_width' %}
+            {% assign height_key = 'btn' | append: i | append: '_height' %}
+            {% assign color_key = 'btn' | append: i | append: '_color' %}
+            {% assign border_key = 'btn' | append: i | append: '_border_color' %}
+            {% assign bg_key = 'btn' | append: i | append: '_bg_color' %}
+
+            {% assign label = banner.settings[label_key] %}
+            {% assign link = banner.settings[link_key] %}
+            {% assign top = banner.settings[top_key] %}
+            {% assign left = banner.settings[left_key] %}
+            {% assign right = banner.settings[right_key] %}
+            {% assign bottom = banner.settings[bottom_key] %}
+            {% assign width = banner.settings[width_key] | default: 10 %}
+            {% assign height = banner.settings[height_key] | default: 5 %}
+            {% assign color = banner.settings[color_key] | default: '#ffffff' %}
+            {% assign border_color = banner.settings[border_key] | default: '#ffffff' %}
+            {% assign bg_color = banner.settings[bg_key] | default: 'transparent' %}
+
+            {% if label != blank %}
+              <a
+                href="{{ link }}"
+                class="banner-btn"
+                style="
+                  position:absolute;
+                  top:{{ top }}%;
+                  left:{{ left }}%;
+                  right:{{ right }}%;
+                  bottom:{{ bottom }}%;
+                  width:{{ width }}%;
+                  height:{{ height }}%;
+                  color:{{ color }};
+                  border:1px solid {{ border_color }};
+                  background:{{ bg_color }};
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  text-decoration:none;
+                  transform:translate(-50%, -50%);
+                "
+              >
+                {{ label }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "Banners Programables",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Imagen Desktop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Imagen Mobile"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Texto alternativo"
+        },
+        {
+          "type": "text",
+          "id": "start_date",
+          "label": "Fecha inicio (YYYY-MM-DD)"
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "Fecha fin (YYYY-MM-DD)"
+        },
+
+        { "type": "header", "content": "Botón 1" },
+        { "type": "text", "id": "btn1_label", "label": "Texto del botón 1" },
+        { "type": "url", "id": "btn1_link", "label": "Enlace del botón 1" },
+        { "type": "range", "id": "btn1_top", "min": 0, "max": 100, "step": 1, "default": 50, "label": "Top (%)" },
+        { "type": "range", "id": "btn1_left", "min": 0, "max": 100, "step": 1, "default": 50, "label": "Left (%)" },
+        { "type": "range", "id": "btn1_right", "min": 0, "max": 100, "step": 1, "default": 0, "label": "Right (%)" },
+        { "type": "range", "id": "btn1_bottom", "min": 0, "max": 100, "step": 1, "default": 0, "label": "Bottom (%)" },
+        { "type": "range", "id": "btn1_width", "min": 1, "max": 100, "step": 1, "default": 20, "label": "Ancho (%)" },
+        { "type": "range", "id": "btn1_height", "min": 1, "max": 100, "step": 1, "default": 10, "label": "Alto (%)" },
+        { "type": "color", "id": "btn1_color", "label": "Color de texto", "default": "#ffffff" },
+        { "type": "color", "id": "btn1_border_color", "label": "Color de borde", "default": "#ffffff" },
+        { "type": "color", "id": "btn1_bg_color", "label": "Color de fondo", "default": "transparent" },
+
+        { "type": "header", "content": "Botón 2" },
+        { "type": "text", "id": "btn2_label", "label": "Texto del botón 2" },
+        { "type": "url", "id": "btn2_link", "label": "Enlace del botón 2" },
+        { "type": "range", "id": "btn2_top", "min": 0, "max": 100, "step": 1, "default": 50, "label": "Top (%)" },
+        { "type": "range", "id": "btn2_left", "min": 0, "max": 100, "step": 1, "default": 50, "label": "Left (%)" },
+        { "type": "range", "id": "btn2_right", "min": 0, "max": 100, "step": 1, "default": 0, "label": "Right (%)" },
+        { "type": "range", "id": "btn2_bottom", "min": 0, "max": 100, "step": 1, "default": 0, "label": "Bottom (%)" },
+        { "type": "range", "id": "btn2_width", "min": 1, "max": 100, "step": 1, "default": 20, "label": "Ancho (%)" },
+        { "type": "range", "id": "btn2_height", "min": 1, "max": 100, "step": 1, "default": 10, "label": "Alto (%)" },
+        { "type": "color", "id": "btn2_color", "label": "Color de texto", "default": "#ffffff" },
+        { "type": "color", "id": "btn2_border_color", "label": "Color de borde", "default": "#ffffff" },
+        { "type": "color", "id": "btn2_bg_color", "label": "Color de fondo", "default": "transparent" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banners Programables",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
